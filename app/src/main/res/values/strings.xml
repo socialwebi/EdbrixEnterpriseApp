@@ -5,11 +5,46 @@
 
 
     <!--Login / SignUp / Password-->
+    <string name="first_name">First Name </string>
+    <string name="last_name">Last Name </string>
+    <string name="email">Email  </string>
+    <string name="phone_number">Phone </string>
+    <string name="password">Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_password">Confirm Password</string>
+
+    <string name="new_account">Create a new account </string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="password_text">  Please enter your registered email address.  </string>
+    <string name="password_not_match">Password not match </string>
+
+    <string name="welcome_title">Welcome to Edbrix </string>
+    <string name="welcome_description"> Edbrix has opened up the informational flood gates with the launch of its advanced interactive cloud based market place portal exclusively developed to make E-Learning interactive and simple. Our single incredible sign-on portal allows all users to communicate and exchange knowledge using Google/ Microsoft Apps. </string>
+    <string name="submit"> Submit </string>
+    <string name="login"> Login </string>
+    <string name="signin"> Sign In </string>
+    <string name="signup"> Sign Up </string>
+    <string name="register"> Register </string>
+    <string name="cancel"> Cancel </string>
+
+
+    <string name="change_password">Change Password</string>
+    <string name="share">Share </string>
+    <string name="logout">Logout</string>
 
 
     <!--Image Descriptions-->
     <string name="image_walkthrough">Walkthrough image</string>
     <string name="image_org">Organization image</string>
+    <string name="image_logo">Edbrix logo</string>
+
+
+    <!--Error messages-->
+    <string name="error_edit_text">Field can not be empty </string>
+    <string name="error_email_not_valid">Email address not valid </string>
+    <string name="error_number_not_valid">Number not valid </string>
+    <string name="error_network"> Check network connection </string>
+    <string name="error_something_wrong">Something went wrong, Pleae try again</string>
 
 
     <!--WalkThrough-->
