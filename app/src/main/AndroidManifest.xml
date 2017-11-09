@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.edbrix.enterprise">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-feature android:name="android.hardware.telephony" android:required="false" />
+
+    <application
+        android:name="com.edbrix.enterprise.Application"
+        android:allowBackup="true"
+        android:icon="@mipmap/edbrix"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:fullBackupContent="true">
+
+        <activity android:name="com.edbrix.enterprise.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="com.edbrix.enterprise.Activities.LoginActivity" />
+        <activity android:name="com.edbrix.enterprise.Activities.SignupActivity" />
+        <activity android:name="com.edbrix.enterprise.Activities.ForgotPasswordActivity" />
+        <activity android:name="com.edbrix.enterprise.Activities.ChangePasswordActivity" />
+        <activity android:name="com.edbrix.enterprise.Activities.OrganizationListActivity" />
+        <activity android:name="com.edbrix.enterprise.Activities.WalkThroughActivity"/>
+
+    </application>
+
+</manifest>

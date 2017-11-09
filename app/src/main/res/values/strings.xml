@@ -1,0 +1,22 @@
+<resources>
+
+    <!--App name-->
+    <string name="app_name">Edbrix</string>
+
+
+    <!--Login / SignUp / Password-->
+
+
+    <!--Image Descriptions-->
+    <string name="image_walkthrough">Walkthrough image</string>
+    <string name="image_org">Organization image</string>
+
+
+    <!--WalkThrough-->
+    <string name="skip">Skip</string>
+    <string name="next">Next</string>
+    <string name="start">Get Started</string>
+    <string name="done">Done</string>
+
+
+</resources>
