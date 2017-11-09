@@ -7,32 +7,33 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-feature android:name="android.hardware.telephony" android:required="false" />
+
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
 
     <application
-        android:name="com.edbrix.enterprise.Application"
+        android:name=".Application"
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/edbrix"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:fullBackupContent="true">
-
-        <activity android:name="com.edbrix.enterprise.MainActivity">
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name="com.edbrix.enterprise.Activities.LoginActivity" />
-        <activity android:name="com.edbrix.enterprise.Activities.SignupActivity" />
-        <activity android:name="com.edbrix.enterprise.Activities.ForgotPasswordActivity" />
-        <activity android:name="com.edbrix.enterprise.Activities.ChangePasswordActivity" />
-        <activity android:name="com.edbrix.enterprise.Activities.OrganizationListActivity" />
-        <activity android:name="com.edbrix.enterprise.Activities.WalkThroughActivity"/>
-
+        <activity android:name=".Activities.LoginActivity" />
+        <activity android:name=".Activities.SignupActivity" />
+        <activity android:name=".Activities.ForgotPasswordActivity" />
+        <activity android:name=".Activities.ChangePasswordActivity" />
+        <activity android:name=".Activities.OrganizationListActivity" />
+        <activity android:name=".Activities.WalkThroughActivity" />
+        <activity android:name=".Activities.PasswordActivity"></activity>
     </application>
 
 </manifest>

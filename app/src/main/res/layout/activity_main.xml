@@ -3,11 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="8dp"
-    android:padding="2dp"
+    android:padding="@dimen/main_padding"
     tools:context="com.edbrix.enterprise.MainActivity">
 
-    <ImageView
+    <android.support.v7.widget.AppCompatImageView
         android:id="@+id/main_image_logo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
