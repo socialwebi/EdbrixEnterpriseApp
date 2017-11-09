@@ -9,7 +9,7 @@ android {
     useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
-        applicationId "com.edbrix.app"
+        applicationId "com.edbrix.enterprise"
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
