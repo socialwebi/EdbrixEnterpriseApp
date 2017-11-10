@@ -5,7 +5,8 @@ public class Constants {
 	private final static String BASE_URL = "http://enterpriseservices.edbrix.net/app/student/";
 	// http://enterpriseservices.edbrix.net/app/student/authenticatestudent
 
-	public final static String  userLogin = BASE_URL.concat("authenticateuser");  // authenticatestudent
+	public final static String userLogin = BASE_URL.concat("authenticateuser");  // authenticatestudent
+	public final static String userRegister = BASE_URL.concat("");
 	public final static String getSchoolList = BASE_URL.concat("getschoollist");
 	public final static String changePassword = BASE_URL.concat("changepassword");
 	public final static String getMeetings = BASE_URL.concat("getmeetings");

@@ -24,6 +24,7 @@ import com.edbrix.enterprise.MainActivity;
 import com.edbrix.enterprise.Models.ResponseData;
 import com.edbrix.enterprise.Models.User;
 import com.edbrix.enterprise.R;
+import com.edbrix.enterprise.Utils.Conditions;
 import com.edbrix.enterprise.Utils.Constants;
 import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
@@ -64,7 +65,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         _change_password_button_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                checkValidations();
             }
         });
 
@@ -81,6 +82,46 @@ public class ChangePasswordActivity extends AppCompatActivity {
         }
     }
 
+
+    private void checkValidations() {
+
+        Conditions.hideKeyboard(ChangePasswordActivity.this);
+
+        String password = _change_password_edit_text_password.getText().toString().trim();
+        String cPassword = _change_password_edit_text_confirm_password.getText().toString().trim();
+
+        if (password.isEmpty()) {
+            _change_password_edit_text_password.setError(getString(R.string.error_edit_text));
+        }
+        else if (cPassword.isEmpty()) {
+            _change_password_edit_text_password.setError(null);
+            _change_password_edit_text_confirm_password.setError(getString(R.string.error_edit_text));
+        }
+        else if (!password.equals(cPassword)) {
+            _change_password_edit_text_confirm_password.setError(null);
+            try {
+                Snackbar.make(layout, getString(R.string.error_password_not_match), Snackbar.LENGTH_LONG).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(ChangePasswordActivity.this, getString(R.string.error_password_not_match), Toast.LENGTH_SHORT).show();
+            }
+        }
+        else {
+            if (Conditions.isNetworkConnected(ChangePasswordActivity.this)) {
+                setChangePassword(password);
+                // ((MainActivity) getActivity()).onMeetingListSelected();
+            }
+            else {
+                try {
+                    Snackbar.make(layout, getString(R.string.error_network), Snackbar.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(ChangePasswordActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
+    }
 
     private void setChangePassword(String password) {
 
@@ -106,13 +147,14 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     new Response.Listener<ResponseData>() {
                         @Override
                         public void onResponse(@NonNull ResponseData response) {
-
+                            _change_password_progress_bar.setVisibility(View.INVISIBLE);
                             Timber.d("response: %s", response.toString());
                             if (response.getErrorCode()==null) {
                                 Toast.makeText(context, "Success, Please login with new password ", Toast.LENGTH_SHORT).show();
                                 SettingsMy.setActiveUser(null);
 
                                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                                 finish();
 
@@ -133,6 +175,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    _change_password_progress_bar.setVisibility(View.INVISIBLE);
                     try {
                         Snackbar.make(layout, getString(R.string.error_something_wrong), Snackbar.LENGTH_LONG).show();
                     } catch (Exception e2) {

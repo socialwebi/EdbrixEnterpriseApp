@@ -43,6 +43,7 @@
     <string name="error_edit_text">Field can not be empty </string>
     <string name="error_email_not_valid">Email address not valid </string>
     <string name="error_number_not_valid">Number not valid </string>
+    <string name="error_password_not_match">Password not match </string>
     <string name="error_network"> Check network connection </string>
     <string name="error_something_wrong">Something went wrong, Pleae try again</string>
 

@@ -33,7 +33,8 @@
         <activity android:name=".Activities.ChangePasswordActivity" />
         <activity android:name=".Activities.OrganizationListActivity" />
         <activity android:name=".Activities.WalkThroughActivity" />
-        <activity android:name=".Activities.PasswordActivity"></activity>
+        <activity android:name=".Activities.PasswordActivity" />
+        <activity android:name=".Activities.DashboardActivity"></activity>
     </application>
 
 </manifest>

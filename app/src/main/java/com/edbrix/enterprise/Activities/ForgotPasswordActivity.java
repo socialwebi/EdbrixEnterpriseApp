@@ -23,6 +23,7 @@ import com.edbrix.enterprise.BuildConfig;
 import com.edbrix.enterprise.MainActivity;
 import com.edbrix.enterprise.Models.ResponseData;
 import com.edbrix.enterprise.R;
+import com.edbrix.enterprise.Utils.Conditions;
 import com.edbrix.enterprise.Utils.Constants;
 import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
@@ -61,7 +62,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         _forgot_password_button_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                checkValidations();
             }
         });
 
@@ -76,6 +77,36 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void checkValidations() {
+
+        Conditions.hideKeyboard(ForgotPasswordActivity.this);
+
+        String email = _forgot_password_edit_text_email.getText().toString().trim();
+
+        if (email.isEmpty()) {
+            _forgot_password_edit_text_email.setError(getString(R.string.error_edit_text));
+        }
+        else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            _forgot_password_edit_text_email.setError(getString(R.string.error_email_not_valid));
+        }
+        else {
+            _forgot_password_edit_text_email.setError(null);
+
+            if (Conditions.isNetworkConnected(ForgotPasswordActivity.this)) {
+                forgotPassword(email);
+            }
+            else {
+                try {
+                    Snackbar.make(layout, getString(R.string.error_network), Snackbar.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(ForgotPasswordActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
     }
 
     private void forgotPassword(final String emailId) {
@@ -95,7 +126,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 new Response.Listener<ResponseData>() {
                     @Override
                     public void onResponse(@NonNull ResponseData response) {
-
+                        _forgot_password_progress_bar.setVisibility(View.INVISIBLE);
                         Timber.d("response: %s", response.toString());
                         if (response.getErrorCode()==null) {
 
@@ -104,11 +135,12 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                                 SettingsMy.setActiveUser(null);
 
                                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                                 finish();
                             }
                             else {
-                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                Intent intent = new Intent(getApplicationContext(), OrganizationListActivity.class);
                                 intent.putExtra("key",true);
                                 intent.putExtra("email",emailId);
                                 startActivity(intent);
@@ -133,6 +165,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                _forgot_password_progress_bar.setVisibility(View.INVISIBLE);
                 try {
                     Snackbar.make(layout, getString(R.string.error_something_wrong), Snackbar.LENGTH_LONG).show();
                 } catch (Exception e2) {

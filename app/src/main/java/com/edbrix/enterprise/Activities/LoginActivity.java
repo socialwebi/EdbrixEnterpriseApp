@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,8 +21,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.edbrix.enterprise.Application;
 import com.edbrix.enterprise.BuildConfig;
+import com.edbrix.enterprise.MainActivity;
 import com.edbrix.enterprise.Models.ResponseData;
 import com.edbrix.enterprise.R;
+import com.edbrix.enterprise.Utils.Conditions;
 import com.edbrix.enterprise.Utils.Constants;
 import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
@@ -68,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
         _login_button_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                checkValidations();
             }
         });
 
@@ -102,7 +103,43 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void signIn(String email, String password) {
+    private void checkValidations() {
+
+        Conditions.hideKeyboard(LoginActivity.this);
+
+        String email = _login_edit_text_email.getText().toString().trim();
+        String password = _login_edit_text_password.getText().toString().trim();
+
+        if (email.isEmpty()) {
+            _login_edit_text_email.setError(getString(R.string.error_edit_text));
+        }
+        else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            _login_edit_text_email.setError(getString(R.string.error_email_not_valid));
+        }
+        else if (password.isEmpty()) {
+            _login_edit_text_email.setError(null);
+            _login_edit_text_password.setError(getString(R.string.error_edit_text));
+        }
+        else {
+            _login_edit_text_password.setError(null);
+
+            if (Conditions.isNetworkConnected(LoginActivity.this)) {
+                signIn(email, password);
+                // ((MainActivity) getActivity()).onMeetingListSelected();
+            }
+            else {
+                try {
+                    Snackbar.make(layout, getString(R.string.error_network), Snackbar.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(LoginActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+
+    }
+
+    private void signIn(final String email, final String password) {
 
         JSONObject jo = new JSONObject();
         try {
@@ -121,22 +158,25 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NonNull ResponseData response) {
                         Timber.d("response: %s", response.toString());
+                        _login_progress_bar.setVisibility(View.INVISIBLE);
                         if (response.getErrorCode()==null) {
-
-                            _login_progress_bar.setVisibility(View.INVISIBLE);
-                            SettingsMy.setActiveUser(response.getUser());
-
                             //((MainActivity) getActivity()).onCategoryListSelected();  //onCategoryMenuSelected
                             if (response.getIsOrganizationListShow().equals("0")){
+                                SettingsMy.setActiveUser(response.getUser());
 
+                                Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
                             }
                             else {
-
+                                Intent intent = new Intent(getApplicationContext(), OrganizationListActivity.class);
+                                intent.putExtra("email", email);
+                                intent.putExtra("password", password);
+                                startActivity(intent);
                             }
-
                         }
                         else {
-                            _login_progress_bar.setVisibility(View.INVISIBLE);
                             try {
                                 Timber.d("Error: %s", response.getErrorCode());
                                 Snackbar.make(layout, response.getErrorMessage(), Snackbar.LENGTH_LONG).show();
