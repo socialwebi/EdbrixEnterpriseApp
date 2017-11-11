@@ -18,11 +18,13 @@
     <string name="enter_password">Enter Password</string>
     <string name="organization_list">Organization List</string>
     <string name="course_list">Course List</string>
+    <string name="meeting_list">Meeting List</string>
     <string name="forgot_password_">Forgot Password?</string>
     <string name="password_text">  Please enter your registered email address.  </string>
     <string name="password_not_match">Password not match </string>
 
     <string name="schedules">Schedules</string>
+    <string name="meetings">Meetings</string>
     <string name="courses">Courses</string>
     <string name="settings">Settings</string>
 

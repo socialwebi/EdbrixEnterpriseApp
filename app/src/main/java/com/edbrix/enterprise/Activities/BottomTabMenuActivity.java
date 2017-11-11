@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.edbrix.enterprise.Fragments.CourseListFragment;
+import com.edbrix.enterprise.Fragments.MeetingListFragment;
 import com.edbrix.enterprise.R;
 
 public class BottomTabMenuActivity extends AppCompatActivity {
@@ -28,6 +30,10 @@ public class BottomTabMenuActivity extends AppCompatActivity {
 
     private Fragment menuFragment;
 
+    public static final String tabIndexKey = "tabIndex";
+
+    private int tabIndex;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,9 +43,10 @@ public class BottomTabMenuActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         titleText = (TextView) toolbar.findViewById(R.id.title);
         menuTab = (TabLayout) findViewById(R.id.tabLayout);
+        tabIndex = getIntent().getIntExtra(tabIndexKey, 0);
         setMenuTabs();
         setListeners();
-        menuTab.getTabAt(0).select();
+        menuTab.getTabAt(tabIndex).select();
         tabSelected();
     }
 
@@ -112,8 +119,8 @@ public class BottomTabMenuActivity extends AppCompatActivity {
             case 0:
                 tabSchdlIcon.setImageResource(R.mipmap.footer_calendar_menu_active);
                 tabSchdlText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAppOrange));
-                titleText.setText(tabSchdlText.getText());
-//                menuFragment = new ProfileFragment();
+                titleText.setText(getText(R.string.meetings));
+                menuFragment = new MeetingListFragment();
 //                Bundle bundleMsg = new Bundle();
 //                bundleMsg.putSerializable(MessagesFragment.INFO, stringInfo);
 //                fragment.setArguments(bundleMsg);
@@ -122,7 +129,7 @@ public class BottomTabMenuActivity extends AppCompatActivity {
                 tabCoursesIcon.setImageResource(R.mipmap.footer_course_menu_active);
                 tabCoursesText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAppOrange));
                 titleText.setText(tabCoursesText.getText());
-//                menuFragment = new ProfileSubjectFragment();
+                menuFragment = new CourseListFragment();
 //                Bundle bundleSchdl = new Bundle();
 //                bundleSchdl.putSerializable(ScheduleFragment.INFO, stringInfo);
 //                fragment.setArguments(bundleSchdl);

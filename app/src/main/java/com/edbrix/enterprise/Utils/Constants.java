@@ -12,6 +12,7 @@ public class Constants {
 	public final static String getMeetings = BASE_URL.concat("getmeetings");
 	public final static String forgotPassword = BASE_URL.concat("forgotpassword");
 	public final static String getMeetingDetails = BASE_URL.concat("getmeetingdetails");
+	public final static String getDashboardCourseSchedules = BASE_URL.concat("getdashboardcourseandschedules");
 
 
 	// TODO Change it to your web domain

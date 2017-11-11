@@ -122,14 +122,14 @@
         android:gravity="center"
         android:orientation="vertical">
 
-
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:id="@+id/btnGoDetail"
+            android:layout_width="28dp"
+            android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/app_min_margin"
             android:layout_marginTop="@dimen/app_min_margin"
             android:padding="@dimen/app_min_padding"
-            android:src="@mipmap/right_arrow" />
+            android:src="@mipmap/right_arrow_start_icon_orange" />
 
     </LinearLayout>
 </LinearLayout>
