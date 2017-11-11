@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
@@ -124,6 +125,13 @@ public class OrganizationListActivity extends AppCompatActivity {
                 Toast.makeText(OrganizationListActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show();
             }
         }
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        assert _organization_recycler != null;
+        _organization_recycler.setHasFixedSize(true);
+        _organization_recycler.setLayoutManager(linearLayoutManager);
+        registerForContextMenu(_organization_recycler);
+        _organization_recycler.setAdapter(organizationListAdapter);
 
     }
 

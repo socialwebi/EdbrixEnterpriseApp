@@ -149,6 +149,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private void register(String email, String number, String firstName, String lastName) {
 
+        _register_progress_bar.setVisibility(View.VISIBLE);
         JSONObject jo = new JSONObject();
         try {
             jo.put("Email", email);

@@ -131,6 +131,8 @@ public class PasswordActivity extends AppCompatActivity {
 
     private void signIn(String password) {
 
+        _password_progress_bar.setVisibility(View.VISIBLE);
+
         JSONObject jo = new JSONObject();
         try {
             jo.put("Email", email);

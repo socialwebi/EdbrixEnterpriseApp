@@ -111,6 +111,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     private void forgotPassword(final String emailId) {
 
+        _forgot_password_progress_bar.setVisibility(View.VISIBLE);
+
         JSONObject jo = new JSONObject();
         try {
 
