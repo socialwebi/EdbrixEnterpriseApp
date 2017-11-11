@@ -153,12 +153,13 @@
                 android:gravity="center"
                 android:text="@string/signin" />
 
-            <ProgressBar
-                android:id="@+id/register_progress_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:indeterminate="true" />
+        <ProgressBar
+            android:id="@+id/register_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="invisible"
+            android:indeterminate="true" />
 
         </RelativeLayout>
     </ScrollView>

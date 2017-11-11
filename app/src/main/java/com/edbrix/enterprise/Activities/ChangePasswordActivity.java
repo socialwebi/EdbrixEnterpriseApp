@@ -123,6 +123,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
     private void setChangePassword(String password) {
 
+        _change_password_progress_bar.setVisibility(View.VISIBLE);
+
         User user = SettingsMy.getActiveUser();
 
         if (user!=null) {
