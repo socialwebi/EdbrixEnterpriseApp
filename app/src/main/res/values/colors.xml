@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#f5f5f5</color>
+    <color name="colorPrimaryDark">#666666</color>
+    <color name="colorAccent">#ff6600</color>
 
     <color name="WalkThroughTextColor">#666666</color>
     <color name="WalkThroughTabBg">#E8E8E8</color>
+
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorSubText">#999999</color>
+    <color name="colorMainText">#666666</color>
+    <color name="colorDisableBtn">#d4d4d4</color>
+    <color name="colorBlueLink">#4285f4</color>
+    <color name="colorAppOrange">#ff6600</color>
+    <color name="colorActionBar">#f5f5f5</color>
+    <color name="colorDivider">#dddddd</color>
+    <color name="colorHintText">#CCCCCC</color>
+    <color name="colorFooterMenuText">#777777</color>
+
+
 
 </resources>

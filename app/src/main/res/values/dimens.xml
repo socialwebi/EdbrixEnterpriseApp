@@ -10,4 +10,30 @@
     <dimen name="activity_horizontal_margin_small">8dp</dimen>
     <dimen name="activity_vertical_margin_small">8dp</dimen>
 
+
+    <!-- Regular margins -->
+    <dimen name="app_normal_margin">10dp</dimen>
+    <dimen name="app_normal_padding">10dp</dimen>
+    <dimen name="app_min_margin">5dp</dimen>
+    <dimen name="app_min_padding">5dp</dimen>
+    <dimen name="app_big_margin">30dp</dimen>
+    <dimen name="app_big_padding">30dp</dimen>
+
+    <!-- min Height and widths of Views -->
+    <dimen name="view_big_height">20dp</dimen>
+    <dimen name="view_big_width">20dp</dimen>
+    <dimen name="view_normal_height">10dp</dimen>
+    <dimen name="view_normal_width">10dp</dimen>
+    <dimen name="view_subheader_height">40dp</dimen>
+    <dimen name="fa_btn_height">25dp</dimen>
+    <dimen name="fa_btn_width">25dp</dimen>
+
+    <!-- Reveal Button Size -->
+    <dimen name="reveal_btn_height">40dp</dimen>
+    <dimen name="reveal_btn_width">40dp</dimen>
+
+    <dimen name="ui_element_gap">8dp</dimen>
+    <dimen name="ui_element_gap_half">4dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+
 </resources>

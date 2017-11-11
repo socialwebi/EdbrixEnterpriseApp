@@ -8,6 +8,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -46,14 +47,11 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         context = this;
-        getSupportActionBar().setTitle("Forgot Password ");
-
-        final ActionBar ab = ((AppCompatActivity) context).getSupportActionBar();
-        if (ab != null) {
-            ab.setDisplayHomeAsUpEnabled(true);
-        }
 
         _forgot_password_edit_text_email = findViewById(R.id.forgot_password_edit_text_email);
         _forgot_password_button_submit = findViewById(R.id.forgot_password_button_submit);

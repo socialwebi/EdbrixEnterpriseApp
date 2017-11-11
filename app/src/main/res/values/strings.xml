@@ -14,9 +14,17 @@
     <string name="confirm_password">Confirm Password</string>
 
     <string name="new_account">Create a new account </string>
-    <string name="forgot_password">Forgot Password?</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="organization_list">Organization List</string>
+    <string name="course_list">Course List</string>
+    <string name="forgot_password_">Forgot Password?</string>
     <string name="password_text">  Please enter your registered email address.  </string>
     <string name="password_not_match">Password not match </string>
+
+    <string name="schedules">Schedules</string>
+    <string name="courses">Courses</string>
+    <string name="settings">Settings</string>
 
     <string name="welcome_title">Welcome to Edbrix </string>
     <string name="welcome_description"> Edbrix has opened up the informational flood gates with the launch of its advanced interactive cloud based market place portal exclusively developed to make E-Learning interactive and simple. Our single incredible sign-on portal allows all users to communicate and exchange knowledge using Google/ Microsoft Apps. </string>
@@ -24,7 +32,7 @@
     <string name="login"> Login </string>
     <string name="signin"> Sign In </string>
     <string name="signup"> Sign Up </string>
-    <string name="register"> Register </string>
+    <string name="register">Register</string>
     <string name="cancel"> Cancel </string>
 
 

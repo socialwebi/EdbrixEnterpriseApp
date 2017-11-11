@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.edbrix.enterprise.Activities.BottomTabMenuActivity;
 import com.edbrix.enterprise.Activities.LoginActivity;
 import com.edbrix.enterprise.Activities.SignupActivity;
 
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         _main_button_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent registerIntent = new Intent(MainActivity.this, SignupActivity.class);
+                Intent registerIntent = new Intent(MainActivity.this, BottomTabMenuActivity.class);
                 startActivity(registerIntent);
             }
         });

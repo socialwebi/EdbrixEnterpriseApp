@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.edbrix.enterprise.Activities.OrganizationListActivity">
+    tools:context="com.edbrix.enterprise.Activities.BottomTabMenuActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:theme="@style/AppTheme.AppBarOverlay"
         android:visibility="visible">
 
@@ -31,7 +32,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="@string/organization_list"
+                    android:text="@string/course_list"
                     android:textColor="@color/colorMainText"
                     android:textSize="20sp" />
 
@@ -39,39 +40,29 @@
 
         </android.support.v7.widget.Toolbar>
 
+
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout
+    <FrameLayout
+        android:id="@+id/menu_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="8dp"
-        android:padding="2dp">
+        android:layout_above="@+id/tabLayout"
+        android:layout_below="@+id/appBarLayout"
+        android:background="@color/colorWhite"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-
-        <ImageView
-            android:id="@+id/organization_image_logo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:layout_marginTop="20dp"
-            android:contentDescription="@string/image_logo"
-            android:padding="5dp"
-            android:src="@drawable/edbrix_logo" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/organization_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/organization_image_logo"
-            android:scrollbars="none" />
-
-
-        <ProgressBar
-            android:id="@+id/organization_progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:indeterminate="true" />
-
-    </RelativeLayout>
-</LinearLayout>
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom|end"
+        android:background="@color/colorActionBar"
+        android:clickable="true"
+        android:tabStripEnabled="false"
+        app:tabMaxWidth="0dp"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@android:color/transparent" />
+</RelativeLayout>

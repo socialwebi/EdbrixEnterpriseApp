@@ -52,12 +52,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         context = this;
-        getSupportActionBar().setTitle("Login ");
-
-        final ActionBar ab = ((AppCompatActivity) context).getSupportActionBar();
-        if (ab != null) {
-            ab.setDisplayHomeAsUpEnabled(true);
-        }
 
         _login_edit_text_email = findViewById(R.id.login_edit_text_email);
         _login_edit_text_password = findViewById(R.id.login_edit_text_password);

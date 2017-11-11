@@ -1,125 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scrollbars="none"
-    android:layout_margin="8dp"
-    android:padding="2dp"
+    android:orientation="vertical"
     tools:context="com.edbrix.enterprise.Activities.SignupActivity">
 
-    <RelativeLayout
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:visibility="visible">
 
-        <ImageView
-            android:id="@+id/register_image_logo"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="40dp"
-            android:src="@drawable/edbrix_logo"
-            android:contentDescription="@string/image_logo" />
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorActionBar"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
 
+            <RelativeLayout
+                android:id="@+id/relativeLayoutLogo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/register_input_layout_first_name"
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/register"
+                    android:textColor="@color/colorMainText"
+                    android:textSize="20sp" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        android:padding="2dp"
+        android:scrollbars="none">
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/register_image_logo"
-            android:padding="3dp">
+            android:layout_height="wrap_content">
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/register_edit_text_first_name"
+            <ImageView
+                android:id="@+id/register_image_logo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/first_name"
-                android:imeOptions="actionNext"
-                android:inputType="textPersonName" />
+                android:layout_marginBottom="40dp"
+                android:layout_marginTop="20dp"
+                android:contentDescription="@string/image_logo"
+                android:padding="5dp"
+                android:src="@drawable/edbrix_logo" />
 
-        </android.support.design.widget.TextInputLayout>
 
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/register_input_layout_last_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/register_input_layout_first_name"
-            android:padding="3dp">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/register_edit_text_last_name"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/register_input_layout_first_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/last_name"
-                android:imeOptions="actionNext"
-                android:inputType="textPersonName" />
+                android:layout_below="@+id/register_image_logo"
+                android:padding="3dp">
 
-        </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/register_edit_text_first_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/first_name"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPersonName" />
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/register_input_layout_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/register_input_layout_last_name"
-            android:padding="3dp">
+            </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/register_edit_text_email"
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/register_input_layout_last_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/email"
-                android:imeOptions="actionNext"
-                android:inputType="textEmailAddress" />
+                android:layout_below="@+id/register_input_layout_first_name"
+                android:padding="3dp">
 
-        </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/register_edit_text_last_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/last_name"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPersonName" />
 
+            </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/register_input_layout_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/register_input_layout_email"
-            android:padding="3dp"
-            android:layout_marginBottom="15dp">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/register_edit_text_number"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/register_input_layout_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/phone_number"
-                android:imeOptions="actionNext"
-                android:inputType="number" />
+                android:layout_below="@+id/register_input_layout_last_name"
+                android:padding="3dp">
 
-        </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/register_edit_text_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/email"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress" />
+
+            </android.support.design.widget.TextInputLayout>
 
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/register_button_register"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_below="@+id/register_input_layout_number"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="8dp"
-            android:text="@string/register"/>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/register_input_layout_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/register_input_layout_email"
+                android:layout_marginBottom="15dp"
+                android:padding="3dp">
 
-        <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/register_text_view_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/register_button_register"
-            android:gravity="center"
-            android:text="@string/signin" />
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/register_edit_text_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/phone_number"
+                    android:imeOptions="actionNext"
+                    android:inputType="number" />
 
-        <ProgressBar
-            android:id="@+id/register_progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:indeterminate="true" />
+            </android.support.design.widget.TextInputLayout>
 
-    </RelativeLayout>
 
-</ScrollView>
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/register_button_register"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/register_input_layout_number"
+                android:layout_marginBottom="8dp"
+                android:padding="5dp"
+                android:text="@string/register"
+                android:textColor="@android:color/white" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/register_text_view_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/register_button_register"
+                android:gravity="center"
+                android:text="@string/signin" />
+
+            <ProgressBar
+                android:id="@+id/register_progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:indeterminate="true" />
+
+        </RelativeLayout>
+    </ScrollView>
+</LinearLayout>

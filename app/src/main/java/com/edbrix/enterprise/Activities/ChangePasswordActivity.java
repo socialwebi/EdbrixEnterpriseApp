@@ -8,6 +8,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -48,14 +49,11 @@ public class ChangePasswordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         context = this;
-        getSupportActionBar().setTitle("Change Password ");
-
-        final ActionBar ab = ((AppCompatActivity) context).getSupportActionBar();
-        if (ab != null) {
-            ab.setDisplayHomeAsUpEnabled(true);
-        }
 
         _change_password_edit_text_password = findViewById(R.id.change_password_edit_text_password);
         _change_password_edit_text_confirm_password = findViewById(R.id.change_password_edit_text_confirm_password);

@@ -19,7 +19,7 @@
         android:icon="@mipmap/edbrix"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,7 +34,8 @@
         <activity android:name=".Activities.OrganizationListActivity" />
         <activity android:name=".Activities.WalkThroughActivity" />
         <activity android:name=".Activities.PasswordActivity" />
-        <activity android:name=".Activities.DashboardActivity"></activity>
+        <activity android:name=".Activities.DashboardActivity" />
+        <activity android:name=".Activities.BottomTabMenuActivity"></activity>
     </application>
 
 </manifest>
