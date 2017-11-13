@@ -1,6 +1,8 @@
 package com.edbrix.enterprise.Models;
 
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 public class ResponseData {
@@ -12,10 +14,15 @@ public class ResponseData {
 
     private User   user;
     private ArrayList<Organizations> organizations;
-    private ArrayList<Meetings> meetings;
+    private ArrayList<Meetings> meeting;
+    private ArrayList<Meeting> meetings;
+
+    @SerializedName("courses")
+    private ArrayList<Courses> coursesList;
 
     private String ErrorCode;
     private String ErrorMessage;
+    private String page;
     private String offset;
 
     public String getCode() {
@@ -67,11 +74,35 @@ public class ResponseData {
     }
 
     public ArrayList<Meetings> getMeetings() {
-        return meetings;
+        return meeting;
     }
 
     public void setMeetings(ArrayList<Meetings> meetings) {
+        this.meeting = meeting;
+    }
+
+    public ArrayList<Meeting> getMeeting() {
+        return meetings;
+    }
+
+    public void setMeeting(ArrayList<Meeting> meeting) {
         this.meetings = meetings;
+    }
+
+    public String getPage() {
+        return page;
+    }
+
+    public void setPage(String page) {
+        this.page = page;
+    }
+
+    public ArrayList<Courses> getCoursesList() {
+        return coursesList;
+    }
+
+    public void setCoursesList(ArrayList<Courses> coursesList) {
+        this.coursesList = coursesList;
     }
 
     public String getErrorCode() {
@@ -109,8 +140,11 @@ public class ResponseData {
                 ", user= '" + user + '\'' +
                 ", organizations= '" + organizations + '\'' +
                 ", Meetings = '" + meetings + '\'' +
+                ", meeting = '" + meeting + '\'' +
+                ", coursesList = '" + coursesList + '\'' +
                 ", ErrorCode= '" + ErrorCode + '\'' +
                 ", ErrorMessage= '" + ErrorMessage + '\'' +
+                ", page= '" + page + '\'' +
                 ", offset= '" + offset + '\'' +
                 '}';
     }

@@ -43,6 +43,7 @@ public class BottomTabMenuActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         titleText = (TextView) toolbar.findViewById(R.id.title);
         menuTab = (TabLayout) findViewById(R.id.tabLayout);
+
         tabIndex = getIntent().getIntExtra(tabIndexKey, 0);
         setMenuTabs();
         setListeners();

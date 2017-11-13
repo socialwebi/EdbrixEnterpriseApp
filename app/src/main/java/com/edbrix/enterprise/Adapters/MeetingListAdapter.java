@@ -38,6 +38,10 @@ public class MeetingListAdapter extends RecyclerView.Adapter<MeetingListAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
+        holder.day.setText(list.get(position).getMeetingDate());
+        holder.date.setText(list.get(position).getMeetingDate());
+        holder.title.setText(list.get(position).getTitle());
+        holder.time.setText(list.get(position).getStartDateTime() +" - "+list.get(position).getEndDateTime());
 
     }
 
@@ -48,14 +52,18 @@ public class MeetingListAdapter extends RecyclerView.Adapter<MeetingListAdapter.
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView name;
-        private ImageView imageView;
+        private TextView day;
+        private TextView date;
+        private TextView title;
+        private TextView time;
 
         ViewHolder(View itemView, final MeetingListInterface meetingListInterface) {
             super(itemView);
 
-            // name = itemView.findViewById(R.id.org_name);
-            // imageView = itemView.findViewById(R.id.org_image);
+            day = itemView.findViewById(R.id.meetings_day);
+            date = itemView.findViewById(R.id.meetings_date);
+            title = itemView.findViewById(R.id.meetings_name);
+            time = itemView.findViewById(R.id.meetings_time);
 
             itemView.setClickable(true);
             itemView.setOnClickListener(new View.OnClickListener() {

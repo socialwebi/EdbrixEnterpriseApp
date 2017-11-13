@@ -1,0 +1,28 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="com.edbrix.enterprise.Adapters.DashBoardMeetingListAdapter">
+
+        <TextView
+            android:id="@+id/meeting_schedule_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Meeting 1"
+            android:layout_gravity="center"
+            android:gravity="center_vertical"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/meeting_schedule_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="12:30 AM"
+            android:layout_gravity="center"
+            android:gravity="center_vertical"
+            android:drawablePadding="5dp"
+            android:drawableLeft="@mipmap/clock"
+            android:drawableStart="@mipmap/clock" />
+
+</LinearLayout>

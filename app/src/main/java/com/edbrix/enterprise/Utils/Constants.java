@@ -14,6 +14,8 @@ public class Constants {
 	public final static String getMeetingDetails = BASE_URL.concat("getmeetingdetails");
 	public final static String getDashboardCourseSchedules = BASE_URL.concat("getdashboardcourseandschedules");
 
+	public final static String getDashboardScheduleCourse = BASE_URL.concat("getdashboardcourseandschedules");
+
 
 	// TODO Change it to your web domain
 	final static String WEB_DOMAIN = "zoom.us";

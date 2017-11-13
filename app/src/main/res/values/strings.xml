@@ -42,11 +42,15 @@
     <string name="share">Share </string>
     <string name="logout">Logout</string>
 
+    <string name="all_meetings"> View all meetings </string>
+    <string name="all_courses"> View all courses </string>
 
     <!--Image Descriptions-->
     <string name="image_walkthrough">Walkthrough image</string>
     <string name="image_org">Organization image</string>
     <string name="image_logo">Edbrix logo</string>
+    <string name="image_course">Course image</string>
+    <string name="image_right_arrow">Right arrow icon</string>
 
 
     <!--Error messages-->
