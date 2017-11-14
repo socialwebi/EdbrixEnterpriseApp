@@ -28,13 +28,14 @@ import com.edbrix.enterprise.Utils.Conditions;
 import com.edbrix.enterprise.Utils.Constants;
 import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
+import com.edbrix.enterprise.baseclass.BaseActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import timber.log.Timber;
 
-public class ForgotPasswordActivity extends AppCompatActivity {
+public class ForgotPasswordActivity extends BaseActivity {
 
     Context context;
 

@@ -28,6 +28,7 @@ public class SessionManager {
     private static final String PREFS_SESSION_PASSWORD = "SessionPassword";
     private static final String PREFS_SESSION_PROFILE_TOKEN = "SessionProfileToken";
     private static final String PREFS_SESSION_DEVICE_TOKEN = "SessionDeviceToken";
+    private static final String PREFS_SESSION_DEVICE_TYPE = "SessionDeviceType";
     private static final String PREFS_SESSION_ORG_ID = "SessionOrgId";
     private static final String PREFS_SESSION_SUB_COURSE_DATA = "SessionSubjectCourseData";
     private static final String PREFS_SESSION_LOGGED_USERDATA = "SessionLoggedUsersData";
@@ -92,6 +93,14 @@ public class SessionManager {
         return this.sharedPrefs.getString(PREFS_SESSION_DEVICE_TOKEN, "");
     }
 
+    /**
+     * Gets the session's saved device orientation.
+     *
+     * @return
+     */
+    public String getSessionDeviceType() {
+        return this.sharedPrefs.getString(PREFS_SESSION_DEVICE_TYPE, "mob");
+    }
     /**
      * Gets the session's saved Course Id.
      *
@@ -224,6 +233,17 @@ public class SessionManager {
             editor.putString(PREFS_SESSION_DEVICE_TOKEN, deviceToken);
         } else {
             editor.remove(PREFS_SESSION_DEVICE_TOKEN);
+        }
+        editor.commit();
+    }
+
+    public void updateSessionDeviceType(String deviceType) {
+
+        Editor editor = this.sharedPrefs.edit();
+        if ((deviceType != null) && (deviceType.length() > 0)) {
+            editor.putString(PREFS_SESSION_DEVICE_TYPE, deviceType);
+        } else {
+            editor.remove(PREFS_SESSION_DEVICE_TYPE);
         }
         editor.commit();
     }

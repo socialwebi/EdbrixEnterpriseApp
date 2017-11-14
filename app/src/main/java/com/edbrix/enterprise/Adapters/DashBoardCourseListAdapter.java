@@ -51,7 +51,7 @@ public class DashBoardCourseListAdapter extends RecyclerView.Adapter<DashBoardCo
         holder.name.setText(list.get(position).getTitle());
 
         Picasso.with(context)
-                .load(list.get(position).getImage_url())
+                .load(list.get(position).getCourse_image_url())
                 .error(R.drawable.edbrix_logo)
                 .into(holder.imageView);
 

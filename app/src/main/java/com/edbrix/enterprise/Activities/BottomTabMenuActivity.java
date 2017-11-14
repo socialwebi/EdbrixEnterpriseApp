@@ -1,5 +1,7 @@
 package com.edbrix.enterprise.Activities;
 
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -14,8 +16,9 @@ import android.widget.TextView;
 import com.edbrix.enterprise.Fragments.CourseListFragment;
 import com.edbrix.enterprise.Fragments.MeetingListFragment;
 import com.edbrix.enterprise.R;
+import com.edbrix.enterprise.baseclass.BaseActivity;
 
-public class BottomTabMenuActivity extends AppCompatActivity {
+public class BottomTabMenuActivity extends BaseActivity {
 
     private TabLayout menuTab;
 
@@ -37,6 +40,7 @@ public class BottomTabMenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_bottom_tab_menu);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -150,5 +154,4 @@ public class BottomTabMenuActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.menu_container, menuFragment).commit();
         }
     }
-
 }

@@ -18,6 +18,7 @@
     <string name="enter_password">Enter Password</string>
     <string name="organization_list">Organization List</string>
     <string name="course_list">Course List</string>
+    <string name="course_details">Course List</string>
     <string name="meeting_list">Meeting List</string>
     <string name="forgot_password_">Forgot Password?</string>
     <string name="password_text">  Please enter your registered email address.  </string>

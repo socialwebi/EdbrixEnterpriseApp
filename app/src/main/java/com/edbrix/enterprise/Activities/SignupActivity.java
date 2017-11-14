@@ -28,13 +28,14 @@ import com.edbrix.enterprise.Utils.Conditions;
 import com.edbrix.enterprise.Utils.Constants;
 import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
+import com.edbrix.enterprise.baseclass.BaseActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import timber.log.Timber;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignupActivity extends BaseActivity {
 
     Context context;
 

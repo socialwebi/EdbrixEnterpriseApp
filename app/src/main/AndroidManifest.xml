@@ -35,7 +35,8 @@
         <activity android:name=".Activities.WalkThroughActivity" />
         <activity android:name=".Activities.PasswordActivity" />
         <activity android:name=".Activities.DashboardActivity" />
-        <activity android:name=".Activities.BottomTabMenuActivity"></activity>
+        <activity android:name=".Activities.BottomTabMenuActivity" />
+        <activity android:name=".Activities.CourseDetailActivity"></activity>
     </application>
 
 </manifest>

@@ -2,13 +2,19 @@ package com.edbrix.enterprise.Adapters;
 
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.edbrix.enterprise.Interfaces.CourseListActionListener;
+import com.edbrix.enterprise.Interfaces.OnLoadMoreListener;
 import com.edbrix.enterprise.Interfaces.OrganizationListInterface;
 import com.edbrix.enterprise.Models.Courses;
 import com.edbrix.enterprise.Models.Organizations;
@@ -18,86 +24,143 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class CourseListAdapter extends RecyclerView.Adapter<CourseListAdapter.ViewHolder> {
+public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
     private ArrayList<Courses> courseList;
     private CourseListActionListener courseListActionListener;
+    private OnLoadMoreListener onLoadMoreListener;
 
-    public interface CourseListActionListener{
-         void onCourseItemSelected(Courses courses);
-         void onCoursePlayClick(String url);
-         void onCourseMessageClick(String mobNo);
-         void onCourseCallClick(String mobNo);
-    }
+    private final int VIEW_TYPE_ITEM = 0;
+    private final int VIEW_TYPE_LOADING = 1;
 
-    public CourseListAdapter(Context context, ArrayList<Courses> courseList, CourseListActionListener courseListActionListener) {
+    private boolean isLoading;
+    private int visibleThreshold = 5;
+    private int lastVisibleItem, totalItemCount;
+
+
+    public CourseListAdapter(Context context, RecyclerView mRecyclerView, ArrayList<Courses> courseList) {
 
         this.context = context;
         this.courseList = courseList;
-        this.courseListActionListener = courseListActionListener;
+
+        final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                totalItemCount = linearLayoutManager.getItemCount();
+                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+
+                if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                    if (onLoadMoreListener != null) {
+                        onLoadMoreListener.onLoadMore();
+                    }
+                    isLoading = true;
+                }
+            }
+        });
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_courses, parent, false);
-        return new ViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
-
-        holder.txtCourseName.setText(courseList.get(position).getTitle());
-        holder.txtCourseBy.setText(courseList.get(position).getInstructor_name());
-        holder.txtCourseDesc.setText(courseList.get(position).getDescription());
-
-        if (courseList.get(position).getImage_url()!=null && !courseList.get(position).getImage_url().isEmpty()) {
-            Picasso.with(context)
-                    .load(courseList.get(position).getImage_url())
-                    .error(R.drawable.edbrix_logo)
-                    .into(holder.imgCourseBy);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == VIEW_TYPE_ITEM) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_courses, parent, false);
+            return new CourseViewHolder(view);
+        } else if (viewType == VIEW_TYPE_LOADING) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_loading, parent, false);
+            return new LoadingViewHolder(view);
         }
+        return null;
+    }
 
-        holder.btnGoDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                courseListActionListener.onCourseItemSelected(courseList.get(position));
-            }
-        });
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
-        holder.btnCourseCall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                courseListActionListener.onCourseCallClick(courseList.get(position).getInstructor_mobileno());
-            }
-        });
+        if (holder instanceof CourseViewHolder) {
+            final Courses course = courseList.get(position);
+            CourseViewHolder courseViewHolder = (CourseViewHolder) holder;
+            courseViewHolder.txtCourseName.setText(course.getTitle());
+            courseViewHolder.txtCourseBy.setText("By " + course.getInstructor_name());
+            courseViewHolder.txtCourseDesc.setText(course.getDescription());
+//        courseViewHolder.setRating.setRating(Float.valueOf("2.5"));
 
-        holder.btnCourseMsg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                courseListActionListener.onCourseMessageClick(courseList.get(position).getInstructor_mobileno());
+            if (course.getInstructor_image_url() != null && !course.getInstructor_image_url().isEmpty()) {
+                Picasso.with(context)
+                        .load(course.getInstructor_image_url())
+                        .error(R.drawable.edbrix_logo)
+                        .into(courseViewHolder.imgCourseBy);
             }
-        });
 
-        holder.btnCoursePlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                courseListActionListener.onCoursePlayClick("");
+            courseViewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    courseListActionListener.onCourseItemSelected(course);
+                }
+            });
+            courseViewHolder.btnGoDetail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    courseListActionListener.onCourseItemSelected(course);
+                }
+            });
+
+            courseViewHolder.btnCourseCall.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    courseListActionListener.onCourseCallClick(course.getInstructor_mobileno());
+                }
+            });
+
+            courseViewHolder.btnCourseMsg.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    courseListActionListener.onCourseMessageClick(course.getInstructor_mobileno());
+                }
+            });
+
+            courseViewHolder.btnCoursePlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    courseListActionListener.onCoursePlayClick("");
+                }
+            });
+
+            if (position % 2 == 1) {
+                courseViewHolder.mView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorActionBar));
+            } else {
+                courseViewHolder.mView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite));
             }
-        });
+        } else if (holder instanceof LoadingViewHolder) {
+            LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
+            loadingViewHolder.progressBar.setIndeterminate(true);
+        }
     }
 
     @Override
     public int getItemCount() {
-        if(courseList!=null && courseList.size()>0){
-            return courseList.size();
-        }else{
-            return 0;
-        }
+        return courseList == null ? 0 : courseList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public int getItemViewType(int position) {
+        return courseList.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+    }
+
+    public void setOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
+        this.onLoadMoreListener = mOnLoadMoreListener;
+    }
+
+    public void setCourseListActionListener(CourseListActionListener courseListActionListener) {
+        this.courseListActionListener = courseListActionListener;
+    }
+
+    public void setLoaded() {
+        isLoading = false;
+    }
+
+    public class CourseViewHolder extends RecyclerView.ViewHolder {
 
         private View mView;
         private TextView txtCourseName;
@@ -108,11 +171,12 @@ public class CourseListAdapter extends RecyclerView.Adapter<CourseListAdapter.Vi
         private ImageView btnCourseCall;
         private ImageView btnGoDetail;
         private RoundedImageView imgCourseBy;
+        private RatingBar setRating;
 
 
-        ViewHolder(View itemView) {
+        CourseViewHolder(View itemView) {
             super(itemView);
-            mView =itemView;
+            mView = itemView;
             txtCourseName = itemView.findViewById(R.id.txtCourseName);
             txtCourseBy = itemView.findViewById(R.id.txtCourseBy);
             txtCourseDesc = itemView.findViewById(R.id.txtCourseDesc);
@@ -123,6 +187,18 @@ public class CourseListAdapter extends RecyclerView.Adapter<CourseListAdapter.Vi
             btnGoDetail = itemView.findViewById(R.id.btnGoDetail);
 
             imgCourseBy = itemView.findViewById(R.id.imgCourseBy);
+
+            setRating = itemView.findViewById(R.id.setRating);
+        }
+    }
+
+    // "Loading item" ViewHolder
+    private class LoadingViewHolder extends RecyclerView.ViewHolder {
+        public ProgressBar progressBar;
+
+        public LoadingViewHolder(View view) {
+            super(view);
+            progressBar = (ProgressBar) view.findViewById(R.id.progressBar1);
         }
     }
 

@@ -2,11 +2,13 @@ package com.edbrix.enterprise.Models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by rajk on 11/11/17.
  */
 
-public class Courses {
+public class Courses implements Serializable {
     @SerializedName("id")
     private String id;
 
@@ -22,8 +24,11 @@ public class Courses {
     @SerializedName("instructor_name")
     private String instructor_name;
 
-    @SerializedName("image_url")
-    private String image_url;
+    @SerializedName("course_image_url")
+    private String course_image_url;
+
+    @SerializedName("instructor_image_url")
+    private String instructor_image_url;
 
     @SerializedName("description")
     private String description;
@@ -81,14 +86,12 @@ public class Courses {
         this.instructor_name = instructor_name;
     }
 
-    public String getImage_url ()
-    {
-        return image_url;
+    public String getCourse_image_url() {
+        return course_image_url;
     }
 
-    public void setImage_url (String image_url)
-    {
-        this.image_url = image_url;
+    public void setCourse_image_url(String course_image_url) {
+        this.course_image_url = course_image_url;
     }
 
     public String getDescription ()
@@ -111,9 +114,17 @@ public class Courses {
         this.instructor_mobileno = instructor_mobileno;
     }
 
+    public String getInstructor_image_url() {
+        return instructor_image_url;
+    }
+
+    public void setInstructor_image_url(String instructor_image_url) {
+        this.instructor_image_url = instructor_image_url;
+    }
+
     @Override
     public String toString()
     {
-        return "ClassPojo [id = "+id+", access_code = "+access_code+", title = "+title+", instructor_email = "+instructor_email+", instructor_name = "+instructor_name+", image_url = "+image_url+", description = "+description+", instructor_mobileno = "+instructor_mobileno+"]";
+        return "ClassPojo [id = "+id+", access_code = "+access_code+", title = "+title+", instructor_email = "+instructor_email+", instructor_name = "+instructor_name+", course_image_url = "+course_image_url+", description = "+description+", instructor_mobileno = "+instructor_mobileno+"]";
     }
 }

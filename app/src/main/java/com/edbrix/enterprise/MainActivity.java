@@ -11,8 +11,9 @@ import com.edbrix.enterprise.Activities.DashboardActivity;
 import com.edbrix.enterprise.Activities.LoginActivity;
 import com.edbrix.enterprise.Activities.SignupActivity;
 import com.edbrix.enterprise.Volley.SettingsMy;
+import com.edbrix.enterprise.baseclass.BaseActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     Button _main_button_login;
     Button _main_button_register;
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         _main_button_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent registerIntent = new Intent(MainActivity.this, BottomTabMenuActivity.class);
+                Intent registerIntent = new Intent(MainActivity.this, SignupActivity.class);
                 startActivity(registerIntent);
             }
         });
