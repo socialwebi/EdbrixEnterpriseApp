@@ -73,19 +73,19 @@ public class ResponseData {
         this.organizations = organizations;
     }
 
-    public ArrayList<Meetings> getMeetings() {
+    public ArrayList<Meetings> getMeeting() {
         return meeting;
     }
 
-    public void setMeetings(ArrayList<Meetings> meetings) {
+    public void setMeeting(ArrayList<Meetings> meeting) {
         this.meeting = meeting;
     }
 
-    public ArrayList<Meeting> getMeeting() {
+    public ArrayList<Meeting> getMeetings() {
         return meetings;
     }
 
-    public void setMeeting(ArrayList<Meeting> meeting) {
+    public void setMeetings(ArrayList<Meeting> meetings) {
         this.meetings = meetings;
     }
 

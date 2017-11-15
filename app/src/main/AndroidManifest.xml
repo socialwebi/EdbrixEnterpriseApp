@@ -36,7 +36,10 @@
         <activity android:name=".Activities.PasswordActivity" />
         <activity android:name=".Activities.DashboardActivity" />
         <activity android:name=".Activities.BottomTabMenuActivity" />
-        <activity android:name=".Activities.CourseDetailActivity"></activity>
+        <activity android:name=".Activities.CourseDetailActivity" />
+        <activity android:name=".Activities.MeetingDetailActivity" />
+        <activity android:name=".Activities.CreateLiveCourseActivity" />
+        <activity android:name=".Activities.CreateVideoCourseActivity"></activity>
     </application>
 
 </manifest>

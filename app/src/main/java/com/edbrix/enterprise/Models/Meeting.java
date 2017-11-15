@@ -3,15 +3,19 @@ package com.edbrix.enterprise.Models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Meeting {
+public class Meeting implements Serializable {
 
     private String id;
     private String title;
     private String description;
     private String courseId;
     private String meetingDate;
+    private String meetingDay;
+    private String meetingMonth;
+    private String meetingYear;
     private String startDateTime;
     private String endDateTime;
     private String connectType;
@@ -65,6 +69,30 @@ public class Meeting {
 
     public void setMeetingDate(String meetingDate) {
         this.meetingDate = meetingDate;
+    }
+
+    public String getMeetingDay() {
+        return meetingDay;
+    }
+
+    public void setMeetingDay(String meetingDay) {
+        this.meetingDay = meetingDay;
+    }
+
+    public String getMeetingMonth() {
+        return meetingMonth;
+    }
+
+    public void setMeetingMonth(String meetingMonth) {
+        this.meetingMonth = meetingMonth;
+    }
+
+    public String getMeetingYear() {
+        return meetingYear;
+    }
+
+    public void setMeetingYear(String meetingYear) {
+        this.meetingYear = meetingYear;
     }
 
     public String getStartDateTime() {
@@ -131,7 +159,6 @@ public class Meeting {
         this.connect = connect;
     }
 
-
     public ArrayList<MeetingUsers> getMeetingUsers() {
         return meetingUsers;
     }
@@ -159,6 +186,9 @@ public class Meeting {
                 ", description='" + description + '\'' +
                 ", courseId='" + courseId + '\'' +
                 ", meetingDate='" + meetingDate + '\'' +
+                ", meetingDay='" + meetingDay + '\'' +
+                ", meetingMonth='" + meetingMonth + '\'' +
+                ", meetingYear='" + meetingYear + '\'' +
                 ", startDateTime='" + startDateTime + '\'' +
                 ", endDateTime='" + endDateTime + '\'' +
                 ", connectType='" + connectType + '\'' +

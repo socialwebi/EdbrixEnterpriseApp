@@ -1,5 +1,6 @@
 package com.edbrix.enterprise.Activities;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.support.design.widget.TabLayout;
@@ -15,7 +16,9 @@ import android.widget.TextView;
 
 import com.edbrix.enterprise.Fragments.CourseListFragment;
 import com.edbrix.enterprise.Fragments.MeetingListFragment;
+import com.edbrix.enterprise.MainActivity;
 import com.edbrix.enterprise.R;
+import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
 
 public class BottomTabMenuActivity extends BaseActivity {
@@ -143,6 +146,11 @@ public class BottomTabMenuActivity extends BaseActivity {
                 tabSettingIcon.setImageResource(R.mipmap.footer_schedule_menu_active);
                 tabSettingText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAppOrange));
                 titleText.setText(tabSettingText.getText());
+                SettingsMy.setActiveUser(null);
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
 //                menuFragment = new SettingsFragment();
 //                Bundle bundleLogs = new Bundle();
 //                bundleLogs.putSerializable(LogFragment.INFO, stringInfo);

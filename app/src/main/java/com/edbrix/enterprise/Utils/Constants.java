@@ -18,15 +18,15 @@ public class Constants {
 
 
 	// TODO Change it to your web domain
-	final static String WEB_DOMAIN = "zoom.us";
+	public final static String WEB_DOMAIN = "zoom.us";
 
 	// TODO Change it to your APP Key
 	final static String APP_KEY_ = "UTiw4W3on3YdNzjU1dD3dxFIa9mCVu16JOop";
-	final static String APP_KEY = "zAJLGT0f3NjDeThGV15pwjVzDACqYf4VDkH7";
+	public final static String APP_KEY = "zAJLGT0f3NjDeThGV15pwjVzDACqYf4VDkH7";
 
 	// TODO Change it to your APP Secret
 	final static String APP_SECRET_ = "JC37LqI5LssCXYCXytIxNc2hyyHghHSX7CKo";
-	final static String APP_SECRET = "HZOsMSYDYLBvtRESSpSvXW7tULBFJo2T3JYb";
+	public final static String APP_SECRET = "HZOsMSYDYLBvtRESSpSvXW7tULBFJo2T3JYb";
 
 	// TODO change it to your user ID
 	final static String USER_ID = "604813"; // 604813  ijTMthVYQzSy06ba9Elxdw

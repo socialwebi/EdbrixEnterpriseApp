@@ -9,7 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +39,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import timber.log.Timber;
 
@@ -51,6 +54,8 @@ public class DashboardActivity extends BaseActivity {
 
     TextView _dashboard_text_all_meetings;
     TextView _dashboard_text_all_course;
+
+    ProgressBar _dashboard_progress;
 
     DashBoardCourseListAdapter courseAdapter;
     DashBoardMeetingListAdapter meetingAdapter;
@@ -83,6 +88,7 @@ public class DashboardActivity extends BaseActivity {
         _dashboard_text_all_meetings = findViewById(R.id.dashboard_text_all_meetings);
         _dashboard_recycler_courses = findViewById(R.id.dashboard_recycler_courses);
         _dashboard_text_all_course = findViewById(R.id.dashboard_text_all_course);
+        _dashboard_progress = findViewById(R.id.dashboard_progress);
 
         courseAdapter = new DashBoardCourseListAdapter(context, courses, new DashboardListInterface() {
             @Override
@@ -125,6 +131,7 @@ public class DashboardActivity extends BaseActivity {
         registerForContextMenu(_dashboard_recycler_meetings);
         _dashboard_recycler_meetings.setAdapter(meetingAdapter);
 
+
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(context);
         assert _dashboard_recycler_courses != null;
         _dashboard_recycler_courses.setHasFixedSize(true);
@@ -150,6 +157,7 @@ public class DashboardActivity extends BaseActivity {
 
     private void getDashBoardList() {
 
+        _dashboard_progress.setVisibility(View.VISIBLE);
         User activeUser = SettingsMy.getActiveUser();
         if (activeUser!=null) {
 
@@ -174,10 +182,16 @@ public class DashboardActivity extends BaseActivity {
                         @Override
                         public void onResponse(@NonNull ResponseData response) {
                             Timber.d("response: %s", response.toString());
-
+                            _dashboard_progress.setVisibility(View.INVISIBLE);
                             if (response.getErrorCode()==null) {
-                                courseAdapter.refresh(response.getCoursesList());
-                                meetingAdapter.refresh(response.getMeeting());
+
+                                if (response.getCoursesList()!=null) {
+                                    courseAdapter.refresh(response.getCoursesList());
+                                    courseAdapter.notifyDataSetChanged();
+                                } if (response.getMeetings()!=null){
+                                    meetingAdapter.refresh(response.getMeetings());
+                                    meetingAdapter.notifyDataSetChanged();
+                                }
                             }
                             else {
                                 try {
@@ -195,6 +209,7 @@ public class DashboardActivity extends BaseActivity {
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    _dashboard_progress.setVisibility(View.INVISIBLE);
                     Timber.d("Error: %s", error.getMessage());
                     try {
                         Snackbar.make(layout, getString(R.string.error_something_wrong), Snackbar.LENGTH_LONG).show();

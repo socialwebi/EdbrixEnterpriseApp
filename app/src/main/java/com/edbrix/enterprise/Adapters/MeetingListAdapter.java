@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.edbrix.enterprise.Interfaces.MeetingListInterface;
@@ -38,8 +39,19 @@ public class MeetingListAdapter extends RecyclerView.Adapter<MeetingListAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        holder.day.setText(list.get(position).getMeetingDate());
-        holder.date.setText(list.get(position).getMeetingDate());
+        if (position%2==1)
+        {
+            holder.linear.setBackgroundColor(context.getResources().getColor(R.color.colorWhite));
+            holder.view.setBackgroundColor(context.getResources().getColor(R.color.colorActionBar));
+
+        } else {
+            holder.linear.setBackgroundColor(context.getResources().getColor(R.color.colorActionBar));
+            holder.view.setBackgroundColor(context.getResources().getColor(R.color.colorWhite));
+        }
+
+        holder.day.setText(list.get(position).getMeetingDay());
+        String month = list.get(position).getMeetingMonth() + ", " +list.get(position).getMeetingYear();
+        holder.date.setText(month);
         holder.title.setText(list.get(position).getTitle());
         holder.time.setText(list.get(position).getStartDateTime() +" - "+list.get(position).getEndDateTime());
 
@@ -50,8 +62,16 @@ public class MeetingListAdapter extends RecyclerView.Adapter<MeetingListAdapter.
         return list.size();
     }
 
+    public void refresh(ArrayList<Meeting> list) {
+        this.list = new ArrayList<>();
+        this.list = list;
+        notifyDataSetChanged();
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
 
+        private LinearLayout linear;
+        private View view;
         private TextView day;
         private TextView date;
         private TextView title;
@@ -60,6 +80,8 @@ public class MeetingListAdapter extends RecyclerView.Adapter<MeetingListAdapter.
         ViewHolder(View itemView, final MeetingListInterface meetingListInterface) {
             super(itemView);
 
+            linear = itemView.findViewById(R.id.meetings_linear);
+            view = itemView.findViewById(R.id.meetings_view);
             day = itemView.findViewById(R.id.meetings_day);
             date = itemView.findViewById(R.id.meetings_date);
             title = itemView.findViewById(R.id.meetings_name);
@@ -69,8 +91,7 @@ public class MeetingListAdapter extends RecyclerView.Adapter<MeetingListAdapter.
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    meetingListInterface.onMeetingSelected(list.get(getLayoutPosition()).getId(),
-                            list.get(getLayoutPosition()).getType());
+                    meetingListInterface.onMeetingSelected(list.get(getLayoutPosition()));
                 }
             });
         }
