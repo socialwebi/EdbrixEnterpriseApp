@@ -2,35 +2,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:layout_marginBottom="1dp"
     android:background="@color/colorWhite"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
+    android:orientation="vertical"
+    android:padding="@dimen/app_normal_padding"
     tools:context="com.edbrix.enterprise.Adapters.DashBoardMeetingListAdapter">
 
-        <TextView
-            android:id="@+id/meeting_schedule_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Meeting 1"
-            android:layout_gravity="center"
-            android:gravity="center_vertical"
-            android:textStyle="bold" />
+    <TextView
+        android:id="@+id/meeting_schedule_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_vertical"
+        android:padding="@dimen/app_min_padding"
+        android:text="Meeting 1"
+        android:textColor="@color/colorMainText"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/meeting_schedule_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="12:30 AM"
-            android:layout_gravity="center"
-            android:gravity="center_vertical"
-            android:drawablePadding="5dp"
-            android:drawableLeft="@mipmap/clock"
-            android:drawableStart="@mipmap/clock" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/gray" />
+    <TextView
+        android:id="@+id/meeting_schedule_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:drawableLeft="@mipmap/clock"
+        android:drawablePadding="@dimen/app_min_padding"
+        android:drawableStart="@mipmap/clock"
+        android:gravity="center_vertical"
+        android:padding="@dimen/app_min_padding"
+        android:text="12:30 AM"
+        android:textColor="@color/colorSubText"
+        android:textSize="14sp" />
 
 </LinearLayout>

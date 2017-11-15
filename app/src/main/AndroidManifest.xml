@@ -20,13 +20,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".Activities.LoginActivity" />
         <activity android:name=".Activities.SignupActivity" />
         <activity android:name=".Activities.ForgotPasswordActivity" />
@@ -37,9 +31,17 @@
         <activity android:name=".Activities.DashboardActivity" />
         <activity android:name=".Activities.BottomTabMenuActivity" />
         <activity android:name=".Activities.CourseDetailActivity" />
+        <activity android:name=".Activities.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Activities.PlayCourseActivity"/>
         <activity android:name=".Activities.MeetingDetailActivity" />
         <activity android:name=".Activities.CreateLiveCourseActivity" />
-        <activity android:name=".Activities.CreateVideoCourseActivity"></activity>
+        <activity android:name=".Activities.CreateVideoCourseActivity"/>
     </application>
 
 </manifest>

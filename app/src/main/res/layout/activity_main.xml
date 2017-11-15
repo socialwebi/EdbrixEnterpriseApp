@@ -3,61 +3,70 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/main_padding"
+    android:padding="@dimen/app_min_padding"
+    android:background="@color/colorWhite"
     tools:context="com.edbrix.enterprise.MainActivity">
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/main_image_logo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="40dp"
-        android:src="@drawable/edbrix_logo"
-        android:contentDescription="@string/image_logo" />
+        android:layout_margin="@dimen/app_normal_margin"
+        android:contentDescription="@string/image_logo"
+        android:padding="@dimen/app_big_padding"
+        android:src="@drawable/edbrix_logo" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/main_text_view_welcome_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="17sp"
         android:layout_below="@+id/main_image_logo"
-        android:layout_marginBottom="5dp"
+        android:layout_margin="@dimen/app_normal_margin"
         android:gravity="center"
-        android:text="@string/welcome_title" />
+        android:text="@string/welcome_title"
+        android:textColor="@color/colorMainText"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/main_text_view_welcome_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="@dimen/app_big_margin"
         android:layout_below="@+id/main_text_view_welcome_title"
-        android:text="@string/welcome_description" />
+        android:text="@string/welcome_description"
+        android:textColor="@color/colorSubText"
+        android:textSize="14sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
         android:layout_marginBottom="8dp"
-        android:layout_alignParentBottom="true">
+        android:orientation="horizontal">
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/main_button_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
+            android:background="@color/colorSubText"
             android:layout_weight="1"
-            android:textColor="@android:color/white"
-            android:text="@string/signin"/>
+            android:padding="@dimen/app_normal_padding"
+            android:layout_margin="@dimen/app_min_margin"
+            android:text="@string/signin"
+            android:textColor="@android:color/white" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/main_button_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
+            android:layout_margin="@dimen/app_min_margin"
+            android:background="@color/colorAppOrange"
             android:layout_weight="1"
-            android:textColor="@android:color/white"
-            android:text="@string/signup"/>
+            android:padding="@dimen/app_normal_padding"
+            android:text="@string/signup"
+            android:textColor="@android:color/white" />
 
     </LinearLayout>
 

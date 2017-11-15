@@ -6,7 +6,9 @@ import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -43,7 +45,7 @@ public class MeetingDetailActivity extends AppCompatActivity implements ZoomSDKI
     private String type;
     private static String DISPLAY_NAME = "User";
     private final static int STYPE = MeetingService.USER_TYPE_API_USER;
-
+    private TextView title;
     User user;
     Meeting meeting;
     private boolean mbPendingStartMeeting = false;
@@ -54,6 +56,11 @@ public class MeetingDetailActivity extends AppCompatActivity implements ZoomSDKI
         setContentView(R.layout.activity_meeting_detail);
 
         context = MeetingDetailActivity.this;
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        title = (TextView) toolbar.findViewById(R.id.title);
         assert user != null;
         user = SettingsMy.getActiveUser();
 

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWhite"
     android:orientation="vertical"
     tools:context="com.edbrix.enterprise.Activities.OrganizationListActivity">
 
@@ -17,6 +18,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:layout_marginRight="15dp"
             android:background="@color/colorActionBar"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
@@ -44,26 +46,40 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="8dp"
-        android:padding="2dp">
-
+        >
 
         <ImageView
             android:id="@+id/organization_image_logo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:layout_marginTop="20dp"
+            android:layout_alignParentTop="true"
+            android:layout_margin="@dimen/app_normal_margin"
             android:contentDescription="@string/image_logo"
-            android:padding="5dp"
+            android:padding="@dimen/app_big_padding"
             android:src="@drawable/edbrix_logo" />
+
+        <TextView
+            android:id="@+id/txtChooseOrg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/organization_image_logo"
+            android:layout_margin="@dimen/app_min_margin"
+            android:gravity="center"
+            android:padding="@dimen/app_min_padding"
+            android:text="@string/choose_organisation"
+            android:textColor="@color/colorAppOrange"
+            android:textSize="16sp" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/organization_recycler"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/organization_image_logo"
-            android:scrollbars="none" />
+            android:layout_height="match_parent"
+            android:background="@color/colorActionBar"
+            android:layout_below="@+id/txtChooseOrg"
+            android:paddingTop="@dimen/app_normal_padding"
+            android:layout_marginTop="@dimen/app_min_margin"
+            android:scrollbars="none"
+            tools:listitem="@layout/adapter_organization_list" />
 
 
         <ProgressBar

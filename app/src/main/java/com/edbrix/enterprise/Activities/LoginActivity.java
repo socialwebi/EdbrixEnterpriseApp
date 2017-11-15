@@ -41,7 +41,7 @@ public class LoginActivity extends BaseActivity {
     TextInputEditText _login_edit_text_email;
     TextInputEditText _login_edit_text_password;
     Button _login_button_login;
-    TextView _login_text_view_register;
+    Button _login_text_view_register;
     TextView _login_text_view_forgot_password;
     ProgressBar _login_progress_bar;
 

@@ -2,6 +2,7 @@ package com.edbrix.enterprise.Adapters;
 
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,11 @@ public class OrganizationListAdapter extends RecyclerView.Adapter<OrganizationLi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
+        if (position % 2 == 1) {
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite));
+        } else {
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorActionBar));
+        }
         holder.name.setText(list.get(position).getOrganizationName());
 
         if (list.get(position).getOrganizationImage()!=null && !list.get(position).getOrganizationImage().isEmpty())

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.edbrix.enterprise.Activities.PlayCourseActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:visibility="visible">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorActionBar"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutLogo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="15dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/course_content"
+                    android:textColor="@color/colorMainText"
+                    android:textSize="20sp" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+
+    <TextView
+        android:id="@+id/txtContentType"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_below="@+id/appBarLayout"
+        android:layout_centerInParent="true"
+        android:background="@color/colorActionBar"
+        android:gravity="center"
+        android:text="Content Type"
+        android:textColor="@color/colorMainText"
+        android:textSize="18sp" />
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottomBtnLayout"
+        android:layout_below="@+id/txtContentType"
+        android:background="@color/colorWhite">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtContentDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/app_normal_margin"
+                android:textColor="@color/colorMainText"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txtQuestion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorActionBar"
+                android:padding="@dimen/app_normal_padding"
+                android:text="Q.1 What is your name?"
+                android:textColor="@color/colorMainText"
+                android:textSize="14sp" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottomBtnLayout"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorActionBar"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imgPrevBtn"
+            android:layout_width="42dp"
+            android:padding="@dimen/app_normal_padding"
+            android:layout_height="match_parent"
+            android:src="@mipmap/right_arrow" />
+
+        <TextView
+            android:id="@+id/txtSubmitBtn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="@string/submit"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textColor="@color/colorAppOrange" />
+
+        <ImageView
+            android:id="@+id/imgNextBtn"
+            android:layout_width="42dp"
+            android:padding="@dimen/app_normal_padding"
+            android:src="@mipmap/right_arrow"
+            android:layout_height="match_parent" />
+
+
+    </LinearLayout>
+</RelativeLayout>

@@ -59,7 +59,7 @@ public class MeetingListAdapter extends RecyclerView.Adapter<MeetingListAdapter.
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return list == null ? 0 : list.size();
     }
 
     public void refresh(ArrayList<Meeting> list) {
