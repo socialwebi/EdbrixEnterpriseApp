@@ -3,27 +3,41 @@ package com.edbrix.enterprise.Activities;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.edbrix.enterprise.Adapters.ParticipantListAdapter;
 import com.edbrix.enterprise.Application;
 import com.edbrix.enterprise.Models.Meeting;
+import com.edbrix.enterprise.Models.MeetingUsers;
 import com.edbrix.enterprise.Models.User;
 import com.edbrix.enterprise.R;
+import com.edbrix.enterprise.Utils.Conditions;
 import com.edbrix.enterprise.Utils.Constants;
 import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import timber.log.Timber;
 import us.zoom.sdk.JoinMeetingOptions;
@@ -40,12 +54,25 @@ import us.zoom.sdk.ZoomSDKInitializeListener;
 public class MeetingDetailActivity extends AppCompatActivity implements ZoomSDKInitializeListener, MeetingServiceListener {
 
     Context context;
+    private LinearLayout layout;
+    private TextView day;
+    private TextView date;
+    private TextView title;
+    private TextView time;
+    private TextView des;
+    private Button _meeting_detail_button_connect;
+
+    private ParticipantListAdapter adapter;
+
     private String meetingID;
     private String id;
     private String type;
     private static String DISPLAY_NAME = "User";
     private final static int STYPE = MeetingService.USER_TYPE_API_USER;
-    private TextView title;
+    private TextView toolBarTitle;
+
+    ArrayList<MeetingUsers> list;
+
     User user;
     Meeting meeting;
     private boolean mbPendingStartMeeting = false;
@@ -56,13 +83,73 @@ public class MeetingDetailActivity extends AppCompatActivity implements ZoomSDKI
         setContentView(R.layout.activity_meeting_detail);
 
         context = MeetingDetailActivity.this;
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        title = (TextView) toolbar.findViewById(R.id.title);
+        toolBarTitle =  toolbar.findViewById(R.id.title);
         assert user != null;
         user = SettingsMy.getActiveUser();
+
+        list = new ArrayList<>();
+
+        Intent intent = getIntent();
+        id = intent.getStringExtra("meetingId");
+        type = intent.getStringExtra("meetingType");
+        String meetingTitle = intent.getStringExtra("meetingTitle");
+
+        toolBarTitle.setText(meetingTitle);
+
+        day = findViewById(R.id.meeting_detail_day);
+        date = findViewById(R.id.meeting_detail_date);
+        title = findViewById(R.id.meeting_detail_name);
+        time = findViewById(R.id.meeting_detail_time);
+        des = findViewById(R.id.meeting_detail_des);
+        _meeting_detail_button_connect = findViewById(R.id.meeting_detail_button_connect);
+        RecyclerView _meeting_detail_recycler = findViewById(R.id.meeting_detail_recycler);
+
+
+        adapter = new ParticipantListAdapter(MeetingDetailActivity.this, list);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        assert _meeting_detail_recycler != null;
+        _meeting_detail_recycler.setHasFixedSize(true);
+        _meeting_detail_recycler.setLayoutManager(linearLayoutManager);
+        registerForContextMenu(_meeting_detail_recycler);
+        _meeting_detail_recycler.setAdapter(adapter);
+
+        _meeting_detail_button_connect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (meeting.getConnect().equals("1")) {
+                    if (meeting.getConnectType().equals("ZOOM")) {
+                        meetingID = meeting.getMeetingId();
+
+                        assert user != null;
+                        if (user.getUserType().equals("L")) {
+                            Log.d("TAG", "----JOIN----");
+                            onClickBtnJoinMeeting();
+                        } else {
+                            if (meeting.getIsPaid().equals("1")) {
+                                Log.d("TAG", "----START----");
+                                onClickBtnStartMeeting();
+                            } else {
+                                Log.d("TAG", "----Login START----");
+                                Intent intent = new Intent(MeetingDetailActivity.this, ZoomLoginActivity.class);
+                                intent.putExtra("meetingId", meetingID);
+                                startActivity(intent);
+                            }
+                        }
+                    } else {
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(meeting.getConnectURL()));
+                        context.startActivity(i);
+                    }
+                }
+
+            }
+        });
 
         if(savedInstanceState == null) {
             ZoomSDK sdk = ZoomSDK.getInstance();
@@ -71,7 +158,18 @@ public class MeetingDetailActivity extends AppCompatActivity implements ZoomSDKI
             registerMeetingServiceListener();
         }
 
-        getMeetingList();
+        if (Conditions.isNetworkConnected(context)) {
+            // _meeting_list_progress.setVisibility(View.VISIBLE);
+            getMeetingList();
+        }
+        else {
+            try {
+                Snackbar.make(layout, getString(R.string.error_network), Snackbar.LENGTH_LONG).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(context, getString(R.string.error_network), Toast.LENGTH_SHORT).show();
+            }
+        }
 
     }
 
@@ -113,31 +211,44 @@ public class MeetingDetailActivity extends AppCompatActivity implements ZoomSDKI
                             Timber.d("response: %s", response.toString());
                             meeting = response;
 
-                            /*if (response.getMeetingUsers()!=null ) {
+                            if (response.getMeetingUsers()!=null ) {
 
                                 Log.d("TAG"," Size:  "+response.getMeetingUsers().size());
 
                                 meetingID = response.getMeetingId();
 
-                                if (meeting.getConnect().equals("1")) {
+                                day.setText(response.getMeetingDay());
+                                title.setText(response.getTitle());
+                                String month = response.getMeetingMonth() + ", " +response.getMeetingYear();
+                                date.setText(month);
+                                time.setText(response.getStartDateTime() +" - "+response.getEndDateTime());
+                                des.setText(response.getDescription());
+                                des.setMovementMethod(new ScrollingMovementMethod());
+
+                                /*if (meeting.getConnect().equals("1")) {
                                     buttonColorChange(true);
                                 } else {
                                     buttonColorChange(false);
-                                }
+                                } */
 
                                 list = response.getMeetingUsers();
                                 adapter.refreshList(list);
+                                adapter.notifyDataSetChanged();
                             }
-                            else {
 
-                            }*/
 
                         }
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
 
-                    Toast.makeText(context, "Something went wrong, Please try again", Toast.LENGTH_LONG).show();
+                    Timber.d("Error: %s", error.getMessage());
+                    try {
+                        Snackbar.make(layout, getString(R.string.error_something_wrong), Snackbar.LENGTH_LONG).show();
+                    } catch (Exception e2) {
+                        e2.printStackTrace();
+                        Toast.makeText(context, getString(R.string.error_something_wrong), Toast.LENGTH_LONG).show();
+                    }
                 }
             });
             userMeetingDetailRequest.setRetryPolicy(Application.getDefaultRetryPolice());

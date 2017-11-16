@@ -17,4 +17,16 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
 
+
+    <ImageView
+        android:id="@+id/meeting_list_No_Meetings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:foregroundGravity="center"
+        android:src="@drawable/no_meeting"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
 </RelativeLayout>

@@ -42,6 +42,7 @@
         <activity android:name=".Activities.MeetingDetailActivity" />
         <activity android:name=".Activities.CreateLiveCourseActivity" />
         <activity android:name=".Activities.CreateVideoCourseActivity"/>
+        <activity android:name=".Activities.ZoomLoginActivity"/>
     </application>
 
 </manifest>

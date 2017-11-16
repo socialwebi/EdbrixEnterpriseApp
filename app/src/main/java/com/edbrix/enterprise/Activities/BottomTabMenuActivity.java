@@ -82,7 +82,7 @@ public class BottomTabMenuActivity extends BaseActivity {
         tabSettingText = (TextView) tabSetting.findViewById(R.id.tabText);
         tabSettingIcon = (ImageView) tabSetting.findViewById(R.id.tabIcon);
         tabSettingIcon.setImageResource(R.mipmap.footer_schedule_menu);
-        tabSettingText.setText(getResources().getString(R.string.settings));
+        tabSettingText.setText(getResources().getString(R.string.logout));
         menuTab.getTabAt(2).setCustomView(tabSetting);
 
     }

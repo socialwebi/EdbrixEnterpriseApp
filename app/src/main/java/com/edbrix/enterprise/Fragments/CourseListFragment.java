@@ -126,14 +126,12 @@ public class CourseListFragment extends BaseFragment {
 
 
 //        if (BuildConfig.DEBUG) Timber.d("getCourseList Request Param: %s", jo.toString());
-            showToast("start");
 
             GsonRequest<CourseListResponseData> getDashboardCourseSchedulesRequest = new GsonRequest<>(Request.Method.POST, Constants.getDashboardCourseSchedules, jo.toString(), CourseListResponseData.class,
                     new Response.Listener<CourseListResponseData>() {
                         @Override
                         public void onResponse(@NonNull CourseListResponseData response) {
 //                        Timber.d("response: %s", response.toString());
-                            showToast("completed");
                             swipeRefreshLayout.setRefreshing(false);
                             if (response.getErrorCode() != null && response.getErrorCode().length() > 0) {
 //                            Timber.d("Error: %s", response.getErrorCode());

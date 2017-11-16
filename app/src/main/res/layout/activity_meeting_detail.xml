@@ -110,14 +110,20 @@
             android:drawablePadding="10dp" />
 
         <TextView
+            android:id="@+id/meeting_detail_des"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hello \n Hello \n Hello \n Hello \n Hello \n Hello \n "
             android:maxLines="5" />
 
     </LinearLayout>
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/meeting_detail_button_connect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/connect" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/meeting_detail_recycler"

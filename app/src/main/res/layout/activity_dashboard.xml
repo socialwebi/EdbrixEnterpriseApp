@@ -63,6 +63,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/schedules"
+
                     android:textColor="@color/colorSubText"
                     android:textSize="22sp" />
 
@@ -71,6 +72,7 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/app_min_padding"
                     android:src="@mipmap/dashboard_schedule_icon" />
+
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
@@ -80,7 +82,6 @@
                 android:layout_below="@+id/dashboard_text_meetings"
                 android:background="@color/colorActionBar"
                 tools:listitem="@layout/adapter_dashboard_meeting_list" />
-
 
             <TextView
                 android:id="@+id/dashboard_text_all_meetings"
@@ -115,6 +116,8 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/app_min_padding"
                     android:src="@mipmap/dashboard_course_icon" />
+
+
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
@@ -142,6 +145,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/floatingActionButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="16dp"
+                android:clickable="true"
+                app:srcCompat="@drawable/zm_ic_add_normal_ondark" />
 
         </RelativeLayout>
     </ScrollView>

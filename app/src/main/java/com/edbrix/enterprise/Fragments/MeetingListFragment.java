@@ -69,6 +69,7 @@ public class MeetingListFragment extends Fragment  implements SearchView.OnQuery
 
     Context context;
     private ProgressBar _meeting_list_progress;
+    private ImageView _meeting_list_No_Meetings;
     RelativeLayout layout;
 
     MeetingListAdapter adapter;
@@ -108,6 +109,7 @@ public class MeetingListFragment extends Fragment  implements SearchView.OnQuery
 
         RecyclerView _meeting_list_recycler = view.findViewById(R.id.meeting_list_recycler);
         _meeting_list_progress= view.findViewById(R.id.meeting_list_progress);
+        _meeting_list_No_Meetings= view.findViewById(R.id.meeting_list_No_Meetings);
 
         if(savedInstanceState == null) {
             ZoomSDK sdk = ZoomSDK.getInstance();
@@ -306,9 +308,13 @@ public class MeetingListFragment extends Fragment  implements SearchView.OnQuery
                                 if (response.getErrorCode()==null) {
 
                                     if (response.getMeetings()!=null) {
+                                        _meeting_list_No_Meetings.setVisibility(View.GONE);
                                         adapter.refresh(response.getMeetings());
                                         adapter.notifyDataSetChanged();
                                         pageNo = response.getPage();
+                                    } else {
+                                            _meeting_list_No_Meetings.setVisibility(View.VISIBLE);
+                                            // mRecyclerView.setVisibility(View.GONE);
                                     }
 
                                     //

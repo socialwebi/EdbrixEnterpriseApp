@@ -13,6 +13,11 @@
     <string name="new_password">New Password</string>
     <string name="confirm_password">Confirm Password</string>
 
+    <string name="name">Name  </string>
+    <string name="price">Price  </string>
+    <string name="payment">PayPal Email </string>
+    <string name="session">Session start </string>
+
     <string name="new_account">Create a new account </string>
     <string name="forgot_password">Forgot Password</string>
     <string name="enter_password">Enter Password</string>

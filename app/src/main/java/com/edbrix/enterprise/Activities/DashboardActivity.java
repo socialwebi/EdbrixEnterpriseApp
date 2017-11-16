@@ -3,6 +3,7 @@ package com.edbrix.enterprise.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
@@ -54,6 +55,7 @@ public class DashboardActivity extends BaseActivity {
 
     TextView _dashboard_text_all_meetings;
     TextView _dashboard_text_all_course;
+    FloatingActionButton _fab;
 
     ProgressBar _dashboard_progress;
 
@@ -89,6 +91,7 @@ public class DashboardActivity extends BaseActivity {
         _dashboard_recycler_courses = findViewById(R.id.dashboard_recycler_courses);
         _dashboard_text_all_course = findViewById(R.id.dashboard_text_all_course);
         _dashboard_progress = findViewById(R.id.dashboard_progress);
+        _fab = findViewById(R.id.floatingActionButton);
 
         courseAdapter = new DashBoardCourseListAdapter(context, courses, new DashboardListInterface() {
             @Override
@@ -120,6 +123,14 @@ public class DashboardActivity extends BaseActivity {
                 Intent intent = new Intent(context, BottomTabMenuActivity.class);
                 val = 1;
                 intent.putExtra(BottomTabMenuActivity.tabIndexKey, val);
+                startActivity(intent);
+            }
+        });
+
+        _fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DashboardActivity.this, CreateLiveCourseActivity.class);
                 startActivity(intent);
             }
         });
@@ -191,6 +202,8 @@ public class DashboardActivity extends BaseActivity {
                                 } if (response.getMeetings()!=null){
                                     meetingAdapter.refresh(response.getMeetings());
                                     meetingAdapter.notifyDataSetChanged();
+                                } else {
+                                    _dashboard_text_all_meetings.setText("No meetings available ");
                                 }
                             }
                             else {
