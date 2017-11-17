@@ -54,7 +54,7 @@
             <LinearLayout
                 android:id="@+id/dashboard_text_meetings"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="wrap_content"
                 android:background="@color/colorActionBar"
                 android:gravity="center_vertical"
                 android:padding="@dimen/app_normal_padding">
@@ -63,7 +63,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/schedules"
-
                     android:textColor="@color/colorSubText"
                     android:textSize="22sp" />
 
@@ -71,6 +70,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/app_min_padding"
+                    android:layout_margin="@dimen/app_min_margin"
                     android:src="@mipmap/dashboard_schedule_icon" />
 
             </LinearLayout>
@@ -80,7 +80,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/dashboard_text_meetings"
-                android:background="@color/colorActionBar"
+                android:background="@color/colorDivider"
                 tools:listitem="@layout/adapter_dashboard_meeting_list" />
 
             <TextView
@@ -92,13 +92,15 @@
                 android:drawableEnd="@mipmap/right_arrow"
                 android:drawableRight="@mipmap/right_arrow"
                 android:gravity="center_vertical"
-                android:padding="@dimen/app_normal_padding"
-                android:text="@string/all_meetings" />
+                android:padding="15dp"
+                android:text="@string/all_meetings"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/dashboard_text_courses"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/dashboard_text_all_meetings"
                 android:background="@color/colorActionBar"
                 android:gravity="center_vertical"
@@ -115,6 +117,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/app_min_padding"
+                    android:layout_margin="@dimen/app_min_margin"
                     android:src="@mipmap/dashboard_course_icon" />
 
 
@@ -125,7 +128,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/dashboard_text_courses"
-                android:background="@color/colorActionBar"
+                android:background="@color/colorDivider"
                 tools:listitem="@layout/adapter_dashboard_course_list" />
 
             <TextView
@@ -137,8 +140,11 @@
                 android:drawableEnd="@mipmap/right_arrow"
                 android:drawableRight="@mipmap/right_arrow"
                 android:gravity="center_vertical"
-                android:padding="@dimen/app_normal_padding"
-                android:text="@string/all_courses" />
+                android:padding="15dp"
+                android:layout_marginBottom="50dp"
+                android:text="@string/all_courses"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <ProgressBar
                 android:id="@+id/dashboard_progress"
@@ -150,10 +156,10 @@
                 android:id="@+id/floatingActionButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
+                android:layout_gravity="bottom|end"
                 android:layout_margin="16dp"
                 android:clickable="true"
                 app:srcCompat="@drawable/zm_ic_add_normal_ondark" />

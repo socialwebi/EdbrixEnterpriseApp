@@ -9,7 +9,7 @@ import com.edbrix.enterprise.Models.Courses;
 public interface CourseListActionListener {
     void onCourseItemSelected(Courses courses);
 
-    void onCoursePlayClick(String url);
+    void onCoursePlayClick(Courses courses);
 
     void onCourseMessageClick(String mobNo);
 

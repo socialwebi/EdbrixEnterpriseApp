@@ -13,8 +13,22 @@ public class Constants {
 	public final static String forgotPassword = BASE_URL.concat("forgotpassword");
 	public final static String getMeetingDetails = BASE_URL.concat("getmeetingdetails");
 	public final static String getDashboardCourseSchedules = BASE_URL.concat("getdashboardcourseandschedules");
+	public final static String playCourseContent = BASE_URL.concat("playcoursecontent");
 
 	public final static String getDashboardScheduleCourse = BASE_URL.concat("getdashboardcourseandschedules");
+
+	public final static String submitType_Check ="check";
+	public final static String submitType_Timer ="timer";
+	public final static String submitType_Question ="question";
+
+	public final static String submitDataType_TrueFalse ="truefalse";
+	public final static String submitDataType_SingleChoice ="singlechoice";
+	public final static String submitDataType_MultiChoice ="multichoice";
+	public final static String submitDataType_ImageChoice ="imagechoice";
+	public final static String submitDataType_LongAnswer ="longanswer";
+	public final static String submitDataType_FillInBlanks ="fillinblanks";
+
+//	truefalse, singlechoice, multichoice ,imagechoice ,longanswer ,fillinblanks
 
 
 	// TODO Change it to your web domain

@@ -11,8 +11,9 @@ import android.widget.TextView;
 
 import com.edbrix.enterprise.MainActivity;
 import com.edbrix.enterprise.R;
+import com.edbrix.enterprise.baseclass.BaseActivity;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
 
     private ProgressBar infoProgressBar;
     private TextView infoTextView;

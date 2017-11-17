@@ -53,7 +53,7 @@
         android:layout_centerInParent="true"
         android:background="@color/colorActionBar"
         android:gravity="center"
-        android:text="Content Type"
+        android:text="Content"
         android:textColor="@color/colorMainText"
         android:textSize="18sp" />
 
@@ -78,6 +78,11 @@
                 android:textColor="@color/colorMainText"
                 android:textSize="14sp" />
 
+            <CheckBox
+                android:id="@+id/checkSubmit"
+                android:layout_width="wrap_content"
+                android:visibility="gone"
+                android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/txtQuestion"
                 android:layout_width="match_parent"
@@ -86,7 +91,59 @@
                 android:padding="@dimen/app_normal_padding"
                 android:text="Q.1 What is your name?"
                 android:textColor="@color/colorMainText"
+                android:visibility="gone"
                 android:textSize="14sp" />
+
+            <LinearLayout
+                android:id="@+id/imageContentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imgPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:padding="@dimen/app_normal_padding"
+                    android:scaleType="fitXY" />
+
+                <com.edbrix.enterprise.Utils.CustomViewPager
+                    android:id="@+id/imgViewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <WebView
+                    android:id="@+id/mediaWebView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/checkboxGroupLayout"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_height="wrap_content">
+
+            </LinearLayout>
+
+            <RadioGroup
+                android:id="@+id/radioGroupLayout"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+
+            </RadioGroup>
 
 
         </LinearLayout>
@@ -105,26 +162,26 @@
         <ImageView
             android:id="@+id/imgPrevBtn"
             android:layout_width="42dp"
-            android:padding="@dimen/app_normal_padding"
             android:layout_height="match_parent"
+            android:padding="@dimen/app_normal_padding"
             android:src="@mipmap/right_arrow" />
 
         <TextView
             android:id="@+id/txtSubmitBtn"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
-            android:text="@string/submit"
+            android:layout_weight="1"
             android:gravity="center"
-            android:textSize="18sp"
-            android:textColor="@color/colorAppOrange" />
+            android:text="@string/submit"
+            android:textColor="@color/colorAppOrange"
+            android:textSize="18sp" />
 
         <ImageView
             android:id="@+id/imgNextBtn"
             android:layout_width="42dp"
+            android:layout_height="match_parent"
             android:padding="@dimen/app_normal_padding"
-            android:src="@mipmap/right_arrow"
-            android:layout_height="match_parent" />
+            android:src="@mipmap/right_arrow" />
 
 
     </LinearLayout>

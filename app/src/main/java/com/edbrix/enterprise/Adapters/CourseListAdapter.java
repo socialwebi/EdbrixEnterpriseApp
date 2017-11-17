@@ -123,7 +123,7 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             courseViewHolder.btnCoursePlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    courseListActionListener.onCoursePlayClick("");
+                    courseListActionListener.onCoursePlayClick(course);
                 }
             });
 

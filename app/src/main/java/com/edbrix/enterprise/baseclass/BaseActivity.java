@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.edbrix.enterprise.Utils.SessionManager;
 import com.edbrix.enterprise.commons.GlobalMethods;
@@ -17,9 +18,9 @@ import com.edbrix.enterprise.commons.ToastMessage;
  */
 public class BaseActivity extends AppCompatActivity {
 
-//    DialogManager dialogManager;
+    //    DialogManager dialogManager;
     GlobalMethods globalMethods;
-//    ConnectivityMonitor connectivityMonitor;
+    //    ConnectivityMonitor connectivityMonitor;
     protected Context mContext;
     private ToastMessage toastMessage;
     private SessionManager sessionManager;
@@ -35,7 +36,7 @@ public class BaseActivity extends AppCompatActivity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             sessionManager.updateSessionDeviceType("mob");
 
-        }else{
+        } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             sessionManager.updateSessionDeviceType("tab");
         }
@@ -48,6 +49,10 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void showToast(String msg, int timeDuration) {
         toastMessage.showToastMsg(msg, timeDuration);
+    }
+
+    protected void showToast(String msg) {
+        toastMessage.showToastMsg(msg, Toast.LENGTH_LONG);
     }
 
   /*  protected AlertDialogManager getAlertDialogManager() {
@@ -81,7 +86,11 @@ public class BaseActivity extends AppCompatActivity {
 
 
     protected boolean isTablet() {
-        return (this.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
+        boolean xlarge = ((this.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >=
+        Configuration.SCREENLAYOUT_SIZE_XLARGE);
+        boolean large = ((this.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >=
+        Configuration.SCREENLAYOUT_SIZE_LARGE);
+        return (xlarge || large);
     }
 
     protected int getScreenOrientation() {

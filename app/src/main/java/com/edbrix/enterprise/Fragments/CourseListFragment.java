@@ -20,6 +20,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.edbrix.enterprise.Activities.CourseDetailActivity;
+import com.edbrix.enterprise.Activities.PlayCourseActivity;
 import com.edbrix.enterprise.Adapters.CourseListAdapter;
 import com.edbrix.enterprise.Application;
 import com.edbrix.enterprise.Interfaces.CourseListActionListener;
@@ -217,8 +218,14 @@ public class CourseListFragment extends BaseFragment {
             }
 
             @Override
-            public void onCoursePlayClick(String url) {
+            public void onCoursePlayClick(Courses courseItem) {
+                if (courseItem != null) {
+                    Intent playCourse = new Intent(context, PlayCourseActivity.class);
+                    playCourse.putExtra(PlayCourseActivity.courseItemBundleKey, courseItem);
+                    startActivity(playCourse);
+                } else {
 
+                }
             }
 
             @Override
