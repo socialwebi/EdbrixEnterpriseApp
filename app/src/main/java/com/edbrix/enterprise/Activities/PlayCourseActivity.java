@@ -1,5 +1,6 @@
 package com.edbrix.enterprise.Activities;
 
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -28,14 +31,18 @@ import com.edbrix.enterprise.Models.User;
 import com.edbrix.enterprise.R;
 import com.edbrix.enterprise.Utils.Constants;
 import com.edbrix.enterprise.Utils.CustomViewPager;
+import com.edbrix.enterprise.Utils.CustomWebView;
 import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
+import com.edbrix.enterprise.commons.GlobalMethods;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import timber.log.Timber;
 
@@ -50,8 +57,10 @@ public class PlayCourseActivity extends BaseActivity {
     private LinearLayout radioGroupLayout;
 
     private TextView title;
+    private TextView txtContentType;
     private TextView txtContentDesc;
     private TextView txtQuestion;
+    private TextView txtTimer;
     private TextView txtSubmitBtn;
 
     private ImageView imgPrevBtn;
@@ -61,7 +70,9 @@ public class PlayCourseActivity extends BaseActivity {
     private CheckBox checkSubmit;
     private CustomViewPager imgViewPager;
 
-    private WebView mediaWebView;
+    private CustomWebView mediaWebView;
+
+    private CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +82,11 @@ public class PlayCourseActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         title = (TextView) toolbar.findViewById(R.id.title);
+        txtContentType = (TextView) findViewById(R.id.txtContentType);
         txtContentDesc = (TextView) findViewById(R.id.txtContentDesc);
         txtQuestion = (TextView) findViewById(R.id.txtQuestion);
         txtSubmitBtn = (TextView) findViewById(R.id.txtSubmitBtn);
+        txtTimer = (TextView) findViewById(R.id.txtTimer);
 
         imgPrevBtn = (ImageView) findViewById(R.id.imgPrevBtn);
         imgNextBtn = (ImageView) findViewById(R.id.imgNextBtn);
@@ -81,12 +94,23 @@ public class PlayCourseActivity extends BaseActivity {
         checkSubmit = (CheckBox) findViewById(R.id.checkSubmit);
 
         imgViewPager = (CustomViewPager) findViewById(R.id.imgViewPager);
-        mediaWebView = (WebView) findViewById(R.id.mediaWebView);
+        mediaWebView = (CustomWebView) findViewById(R.id.mediaWebView);
+        mediaWebView.getSettings().setJavaScriptEnabled(true);
+        mediaWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        mediaWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
+        mediaWebView.setWebChromeClient(new WebChromeClient());
 
         checkboxGroupLayout = (LinearLayout) findViewById(R.id.checkboxGroupLayout);
         radioGroupLayout = (RadioGroup) findViewById(R.id.radioGroupLayout);
 
         courseItem = (Courses) getIntent().getSerializableExtra(courseItemBundleKey);
+
+        txtSubmitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stopCountdown();
+            }
+        });
 
         if (courseItem != null) {
             title.setText(courseItem.getTitle());
@@ -184,11 +208,21 @@ public class PlayCourseActivity extends BaseActivity {
 
     private void setContentData(PlayCourseContentResponseData response) {
         txtContentDesc.setText(Html.fromHtml(response.getCourse_content().getDescription()));
+//        if(response.getContent_type().equalsIgnoreCase(Constants.contentType_WC)){
+//            txtContentType.setText(getString(R.string.web_content));
+//            mediaWebView.setVisibility(View.VISIBLE);
+//        }else{
+//            mediaWebView.setVisibility(View.GONE);
+//        }
+
+        // Course content load
+        loadWebContent(response.getCourse_content().getWebContent());
         if (response.getCourse_content().getSubmit_type().equalsIgnoreCase(Constants.submitType_Check)) {
             checkSubmit.setVisibility(View.VISIBLE);
         } else if (response.getCourse_content().getSubmit_type().equalsIgnoreCase(Constants.submitType_Timer)) {
             checkSubmit.setVisibility(View.GONE);
             txtQuestion.setText(response.getCourse_content().getSubmit_data().getTime());
+            startTimer(Integer.parseInt(response.getCourse_content().getSubmit_data().getTime()));
         } else if (response.getCourse_content().getSubmit_type().equalsIgnoreCase(Constants.submitType_Question)) {
             checkSubmit.setVisibility(View.GONE);
             txtQuestion.setVisibility(View.VISIBLE);
@@ -228,6 +262,20 @@ public class PlayCourseActivity extends BaseActivity {
         }
     }
 
+    private void addImageChoiceRadioButton(ArrayList<ChoicesData> choiceList) {
+        radioGroupLayout.setOrientation(LinearLayout.VERTICAL);
+        for (int i = 0; i < choiceList.size(); i++) {
+            RadioButton rdbtn = new RadioButton(this);
+            rdbtn.setId(Integer.parseInt(choiceList.get(i).getId()));
+            try {
+                rdbtn.setCompoundDrawables(null,null,GlobalMethods.drawableFromUrl(choiceList.get(i).getChoice()),null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            radioGroupLayout.addView(rdbtn);
+        }
+    }
+
     private void addMultiChoiceCheckBox(ArrayList<ChoicesData> choiceList) {
         checkboxGroupLayout.setOrientation(LinearLayout.VERTICAL);
         for (int i = 0; i < choiceList.size(); i++) {
@@ -236,6 +284,42 @@ public class PlayCourseActivity extends BaseActivity {
             checkBox.setText(choiceList.get(i).getChoice());
             checkboxGroupLayout.addView(checkBox);
         }
+    }
+
+    private void loadWebContent(String webContent) {
+        mediaWebView.setVisibility(View.VISIBLE);
+        mediaWebView.loadData(webContent, "text/html", "utf-8");
+//        mediaWebView.loadUrl("https://www.tutorialspoint.com/java/java_basic_syntax.htm");
+        mediaWebView.getSettings().setLoadWithOverviewMode(true);
+        mediaWebView.getSettings().setUseWideViewPort(true);
+
+    }
+
+
+    //Stop Countdown method
+    private void stopCountdown() {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+            countDownTimer = null;
+        }
+    }
+
+    //Start Countdown method
+    private void startTimer(int seconds) {
+        countDownTimer = new CountDownTimer((seconds * 1000), 1000) {
+            public void onTick(long millisUntilFinished) {
+                long millis = millisUntilFinished;
+                //Convert milliseconds into hour,minute and seconds
+                String hms = String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis), TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)), TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+                txtTimer.setText(hms);//set text
+            }
+
+            public void onFinish() {
+                txtTimer.setText("00:00:00");//set text
+                countDownTimer = null;//set CountDownTimer to null
+            }
+        }.start();
+
     }
 
 }
