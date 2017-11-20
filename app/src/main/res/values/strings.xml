@@ -39,6 +39,12 @@
     <string name="settings">Settings</string>
     <string name="dashboard">Dashboard</string>
 
+    <string name="content">Content</string>
+    <string name="web_content">Web Content</string>
+    <string name="document_content">Document Content</string>
+    <string name="image_content">Image Content</string>
+    <string name="presentation_content">Presentation Content</string>
+
     <string name="welcome_title">Welcome to Edbrix </string>
     <string name="welcome_description"> Edbrix has opened up the informational flood gates with the launch of its advanced interactive cloud based market place portal exclusively developed to make E-Learning interactive and simple. Our single incredible sign-on portal allows all users to communicate and exchange knowledge using Google/ Microsoft Apps. </string>
     <string name="submit"> Submit </string>

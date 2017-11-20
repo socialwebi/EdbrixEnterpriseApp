@@ -62,6 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottomBtnLayout"
+        android:scrollbars="vertical"
         android:layout_below="@+id/txtContentType"
         android:background="@color/colorWhite">
 
@@ -95,6 +96,81 @@
                 android:textSize="14sp" />
 
             <LinearLayout
+                android:id="@+id/checkboxGroupLayout"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:layout_height="wrap_content">
+
+            </LinearLayout>
+
+            <RadioGroup
+                android:id="@+id/radioGroupLayout"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+
+            </RadioGroup>
+            <RadioGroup
+                android:id="@+id/radioGroup1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/radio0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="A"
+                        android:checked="false" />
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/edbrix_logo" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/radio01"
+                        android:layout_width="wrap_content"
+                        android:text="A"
+                        android:layout_height="wrap_content"
+                        android:checked="false" />
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/edbrix_logo" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <RadioButton
+                        android:id="@+id/radio02"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="A"
+                        android:checked="false" />
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/edbrix_logo" />
+                </LinearLayout>
+            </RadioGroup>
+            <LinearLayout
                 android:id="@+id/imageContentLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -119,32 +195,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <WebView
+                <com.edbrix.enterprise.Utils.CustomWebView
                     android:id="@+id/mediaWebView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="700dp"
+                    android:scrollbars="vertical"
                     android:layout_gravity="center_horizontal"
+                    android:layout_margin="@dimen/app_big_margin"
                     android:visibility="gone" />
 
             </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/checkboxGroupLayout"
-                android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:visibility="gone"
-                android:layout_height="wrap_content">
-
-            </LinearLayout>
-
-            <RadioGroup
-                android:id="@+id/radioGroupLayout"
-                android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:layout_height="wrap_content">
-
-            </RadioGroup>
-
 
         </LinearLayout>
 
@@ -173,6 +233,16 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/submit"
+            android:textColor="@color/colorAppOrange"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/txtTimer"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="00:00"
             android:textColor="@color/colorAppOrange"
             android:textSize="18sp" />
 

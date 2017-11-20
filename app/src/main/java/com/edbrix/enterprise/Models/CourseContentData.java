@@ -1,16 +1,24 @@
 package com.edbrix.enterprise.Models;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by rajk on 16/11/17.
  */
 
 public class CourseContentData {
 
+    @SerializedName("description")
     private String description;
 
+    @SerializedName("submit_type")
     private String submit_type;
 
+    @SerializedName("submit_data")
     private SubmitData submit_data;
+
+    @SerializedName("content")
+    private String webContent;
 
     public String getDescription ()
     {
@@ -40,6 +48,14 @@ public class CourseContentData {
     public void setSubmit_data (SubmitData submit_data)
     {
         this.submit_data = submit_data;
+    }
+
+    public String getWebContent() {
+        return webContent;
+    }
+
+    public void setWebContent(String webContent) {
+        this.webContent = webContent;
     }
 
     @Override

@@ -17,6 +17,10 @@ public class Constants {
 
 	public final static String getDashboardScheduleCourse = BASE_URL.concat("getdashboardcourseandschedules");
 
+	public final static String contentType_C ="C";
+	public final static String contentType_WC ="WC";
+	public final static String contentType_IMG ="IMG";
+
 	public final static String submitType_Check ="check";
 	public final static String submitType_Timer ="timer";
 	public final static String submitType_Question ="question";
