@@ -10,6 +10,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.edbrix.enterprise.Utils.FontsOverride;
 import com.edbrix.enterprise.Volley.OkHttpStack;
+//import com.nostra13.universalimageloader.core.ImageLoader;
+//import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import timber.log.Timber;
 
@@ -45,6 +47,10 @@ public class Application extends android.app.Application {
         FontsOverride.setDefaultFont(this, "MONOSPACE");
         // FontsOverride.setDefaultFont(this, "SERIF", "MyFontAsset3.ttf");
         // FontsOverride.setDefaultFont(this, "SANS_SERIF", "MyFontAsset4.ttf");
+
+        // Create global configuration and initialize ImageLoader with this config
+//        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
+//        ImageLoader.getInstance().init(config);
 
     }
 

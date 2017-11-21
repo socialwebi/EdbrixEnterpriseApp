@@ -1,5 +1,8 @@
 package com.edbrix.enterprise.Activities;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -9,9 +12,11 @@ import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,6 +41,9 @@ import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
 import com.edbrix.enterprise.commons.GlobalMethods;
+//import com.nostra13.universalimageloader.core.ImageLoader;
+//import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.zipow.videobox.confapp.GLImage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -72,12 +80,17 @@ public class PlayCourseActivity extends BaseActivity {
 
     private CustomWebView mediaWebView;
 
+    private CustomWebView contentDescWebView;
+
     private CountDownTimer countDownTimer;
+
+//    private ImageLoader imageLoader; // Get singleton instance
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_course);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -95,11 +108,19 @@ public class PlayCourseActivity extends BaseActivity {
 
         imgViewPager = (CustomViewPager) findViewById(R.id.imgViewPager);
         mediaWebView = (CustomWebView) findViewById(R.id.mediaWebView);
+        contentDescWebView = (CustomWebView) findViewById(R.id.contentDescWebView);
+
         mediaWebView.getSettings().setJavaScriptEnabled(true);
         mediaWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         mediaWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
         mediaWebView.setWebChromeClient(new WebChromeClient());
 
+        contentDescWebView.getSettings().setJavaScriptEnabled(true);
+        contentDescWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        contentDescWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
+        contentDescWebView.setWebChromeClient(new WebChromeClient());
+
+//        setupWebView();
         checkboxGroupLayout = (LinearLayout) findViewById(R.id.checkboxGroupLayout);
         radioGroupLayout = (RadioGroup) findViewById(R.id.radioGroupLayout);
 
@@ -207,7 +228,8 @@ public class PlayCourseActivity extends BaseActivity {
     }
 
     private void setContentData(PlayCourseContentResponseData response) {
-        txtContentDesc.setText(Html.fromHtml(response.getCourse_content().getDescription()));
+//        txtContentDesc.setText(Html.fromHtml(response.getCourse_content().getDescription()));
+        loadContentDescWebView(response.getCourse_content().getDescription());
 //        if(response.getContent_type().equalsIgnoreCase(Constants.contentType_WC)){
 //            txtContentType.setText(getString(R.string.web_content));
 //            mediaWebView.setVisibility(View.VISIBLE);
@@ -217,6 +239,7 @@ public class PlayCourseActivity extends BaseActivity {
 
         // Course content load
         loadWebContent(response.getCourse_content().getWebContent());
+
         if (response.getCourse_content().getSubmit_type().equalsIgnoreCase(Constants.submitType_Check)) {
             checkSubmit.setVisibility(View.VISIBLE);
         } else if (response.getCourse_content().getSubmit_type().equalsIgnoreCase(Constants.submitType_Timer)) {
@@ -226,7 +249,7 @@ public class PlayCourseActivity extends BaseActivity {
         } else if (response.getCourse_content().getSubmit_type().equalsIgnoreCase(Constants.submitType_Question)) {
             checkSubmit.setVisibility(View.GONE);
             txtQuestion.setVisibility(View.VISIBLE);
-            txtQuestion.setText(response.getCourse_content().getSubmit_data().getTitle());
+            txtQuestion.setText("Q. "+response.getCourse_content().getSubmit_data().getTitle());
             if (response.getCourse_content().getSubmit_data().getChoices() != null && response.getCourse_content().getSubmit_data().getChoices().size() > 0) {
                 if (response.getCourse_content().getSubmit_data().getType().equalsIgnoreCase(Constants.submitDataType_TrueFalse)) {
                     radioGroupLayout.setVisibility(View.VISIBLE);
@@ -262,19 +285,25 @@ public class PlayCourseActivity extends BaseActivity {
         }
     }
 
-    private void addImageChoiceRadioButton(ArrayList<ChoicesData> choiceList) {
+  /*  private void addImageChoiceRadioButton(ArrayList<ChoicesData> choiceList) {
+        imageLoader = ImageLoader.getInstance();
+        radioGroupLayout.setVisibility(View.VISIBLE);
         radioGroupLayout.setOrientation(LinearLayout.VERTICAL);
         for (int i = 0; i < choiceList.size(); i++) {
-            RadioButton rdbtn = new RadioButton(this);
+            final RadioButton rdbtn = new RadioButton(this);
             rdbtn.setId(Integer.parseInt(choiceList.get(i).getId()));
-            try {
-                rdbtn.setCompoundDrawables(null,null,GlobalMethods.drawableFromUrl(choiceList.get(i).getChoice()),null);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+// Load image, decode it to Bitmap and return Bitmap to callback
+            imageLoader.loadImage("http://placehold.it/120x120&text=image2", new SimpleImageLoadingListener() {
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    // Do whatever you want with Bitmap
+                    rdbtn.setCompoundDrawables(null, null, new BitmapDrawable(getResources(), loadedImage), null);
+                }
+            });
+
             radioGroupLayout.addView(rdbtn);
         }
-    }
+    }*/
 
     private void addMultiChoiceCheckBox(ArrayList<ChoicesData> choiceList) {
         checkboxGroupLayout.setOrientation(LinearLayout.VERTICAL);
@@ -292,7 +321,14 @@ public class PlayCourseActivity extends BaseActivity {
 //        mediaWebView.loadUrl("https://www.tutorialspoint.com/java/java_basic_syntax.htm");
         mediaWebView.getSettings().setLoadWithOverviewMode(true);
         mediaWebView.getSettings().setUseWideViewPort(true);
+    }
 
+    private void loadContentDescWebView(String webContent) {
+        contentDescWebView.setVisibility(View.VISIBLE);
+        contentDescWebView.loadData(webContent, "text/html", "utf-8");
+//        contentDescWebView.loadUrl("https://www.tutorialspoint.com/java/java_basic_syntax.htm");
+        contentDescWebView.getSettings().setLoadWithOverviewMode(true);
+        contentDescWebView.getSettings().setUseWideViewPort(true);
     }
 
 
@@ -320,5 +356,4 @@ public class PlayCourseActivity extends BaseActivity {
             }
         }.start();
     }
-
 }
