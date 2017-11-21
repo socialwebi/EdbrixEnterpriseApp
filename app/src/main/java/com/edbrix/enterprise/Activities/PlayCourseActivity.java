@@ -319,7 +319,6 @@ public class PlayCourseActivity extends BaseActivity {
                 countDownTimer = null;//set CountDownTimer to null
             }
         }.start();
-
     }
 
 }
