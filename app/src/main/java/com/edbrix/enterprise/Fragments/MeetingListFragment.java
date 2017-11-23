@@ -43,6 +43,7 @@ import com.edbrix.enterprise.Models.User;
 import com.edbrix.enterprise.R;
 import com.edbrix.enterprise.Utils.Conditions;
 import com.edbrix.enterprise.Utils.Constants;
+import com.edbrix.enterprise.Utils.SessionManager;
 import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.squareup.picasso.Picasso;
@@ -81,12 +82,13 @@ public class MeetingListFragment extends Fragment  implements SearchView.OnQuery
     private boolean isLastPage = false;
     private boolean isLoading = true;
 
-    private String deviceType = "tab";
+    private String deviceType;
     private String dataType = "meeting";
     private String pageNo = "1";
 
     private View positiveAction;
     private String meetingNo;
+    SessionManager sessionManager;
 
     private User user;
 
@@ -106,6 +108,9 @@ public class MeetingListFragment extends Fragment  implements SearchView.OnQuery
 
         assert user != null;
         user = SettingsMy.getActiveUser();
+
+        sessionManager = new SessionManager(context);
+        deviceType = sessionManager.getSessionDeviceType();
 
         RecyclerView _meeting_list_recycler = view.findViewById(R.id.meeting_list_recycler);
         _meeting_list_progress= view.findViewById(R.id.meeting_list_progress);

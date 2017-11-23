@@ -9,6 +9,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -45,6 +47,7 @@ public class ChangePasswordActivity extends BaseActivity {
     TextInputEditText _change_password_edit_text_confirm_password;
     Button _change_password_button_submit;
     ProgressBar _change_password_progress_bar;
+    boolean checkPassword = false, checkConfirmPassword = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,57 @@ public class ChangePasswordActivity extends BaseActivity {
             }
         });
 
+        _change_password_edit_text_password.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!charSequence.toString().isEmpty() && charSequence.toString().trim().length()>3) {
+                    checkConfirmPassword = true;
+                } else {
+                    checkConfirmPassword = false;
+                }
+                if (checkPassword && checkConfirmPassword) {
+                    _change_password_button_submit.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+                } else {
+                    _change_password_button_submit.setBackgroundColor(context.getResources().getColor(R.color.colorDisableBtn));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        _change_password_edit_text_confirm_password.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!charSequence.toString().isEmpty() && charSequence.toString().trim().length()>3) {
+                    checkPassword = true;
+                } else {
+                    checkPassword = false;
+                }
+                if (checkPassword && checkConfirmPassword) {
+                    _change_password_button_submit.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+                } else {
+                    _change_password_button_submit.setBackgroundColor(context.getResources().getColor(R.color.colorDisableBtn));
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     @Override

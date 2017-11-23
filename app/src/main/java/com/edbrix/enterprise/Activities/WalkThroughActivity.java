@@ -10,12 +10,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.edbrix.enterprise.Adapters.WalkthroughAdapter;
+import com.edbrix.enterprise.baseclass.BaseActivity;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
 import com.edbrix.enterprise.MainActivity;
 import com.edbrix.enterprise.R;
 
-public class WalkThroughActivity extends AppCompatActivity {
+public class WalkThroughActivity extends BaseActivity {
 
     private ViewPager mPager;
 

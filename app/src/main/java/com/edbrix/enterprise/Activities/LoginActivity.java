@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -44,6 +47,7 @@ public class LoginActivity extends BaseActivity {
     Button _login_text_view_register;
     TextView _login_text_view_forgot_password;
     ProgressBar _login_progress_bar;
+    boolean checkEmail = false, checkPassword = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +83,58 @@ public class LoginActivity extends BaseActivity {
             public void onClick(View view) {
                 Intent forgotPasswordIntent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
                 startActivity(forgotPasswordIntent);
+            }
+        });
+
+        _login_edit_text_email.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!charSequence.toString().isEmpty() && charSequence.toString().trim().length()>3) {
+                    checkEmail = true;
+                } else {
+                    checkEmail = false;
+                }
+                if (checkEmail && checkPassword) {
+                    _login_button_login.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+                } else {
+                    _login_button_login.setBackgroundColor(context.getResources().getColor(R.color.colorDisableBtn));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        _login_edit_text_password.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!charSequence.toString().isEmpty() && charSequence.toString().trim().length()>3) {
+                    checkPassword = true;
+                } else {
+                    checkPassword = false;
+                }
+                if (checkEmail && checkPassword) {
+                    _login_button_login.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+                } else {
+                    _login_button_login.setBackgroundColor(context.getResources().getColor(R.color.colorDisableBtn));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
 

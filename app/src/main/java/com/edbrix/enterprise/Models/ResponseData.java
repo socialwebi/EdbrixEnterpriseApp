@@ -20,6 +20,10 @@ public class ResponseData {
     @SerializedName("courses")
     private ArrayList<Courses> coursesList;
 
+    private ArrayList<TypesC> resourcesTypes;
+    private ArrayList<TypesC> courseContentsTypes;
+    private ArrayList<TypesC> connectivityTypes;
+
     private String ErrorCode;
     private String ErrorMessage;
     private String page;
@@ -103,6 +107,30 @@ public class ResponseData {
 
     public void setCoursesList(ArrayList<Courses> coursesList) {
         this.coursesList = coursesList;
+    }
+
+    public ArrayList<TypesC> getResourcesTypes() {
+        return resourcesTypes;
+    }
+
+    public void setResourcesTypes(ArrayList<TypesC> resourcesTypes) {
+        this.resourcesTypes = resourcesTypes;
+    }
+
+    public ArrayList<TypesC> getCourseContentsTypes() {
+        return courseContentsTypes;
+    }
+
+    public void setCourseContentsTypes(ArrayList<TypesC> courseContentsTypes) {
+        this.courseContentsTypes = courseContentsTypes;
+    }
+
+    public ArrayList<TypesC> getConnectivityTypes() {
+        return connectivityTypes;
+    }
+
+    public void setConnectivityTypes(ArrayList<TypesC> connectivityTypes) {
+        this.connectivityTypes = connectivityTypes;
     }
 
     public String getErrorCode() {

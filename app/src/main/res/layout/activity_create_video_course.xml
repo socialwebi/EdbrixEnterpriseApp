@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,6 +8,7 @@
     tools:context="com.edbrix.enterprise.Activities.CreateVideoCourseActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/create_app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
@@ -42,102 +43,113 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <ScrollView
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/create_card_video"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/create_app_bar"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="7dp"
+        app:cardMaxElevation="4dp"
+        app:cardUseCompatPadding="true" >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:layout_height="50dp"
+            android:padding="5dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:padding="3dp">
+                android:adjustViewBounds="true"
+                android:cropToPadding="false"
+                android:src="@mipmap/video_icon"/>
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/video_course_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/name"
-                    android:imeOptions="actionNext"
-                    android:inputType="text" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/create_video"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="3dp">
+                android:layout_weight="1"
+                android:layout_marginLeft="12dp"
+                android:layout_marginStart="12dp"
+                android:text="Add video "
+                android:textSize="18sp"
+                android:gravity="center_vertical" />
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/video_course_price"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/price"
-                    android:imeOptions="actionNext"
-                    android:inputType="number" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
+            <ImageButton
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="3dp">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/video_course_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/payment"
-                    android:imeOptions="actionNext"
-                    android:inputType="textEmailAddress" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="Choose video "
-                    android:layout_weight="1" />
-
-                <RadioButton
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="Youtube "
-                    android:layout_weight="1" />
-
-            </RadioGroup>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="3dp">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/video_course_upload"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/payment"
-                    android:imeOptions="actionNext"
-                    android:inputType="text" />
-
-            </android.support.design.widget.TextInputLayout>
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/submit" />
+                android:src="@mipmap/right_arrow"
+                android:background="@android:color/transparent"
+                android:layout_marginRight="2dp"
+                android:layout_marginEnd="2dp"
+                android:padding="2dp" />
 
         </LinearLayout>
 
-    </ScrollView>
+    </android.support.v7.widget.CardView>
 
-</LinearLayout>
+    <android.support.v7.widget.CardView
+        android:id="@+id/create_card_document"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/create_card_video"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="7dp"
+        app:cardMaxElevation="4dp"
+        app:cardUseCompatPadding="true" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:padding="5dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:cropToPadding="false"
+                android:src="@mipmap/document_icon"/>
+
+            <TextView
+                android:id="@+id/create_document"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="12dp"
+                android:layout_marginStart="12dp"
+                android:text="Add document "
+                android:textSize="18sp"
+                android:gravity="center_vertical" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/right_arrow"
+                android:background="@android:color/transparent"
+                android:layout_marginRight="2dp"
+                android:layout_marginEnd="2dp"
+                android:padding="2dp" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:padding="5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorAccent"
+        android:textColor="@color/colorWhite"
+        android:text="Skip and Submit"/>
+
+</RelativeLayout>

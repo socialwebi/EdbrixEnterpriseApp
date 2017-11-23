@@ -9,6 +9,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -48,6 +50,8 @@ public class SignupActivity extends BaseActivity {
     TextView _register_text_view_login;
     ProgressBar _register_progress_bar;
 
+    boolean checkEmail = false, checkFname = false, checkLname = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +84,84 @@ public class SignupActivity extends BaseActivity {
                 Intent registerIntent = new Intent(SignupActivity.this, LoginActivity.class);
                 startActivity(registerIntent);
                 finish();
+            }
+        });
+
+        _register_edit_text_first_name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!charSequence.toString().isEmpty() && charSequence.toString().trim().length()>3) {
+                    checkFname = true;
+                } else {
+                    checkFname = false;
+                }
+                if (checkEmail && checkFname && checkLname) {
+                    _register_button_register.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+                } else {
+                    _register_button_register.setBackgroundColor(context.getResources().getColor(R.color.colorDisableBtn));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        _register_edit_text_last_name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!charSequence.toString().isEmpty() && charSequence.toString().trim().length()>3) {
+                    checkLname = true;
+                } else {
+                    checkLname = false;
+                }
+                if (checkEmail && checkFname && checkLname) {
+                    _register_button_register.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+                } else {
+                    _register_button_register.setBackgroundColor(context.getResources().getColor(R.color.colorDisableBtn));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        _register_edit_text_email.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!charSequence.toString().isEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(charSequence.toString().trim()).matches()) {
+                    checkEmail = true;
+                } else {
+                    checkEmail = false;
+                }
+                if (checkEmail && checkFname && checkLname) {
+                    _register_button_register.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+                } else {
+                    _register_button_register.setBackgroundColor(context.getResources().getColor(R.color.colorDisableBtn));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
 

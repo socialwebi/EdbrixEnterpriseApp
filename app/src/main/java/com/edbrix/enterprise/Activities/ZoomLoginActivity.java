@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.edbrix.enterprise.R;
+import com.edbrix.enterprise.baseclass.BaseActivity;
 
 import us.zoom.sdk.MeetingService;
 import us.zoom.sdk.StartMeetingOptions;
@@ -21,7 +22,7 @@ import us.zoom.sdk.ZoomAuthenticationError;
 import us.zoom.sdk.ZoomSDK;
 import us.zoom.sdk.ZoomSDKAuthenticationListener;
 
-public class ZoomLoginActivity extends AppCompatActivity implements ZoomSDKAuthenticationListener, View.OnClickListener {
+public class ZoomLoginActivity extends BaseActivity implements ZoomSDKAuthenticationListener, View.OnClickListener {
 
     private EditText mEdtUserName;
     private EditText mEdtPassord;

@@ -54,6 +54,7 @@ public class Application extends android.app.Application {
 
     }
 
+
     /**
      * Method provides defaultRetryPolice.
      * First Attempt = 14+(14*1)= 28s.

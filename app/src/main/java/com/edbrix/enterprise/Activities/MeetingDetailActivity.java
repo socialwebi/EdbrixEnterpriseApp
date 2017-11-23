@@ -33,6 +33,7 @@ import com.edbrix.enterprise.Utils.Conditions;
 import com.edbrix.enterprise.Utils.Constants;
 import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
+import com.edbrix.enterprise.baseclass.BaseActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,7 +52,7 @@ import us.zoom.sdk.ZoomError;
 import us.zoom.sdk.ZoomSDK;
 import us.zoom.sdk.ZoomSDKInitializeListener;
 
-public class MeetingDetailActivity extends AppCompatActivity implements ZoomSDKInitializeListener, MeetingServiceListener {
+public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitializeListener, MeetingServiceListener {
 
     Context context;
     private LinearLayout layout;

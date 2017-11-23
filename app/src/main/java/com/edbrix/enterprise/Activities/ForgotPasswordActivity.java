@@ -9,6 +9,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -62,6 +64,29 @@ public class ForgotPasswordActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 checkValidations();
+            }
+        });
+
+        _forgot_password_edit_text_email.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                if (!charSequence.toString().isEmpty() && android.util.Patterns.EMAIL_ADDRESS.matcher(charSequence.toString().trim()).matches()) {
+                    _forgot_password_button_submit.setBackgroundColor(context.getResources().getColor(R.color.colorAccent));
+                } else {
+                    _forgot_password_button_submit.setBackgroundColor(context.getResources().getColor(R.color.colorDisableBtn));
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
 

@@ -50,12 +50,12 @@
             android:id="@+id/main_button_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorSubText"
+            android:background="@drawable/border"
             android:layout_weight="1"
             android:padding="@dimen/app_normal_padding"
             android:layout_margin="@dimen/app_min_margin"
             android:text="@string/signin"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/black" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/main_button_register"

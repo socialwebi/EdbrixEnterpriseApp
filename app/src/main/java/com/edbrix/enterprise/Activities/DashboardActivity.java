@@ -89,6 +89,11 @@ public class DashboardActivity extends BaseActivity {
         context = DashboardActivity.this;
 
         sessionManager = new SessionManager(context);
+        // if ()
+            deviceType = sessionManager.getSessionDeviceType();
+        // else
+            // deviceType = "tab";
+        sessionManager = new SessionManager(context);
 
         deviceType =sessionManager.getSessionDeviceType();
 

@@ -37,6 +37,7 @@ import com.edbrix.enterprise.Models.Courses;
 import com.edbrix.enterprise.Models.PlayCourseContentResponseData;
 import com.edbrix.enterprise.Models.User;
 import com.edbrix.enterprise.R;
+import com.edbrix.enterprise.baseclass.BaseActivity;
 import com.edbrix.enterprise.Utils.Constants;
 import com.edbrix.enterprise.Utils.CustomViewPager;
 import com.edbrix.enterprise.Utils.CustomWebView;

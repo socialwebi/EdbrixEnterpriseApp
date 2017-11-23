@@ -15,7 +15,10 @@ public class Constants {
 	public final static String getDashboardCourseSchedules = BASE_URL.concat("getdashboardcourseandschedules");
 	public final static String playCourseContent = BASE_URL.concat("playcoursecontent");
 
-	public final static String getDashboardScheduleCourse = BASE_URL.concat("getdashboardcourseandschedules");
+	public final static String getInstructorResources = BASE_URL.concat("getinstructorresources");
+	public final static String getCourseSections = BASE_URL.concat("getcoursesections");
+	public final static String getConnectivityTypes = BASE_URL.concat("getconnectivitytypes");
+
 
 	public final static String contentType_C ="C";
 	public final static String contentType_WC ="WC";
