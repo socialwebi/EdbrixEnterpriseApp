@@ -20,6 +20,13 @@ public class CourseContentData {
     @SerializedName("content")
     private String webContent;
 
+    private String img_content;
+    private String audio_content;
+    private String video_content;
+    private String doc_content;
+    private String iframe_content;
+
+
     public String getDescription ()
     {
         return description;
@@ -56,6 +63,46 @@ public class CourseContentData {
 
     public void setWebContent(String webContent) {
         this.webContent = webContent;
+    }
+
+    public String getImg_content() {
+        return img_content;
+    }
+
+    public void setImg_content(String img_content) {
+        this.img_content = img_content;
+    }
+
+    public String getAudio_content() {
+        return audio_content;
+    }
+
+    public void setAudio_content(String audio_content) {
+        this.audio_content = audio_content;
+    }
+
+    public String getVideo_content() {
+        return video_content;
+    }
+
+    public void setVideo_content(String video_content) {
+        this.video_content = video_content;
+    }
+
+    public String getDoc_content() {
+        return doc_content;
+    }
+
+    public void setDoc_content(String doc_content) {
+        this.doc_content = doc_content;
+    }
+
+    public String getIframe_content() {
+        return iframe_content;
+    }
+
+    public void setIframe_content(String iframe_content) {
+        this.iframe_content = iframe_content;
     }
 
     @Override

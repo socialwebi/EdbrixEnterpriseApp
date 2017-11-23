@@ -18,8 +18,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -29,6 +31,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.edbrix.enterprise.Application;
 import com.edbrix.enterprise.Models.ChoicesData;
+import com.edbrix.enterprise.Models.ChoicesInputData;
 import com.edbrix.enterprise.Models.CourseListResponseData;
 import com.edbrix.enterprise.Models.Courses;
 import com.edbrix.enterprise.Models.PlayCourseContentResponseData;
@@ -45,6 +48,7 @@ import com.edbrix.enterprise.commons.GlobalMethods;
 //import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.zipow.videobox.confapp.GLImage;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -62,7 +66,8 @@ public class PlayCourseActivity extends BaseActivity {
     private Courses courseItem;
 
     private LinearLayout checkboxGroupLayout;
-    private LinearLayout radioGroupLayout;
+    private LinearLayout surveyProgressLayout;
+    private RadioGroup radioGroupLayout;
 
     private TextView title;
     private TextView txtContentType;
@@ -70,11 +75,13 @@ public class PlayCourseActivity extends BaseActivity {
     private TextView txtQuestion;
     private TextView txtTimer;
     private TextView txtSubmitBtn;
+    private TextView txtSurveyProgress;
 
     private ImageView imgPrevBtn;
     private ImageView imgNextBtn;
     private ImageView imgPreview;
 
+    private ProgressBar pbarSurvey;
     private CheckBox checkSubmit;
     private CustomViewPager imgViewPager;
 
@@ -83,6 +90,8 @@ public class PlayCourseActivity extends BaseActivity {
     private CustomWebView contentDescWebView;
 
     private CountDownTimer countDownTimer;
+
+    private ArrayList<ChoicesInputData> choiceInput;
 
 //    private ImageLoader imageLoader; // Get singleton instance
 
@@ -100,6 +109,7 @@ public class PlayCourseActivity extends BaseActivity {
         txtQuestion = (TextView) findViewById(R.id.txtQuestion);
         txtSubmitBtn = (TextView) findViewById(R.id.txtSubmitBtn);
         txtTimer = (TextView) findViewById(R.id.txtTimer);
+        txtSurveyProgress = (TextView) findViewById(R.id.txtSurveyProgress);
 
         imgPrevBtn = (ImageView) findViewById(R.id.imgPrevBtn);
         imgNextBtn = (ImageView) findViewById(R.id.imgNextBtn);
@@ -109,6 +119,8 @@ public class PlayCourseActivity extends BaseActivity {
         imgViewPager = (CustomViewPager) findViewById(R.id.imgViewPager);
         mediaWebView = (CustomWebView) findViewById(R.id.mediaWebView);
         contentDescWebView = (CustomWebView) findViewById(R.id.contentDescWebView);
+
+        pbarSurvey = (ProgressBar) findViewById(R.id.pbarSurvey);
 
         mediaWebView.getSettings().setJavaScriptEnabled(true);
         mediaWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
@@ -122,6 +134,7 @@ public class PlayCourseActivity extends BaseActivity {
 
 //        setupWebView();
         checkboxGroupLayout = (LinearLayout) findViewById(R.id.checkboxGroupLayout);
+        surveyProgressLayout = (LinearLayout) findViewById(R.id.surveyProgressLayout);
         radioGroupLayout = (RadioGroup) findViewById(R.id.radioGroupLayout);
 
         courseItem = (Courses) getIntent().getSerializableExtra(courseItemBundleKey);
@@ -141,6 +154,9 @@ public class PlayCourseActivity extends BaseActivity {
         } else {
             //show message and finish activity
         }
+
+        setListeners();
+
     }
 
     /**
@@ -170,7 +186,7 @@ public class PlayCourseActivity extends BaseActivity {
             jo.put("UserId", "1");
             jo.put("AccessToken", "sdfsdf");
             jo.put("courseId", "1774");
-            jo.put("contentId", "23230");
+            jo.put("contentId", "23237");
             jo.put("questionId", "0");
 
 //            {"UserId":"1",
@@ -228,6 +244,7 @@ public class PlayCourseActivity extends BaseActivity {
     }
 
     private void setContentData(PlayCourseContentResponseData response) {
+        choiceInput = new ArrayList<>();
 //        txtContentDesc.setText(Html.fromHtml(response.getCourse_content().getDescription()));
         loadContentDescWebView(response.getCourse_content().getDescription());
 //        if(response.getContent_type().equalsIgnoreCase(Constants.contentType_WC)){
@@ -238,7 +255,30 @@ public class PlayCourseActivity extends BaseActivity {
 //        }
 
         // Course content load
-        loadWebContent(response.getCourse_content().getWebContent());
+
+        switch (response.getContent_type()) {
+            case Constants.contentType_Audio:
+                loadWebContent(response.getCourse_content().getAudio_content());
+                break;
+            case Constants.contentType_Video:
+                loadWebContent(response.getCourse_content().getVideo_content());
+                break;
+            case Constants.contentType_Iframe:
+                loadWebContent("<html><body>" + response.getCourse_content().getIframe_content() + "</body></html>");
+                break;
+            case Constants.contentType_Doc:
+                loadWebContent(response.getCourse_content().getDoc_content());
+                break;
+            case Constants.contentType_WC:
+                loadWebContent(response.getCourse_content().getWebContent());
+                break;
+            case Constants.contentType_IMG:
+                break;
+            case Constants.contentType_Survey: showSurveyProgress(10);
+                break;
+        }
+
+//        loadWebContent(response.getCourse_content().getWebContent());
 
         if (response.getCourse_content().getSubmit_type().equalsIgnoreCase(Constants.submitType_Check)) {
             checkSubmit.setVisibility(View.VISIBLE);
@@ -249,7 +289,7 @@ public class PlayCourseActivity extends BaseActivity {
         } else if (response.getCourse_content().getSubmit_type().equalsIgnoreCase(Constants.submitType_Question)) {
             checkSubmit.setVisibility(View.GONE);
             txtQuestion.setVisibility(View.VISIBLE);
-            txtQuestion.setText("Q. "+response.getCourse_content().getSubmit_data().getTitle());
+            txtQuestion.setText("Q. " + response.getCourse_content().getSubmit_data().getTitle());
             if (response.getCourse_content().getSubmit_data().getChoices() != null && response.getCourse_content().getSubmit_data().getChoices().size() > 0) {
                 if (response.getCourse_content().getSubmit_data().getType().equalsIgnoreCase(Constants.submitDataType_TrueFalse)) {
                     radioGroupLayout.setVisibility(View.VISIBLE);
@@ -305,12 +345,29 @@ public class PlayCourseActivity extends BaseActivity {
         }
     }*/
 
-    private void addMultiChoiceCheckBox(ArrayList<ChoicesData> choiceList) {
+    private void addMultiChoiceCheckBox(final ArrayList<ChoicesData> choiceList) {
         checkboxGroupLayout.setOrientation(LinearLayout.VERTICAL);
         for (int i = 0; i < choiceList.size(); i++) {
             CheckBox checkBox = new CheckBox(this);
             checkBox.setId(Integer.parseInt(choiceList.get(i).getId()));
             checkBox.setText(choiceList.get(i).getChoice());
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                    if (isChecked) {
+                        showToast("Added Id :" + compoundButton.getId());
+                        if (!choiceInput.contains(ChoicesInputData.addChoiceData("" + compoundButton.getId()))) {
+                            choiceInput.add(ChoicesInputData.addChoiceData("" + compoundButton.getId()));
+                        }
+                    } else {
+                        showToast("Removed Id :" + compoundButton.getId());
+                        if (choiceInput.contains(ChoicesInputData.addChoiceData("" + compoundButton.getId()))) {
+                            choiceInput.remove(ChoicesInputData.addChoiceData("" + compoundButton.getId()));
+                        }
+                    }
+
+                }
+            });
             checkboxGroupLayout.addView(checkBox);
         }
     }
@@ -323,14 +380,20 @@ public class PlayCourseActivity extends BaseActivity {
         mediaWebView.getSettings().setUseWideViewPort(true);
     }
 
+
     private void loadContentDescWebView(String webContent) {
         contentDescWebView.setVisibility(View.VISIBLE);
         contentDescWebView.loadData(webContent, "text/html", "utf-8");
 //        contentDescWebView.loadUrl("https://www.tutorialspoint.com/java/java_basic_syntax.htm");
-        contentDescWebView.getSettings().setLoadWithOverviewMode(true);
-        contentDescWebView.getSettings().setUseWideViewPort(true);
+//        contentDescWebView.getSettings().setLoadWithOverviewMode(true);
+//        contentDescWebView.getSettings().setUseWideViewPort(true);
     }
 
+    private void showSurveyProgress(int progress) {
+        surveyProgressLayout.setVisibility(View.VISIBLE);
+        txtSurveyProgress.setText(progress + "% Completed");
+        pbarSurvey.setProgress(progress);
+    }
 
     //Stop Countdown method
     private void stopCountdown() {
@@ -355,5 +418,49 @@ public class PlayCourseActivity extends BaseActivity {
                 countDownTimer = null;//set CountDownTimer to null
             }
         }.start();
+    }
+
+    private void setListeners() {
+        txtSubmitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                JSONArray mJSONArray = new JSONArray();
+                for (int i = 0; i < choiceInput.size(); i++) {
+                    mJSONArray.put(choiceInput.get(i).getJSONObject());
+                }
+                showToast(mJSONArray.toString());
+                JSONObject po = new JSONObject();
+                try {
+                    po.put("choiceId", mJSONArray);
+                    showToast(po.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        imgPrevBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        imgNextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        radioGroupLayout.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int id) {
+                choiceInput.clear();
+                choiceInput.add(ChoicesInputData.addChoiceData("" + id));
+            }
+        });
+
     }
 }

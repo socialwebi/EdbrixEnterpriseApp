@@ -1,0 +1,206 @@
+{
+  "project_info": {
+    "project_number": "250705916290",
+    "firebase_url": "https://edbrixcbuilder.firebaseio.com",
+    "project_id": "edbrixcbuilder",
+    "storage_bucket": "edbrixcbuilder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:250705916290:android:ade85152f89b1516",
+        "android_client_info": {
+          "package_name": "edbrix.videorecorder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "250705916290-og7jvq5gmft6uk695654sp922j13dlkm.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "250705916290-fkjgv4g6vlguj7p8iegokfvatdak7315.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB49tuyECm9VEdRQVASoHZYAOsOjulYOs8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:250705916290:android:eba76f3bae47ef7b",
+        "android_client_info": {
+          "package_name": "com.vizipp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "250705916290-odqumdp2bia8lbddna87608b9fjqhft0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vizipp",
+            "certificate_hash": "cc5fa6e3889b3a7697d3f6ed13648419502f6fe4"
+          }
+        },
+        {
+          "client_id": "250705916290-9qhonesb1c775t1p0dj0m5dbpf88sun0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vizipp",
+            "certificate_hash": "0753a8d887f1bd82db3e5b73a12e0abaa0c8142a"
+          }
+        },
+        {
+          "client_id": "250705916290-og7jvq5gmft6uk695654sp922j13dlkm.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "250705916290-fkjgv4g6vlguj7p8iegokfvatdak7315.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB49tuyECm9VEdRQVASoHZYAOsOjulYOs8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "250705916290-og7jvq5gmft6uk695654sp922j13dlkm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:250705916290:android:807654b6477dfb0b",
+        "android_client_info": {
+          "package_name": "com.vizipp.draw"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "250705916290-7jgc1d8sud1bd92vn0rq8am4lh80ktr8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vizipp.draw",
+            "certificate_hash": "568be7c64ec07176244991c25fd13fe7a916a1fb"
+          }
+        },
+        {
+          "client_id": "250705916290-euev2e5cdq259912r8tp4f1cj8n7gpcs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vizipp.draw",
+            "certificate_hash": "cc5fa6e3889b3a7697d3f6ed13648419502f6fe4"
+          }
+        },
+        {
+          "client_id": "250705916290-og7jvq5gmft6uk695654sp922j13dlkm.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "250705916290-fkjgv4g6vlguj7p8iegokfvatdak7315.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB49tuyECm9VEdRQVASoHZYAOsOjulYOs8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "250705916290-og7jvq5gmft6uk695654sp922j13dlkm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:250705916290:android:f594993f2ec361cd",
+        "android_client_info": {
+          "package_name": "com.edbrix.enterprise"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "250705916290-ecngk1idta64s9v51f70av7fh0dj68ni.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.edbrix.enterprise",
+            "certificate_hash": "cc5fa6e3889b3a7697d3f6ed13648419502f6fe4"
+          }
+        },
+        {
+          "client_id": "250705916290-og7jvq5gmft6uk695654sp922j13dlkm.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "250705916290-fkjgv4g6vlguj7p8iegokfvatdak7315.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB49tuyECm9VEdRQVASoHZYAOsOjulYOs8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "250705916290-og7jvq5gmft6uk695654sp922j13dlkm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

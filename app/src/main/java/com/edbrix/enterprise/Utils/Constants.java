@@ -20,6 +20,11 @@ public class Constants {
 	public final static String contentType_C ="C";
 	public final static String contentType_WC ="WC";
 	public final static String contentType_IMG ="IMG";
+	public final static String contentType_Audio ="AC";
+	public final static String contentType_Video ="VC";
+	public final static String contentType_Doc ="DC";
+	public final static String contentType_Iframe ="IC";
+	public final static String contentType_Survey ="SV";
 
 	public final static String submitType_Check ="check";
 	public final static String submitType_Timer ="timer";

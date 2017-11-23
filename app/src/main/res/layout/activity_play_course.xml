@@ -64,6 +64,7 @@
         android:layout_above="@+id/bottomBtnLayout"
         android:layout_below="@+id/txtContentType"
         android:background="@color/colorWhite"
+        android:fadeScrollbars="false"
         android:scrollbars="vertical">
 
         <LinearLayout
@@ -96,16 +97,28 @@
                 android:textSize="14sp"
                 android:visibility="gone" />
 
-            <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="200dp">-->
+            <LinearLayout
+                android:id="@+id/surveyProgressLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/app_normal_padding"
+                android:visibility="gone">
 
-            <!--<WebView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_margin="@dimen/app_normal_margin">-->
-            <!--</WebView>-->
-            <!--</LinearLayout>-->
+                <TextView
+                    android:id="@+id/txtSurveyProgress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/app_min_margin" />
+
+                <ProgressBar
+                    android:id="@+id/pbarSurvey"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/app_min_margin" />
+
+            </LinearLayout>
 
             <CheckBox
                 android:id="@+id/checkSubmit"
@@ -130,7 +143,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
 
             </LinearLayout>
 
@@ -138,7 +151,8 @@
                 android:id="@+id/radioGroupLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
             </RadioGroup>
 
@@ -216,9 +230,9 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="00:00"
-            android:visibility="gone"
             android:textColor="@color/colorAppOrange"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/imgNextBtn"
