@@ -17,7 +17,6 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:layout_marginRight="15dp"
             android:background="@color/colorActionBar"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
@@ -25,6 +24,7 @@
                 android:id="@+id/relativeLayoutLogo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
                 android:visibility="visible">
 
                 <TextView

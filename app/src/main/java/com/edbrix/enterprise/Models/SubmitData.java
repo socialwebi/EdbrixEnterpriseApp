@@ -22,6 +22,9 @@ public class SubmitData {
     @SerializedName("time")
     private String time;
 
+    @SerializedName("progress")
+    private String progress;
+
     private String question_id;
 
     public String getTitle ()
@@ -66,6 +69,14 @@ public class SubmitData {
 
     public void setQuestion_id(String question_id) {
         this.question_id = question_id;
+    }
+
+    public String getProgress() {
+        return progress;
+    }
+
+    public void setProgress(String progress) {
+        this.progress = progress;
     }
 
     @Override

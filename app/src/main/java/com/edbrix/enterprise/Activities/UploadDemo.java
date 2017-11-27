@@ -58,7 +58,7 @@ public class UploadDemo extends BaseActivity {
 //                accessToken = sessionManager.getSessionProfileToken();
 
                 String userId=""+ SettingsMy.getActiveUser().getId();// get user Id from active user
-                StorageReference childRef = storageRef.child("media/" + userId + "/" + uploadFile.getName());
+                StorageReference childRef = storageRef.child("enterprisecoursecontent/" + userId + "/" + uploadFile.getName());
                 //uploading the image
                 uploadTask = childRef.putFile(fileUri);
 

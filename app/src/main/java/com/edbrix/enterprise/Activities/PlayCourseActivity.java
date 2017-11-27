@@ -7,6 +7,8 @@ import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
@@ -19,6 +21,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -29,7 +32,9 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.edbrix.enterprise.Adapters.ImageChoiceListAdapter;
 import com.edbrix.enterprise.Application;
+import com.edbrix.enterprise.Interfaces.ImageChoiceActionListener;
 import com.edbrix.enterprise.Models.ChoicesData;
 import com.edbrix.enterprise.Models.ChoicesInputData;
 import com.edbrix.enterprise.Models.CourseListResponseData;
@@ -68,6 +73,7 @@ public class PlayCourseActivity extends BaseActivity {
 
     private LinearLayout checkboxGroupLayout;
     private LinearLayout surveyProgressLayout;
+    private LinearLayout imageContentLayout;
     private RadioGroup radioGroupLayout;
 
     private TextView title;
@@ -78,6 +84,8 @@ public class PlayCourseActivity extends BaseActivity {
     private TextView txtSubmitBtn;
     private TextView txtSurveyProgress;
 
+    private EditText editTxtLongAns;
+
     private ImageView imgPrevBtn;
     private ImageView imgNextBtn;
     private ImageView imgPreview;
@@ -85,6 +93,7 @@ public class PlayCourseActivity extends BaseActivity {
     private ProgressBar pbarSurvey;
     private CheckBox checkSubmit;
     private CustomViewPager imgViewPager;
+    private RecyclerView imageChoiceListView;
 
     private CustomWebView mediaWebView;
 
@@ -93,6 +102,10 @@ public class PlayCourseActivity extends BaseActivity {
     private CountDownTimer countDownTimer;
 
     private ArrayList<ChoicesInputData> choiceInput;
+
+    private PlayCourseContentResponseData playCourseContentResponseData;
+
+    private JSONArray mJSONArray;
 
 //    private ImageLoader imageLoader; // Get singleton instance
 
@@ -109,6 +122,7 @@ public class PlayCourseActivity extends BaseActivity {
         txtContentDesc = (TextView) findViewById(R.id.txtContentDesc);
         txtQuestion = (TextView) findViewById(R.id.txtQuestion);
         txtSubmitBtn = (TextView) findViewById(R.id.txtSubmitBtn);
+        editTxtLongAns = (EditText) findViewById(R.id.editTxtLongAns);
         txtTimer = (TextView) findViewById(R.id.txtTimer);
         txtSurveyProgress = (TextView) findViewById(R.id.txtSurveyProgress);
 
@@ -136,22 +150,17 @@ public class PlayCourseActivity extends BaseActivity {
 //        setupWebView();
         checkboxGroupLayout = (LinearLayout) findViewById(R.id.checkboxGroupLayout);
         surveyProgressLayout = (LinearLayout) findViewById(R.id.surveyProgressLayout);
+        imageContentLayout = (LinearLayout) findViewById(R.id.imageContentLayout);
         radioGroupLayout = (RadioGroup) findViewById(R.id.radioGroupLayout);
+        imageChoiceListView = (RecyclerView) findViewById(R.id.imageChoiceListView);
 
         courseItem = (Courses) getIntent().getSerializableExtra(courseItemBundleKey);
-
-        txtSubmitBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                stopCountdown();
-            }
-        });
 
         if (courseItem != null) {
             title.setText(courseItem.getTitle());
             //set Course Details
 //            setCourseDetails();
-            getPlayCourseContent(SettingsMy.getActiveUser(), "", "", "");
+            getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), "0", "0");
         } else {
             //show message and finish activity
         }
@@ -172,11 +181,11 @@ public class PlayCourseActivity extends BaseActivity {
         try {
             JSONObject jo = new JSONObject();
 
-//            jo.put("UserId", activeUser.getId());
-//            jo.put("AccessToken", activeUser.getAccessToken());
-//            jo.put("courseId", courseId);
-//            jo.put("contentId", contentId);
-//            jo.put("questionId", questionId);
+            jo.put("UserId", activeUser.getId());
+            jo.put("AccessToken", activeUser.getAccessToken());
+            jo.put("courseId", courseId);
+            jo.put("contentId", contentId);
+            jo.put("questionId", questionId);
 
            /* jo.put("UserId", "1");
             jo.put("AccessToken", "sdfsdf");
@@ -184,11 +193,11 @@ public class PlayCourseActivity extends BaseActivity {
             jo.put("contentId", "21856");
             jo.put("questionId", "0");*/
 
-            jo.put("UserId", "1");
+          /*  jo.put("UserId", "1");
             jo.put("AccessToken", "sdfsdf");
             jo.put("courseId", "1774");
-            jo.put("contentId", "23237");
-            jo.put("questionId", "0");
+            jo.put("contentId", "0");
+            jo.put("questionId", "0");*/
 
 //            {"UserId":"1",
 //                    "AccessToken":"sdfsdf",
@@ -225,6 +234,8 @@ public class PlayCourseActivity extends BaseActivity {
 //                            Timber.d("Error: %s", response.getErrorCode());
 
                             } else {
+                                playCourseContentResponseData = response;
+                                clearData();
                                 setContentData(response);
                             }
                         }
@@ -242,6 +253,82 @@ public class PlayCourseActivity extends BaseActivity {
             Timber.e(e, "Parse getCourseList exception");
             showToast("Something went wrong. Please try again later.");
         }
+    }
+
+    private void submitPlayCourseContent(final User activeUser, final String courseId, String contentId, String questionId, String contentType, String contentCompleteTypeId, String longAnswer, JSONArray choiceJsonArray) {
+        try {
+            JSONObject jo = new JSONObject();
+
+            jo.put("UserId", activeUser.getId());
+            jo.put("AccessToken", activeUser.getAccessToken());
+            jo.put("courseId", courseId);
+            jo.put("contentId", contentId);
+            jo.put("questionId", questionId);
+            jo.put("contentType", contentType);
+            jo.put("contentcomplete_type_id", contentCompleteTypeId);
+            jo.put("choiceId", choiceJsonArray);
+            if (longAnswer != null && longAnswer.length() > 0) {
+                jo.put("longAnswer", longAnswer);
+            }
+
+/*            jo.put("UserId", "1");
+            jo.put("AccessToken", "sdfsdf");
+            jo.put("courseId", "1774");
+            jo.put("contentId", "0");
+            jo.put("questionId", "0");
+            jo.put("contentType", "C");
+            jo.put("contentcomplete_type_id", "0");
+            jo.put("choiceId", choiceJsonArray);*/
+
+
+//        if (BuildConfig.DEBUG) Timber.d("getCourseList Request Param: %s", jo.toString());
+
+            GsonRequest<PlayCourseContentResponseData> submitPlayCourseContentRequest = new GsonRequest<>(Request.Method.POST, Constants.playCourseContentSubmit, jo.toString(), PlayCourseContentResponseData.class,
+                    new Response.Listener<PlayCourseContentResponseData>() {
+                        @Override
+                        public void onResponse(@NonNull PlayCourseContentResponseData response) {
+//                        Timber.d("response: %s", response.toString());
+                            Log.v("ResponseData", response.toString());
+
+                            if (response.getErrorCode() != null && response.getErrorCode().length() > 0) {
+//                            Timber.d("Error: %s", response.getErrorCode());
+                                showToast(response.getErrorMessage());
+                            } else {
+                                getPlayCourseContent(SettingsMy.getActiveUser(), courseId, response.getNext_content_id(), response.getQuestion_id());
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Timber.d("Error: %s", error.getMessage());
+                    showToast(SettingsMy.getErrorMessage(error));
+                }
+            });
+            submitPlayCourseContentRequest.setRetryPolicy(Application.getDefaultRetryPolice());
+            submitPlayCourseContentRequest.setShouldCache(false);
+            Application.getInstance().addToRequestQueue(submitPlayCourseContentRequest, "playcoursecontentsubmit");
+        } catch (JSONException e) {
+            Timber.e(e, "Parse submitPlayCourseContentRequest exception");
+            showToast("Something went wrong. Please try again later.");
+        }
+    }
+
+    private void clearData() {
+        contentDescWebView.setVisibility(View.GONE);
+        surveyProgressLayout.setVisibility(View.GONE);
+        checkSubmit.setVisibility(View.GONE);
+        txtQuestion.setText("");
+        txtQuestion.setVisibility(View.GONE);
+        checkboxGroupLayout.removeAllViewsInLayout();
+        checkboxGroupLayout.setVisibility(View.GONE);
+        radioGroupLayout.removeAllViewsInLayout();
+        radioGroupLayout.setVisibility(View.GONE);
+        imageContentLayout.setVisibility(View.GONE);
+        mediaWebView.setVisibility(View.GONE);
+        editTxtLongAns.setText("");
+        editTxtLongAns.setVisibility(View.GONE);
+        imageChoiceListView.setAdapter(null);
+        imageChoiceListView.setVisibility(View.GONE);
     }
 
     private void setContentData(PlayCourseContentResponseData response) {
@@ -275,7 +362,10 @@ public class PlayCourseActivity extends BaseActivity {
                 break;
             case Constants.contentType_IMG:
                 break;
-            case Constants.contentType_Survey: showSurveyProgress(10);
+            case Constants.contentType_Survey:
+                showSurveyProgress(10);
+            case Constants.contentType_Test:
+                showSurveyProgress(10);
                 break;
         }
 
@@ -301,7 +391,12 @@ public class PlayCourseActivity extends BaseActivity {
                 } else if (response.getCourse_content().getSubmit_data().getType().equalsIgnoreCase(Constants.submitDataType_MultiChoice)) {
                     checkboxGroupLayout.setVisibility(View.VISIBLE);
                     addMultiChoiceCheckBox(response.getCourse_content().getSubmit_data().getChoices());
+                }else if (response.getCourse_content().getSubmit_data().getType().equalsIgnoreCase(Constants.submitDataType_ImageChoice)) {
+                    radioGroupLayout.setVisibility(View.VISIBLE);
+                    addImageChoiceRadioButton(response.getCourse_content().getSubmit_data().getChoices());
                 }
+            }else if (response.getCourse_content().getSubmit_data().getType().equalsIgnoreCase(Constants.submitDataType_LongAnswer)) {
+                editTxtLongAns.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -311,7 +406,7 @@ public class PlayCourseActivity extends BaseActivity {
         for (int i = 0; i < choiceList.size(); i++) {
             RadioButton rdbtn = new RadioButton(this);
             rdbtn.setId(Integer.parseInt(choiceList.get(i).getId()));
-            rdbtn.setText(choiceList.get(i).getChoice());
+            rdbtn.setText((char) (65 + i) + ". " + choiceList.get(i).getChoice());
             radioGroupLayout.addView(rdbtn);
         }
     }
@@ -321,49 +416,61 @@ public class PlayCourseActivity extends BaseActivity {
         for (int i = 0; i < choiceList.size(); i++) {
             RadioButton rdbtn = new RadioButton(this);
             rdbtn.setId(Integer.parseInt(choiceList.get(i).getId()));
-            rdbtn.setText(choiceList.get(i).getChoice());
+            rdbtn.setText((char) (65 + i) + ". " + choiceList.get(i).getChoice());
             radioGroupLayout.addView(rdbtn);
         }
     }
 
-  /*  private void addImageChoiceRadioButton(ArrayList<ChoicesData> choiceList) {
-        imageLoader = ImageLoader.getInstance();
-        radioGroupLayout.setVisibility(View.VISIBLE);
-        radioGroupLayout.setOrientation(LinearLayout.VERTICAL);
-        for (int i = 0; i < choiceList.size(); i++) {
-            final RadioButton rdbtn = new RadioButton(this);
-            rdbtn.setId(Integer.parseInt(choiceList.get(i).getId()));
-// Load image, decode it to Bitmap and return Bitmap to callback
-            imageLoader.loadImage("http://placehold.it/120x120&text=image2", new SimpleImageLoadingListener() {
-                @Override
-                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                    // Do whatever you want with Bitmap
-                    rdbtn.setCompoundDrawables(null, null, new BitmapDrawable(getResources(), loadedImage), null);
-                }
-            });
-
-            radioGroupLayout.addView(rdbtn);
-        }
-    }*/
+    private void addImageChoiceRadioButton(ArrayList<ChoicesData> choiceList) {
+        ImageChoiceListAdapter imageChoiceListAdapter = new ImageChoiceListAdapter(PlayCourseActivity.this, choiceList, new ImageChoiceActionListener() {
+            @Override
+            public void onImageChoiceSelected(ChoicesData choicesData) {
+                choiceInput.clear();
+                choiceInput.add(ChoicesInputData.addChoiceData(choicesData.getId()));
+            }
+        });
+        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(PlayCourseActivity.this);
+        assert imageChoiceListView != null;
+        imageChoiceListView.setHasFixedSize(true);
+        imageChoiceListView.setLayoutManager(linearLayoutManager1);
+        registerForContextMenu(imageChoiceListView);
+        imageChoiceListView.setAdapter(imageChoiceListAdapter);
+        imageChoiceListView.setVisibility(View.VISIBLE);
+    }
 
     private void addMultiChoiceCheckBox(final ArrayList<ChoicesData> choiceList) {
         checkboxGroupLayout.setOrientation(LinearLayout.VERTICAL);
         for (int i = 0; i < choiceList.size(); i++) {
             CheckBox checkBox = new CheckBox(this);
             checkBox.setId(Integer.parseInt(choiceList.get(i).getId()));
-            checkBox.setText(choiceList.get(i).getChoice());
+            checkBox.setText((char) (65 + i) + ". " + choiceList.get(i).getChoice());
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                    int choiceSize = choiceInput.size();
                     if (isChecked) {
                         showToast("Added Id :" + compoundButton.getId());
-                        if (!choiceInput.contains(ChoicesInputData.addChoiceData("" + compoundButton.getId()))) {
+                        if (choiceSize > 0) {
+                            boolean isDuplicateChoice = false;
+                            for (int i = 0; i < choiceSize; i++) {
+                                if (choiceInput.get(i).getId().equalsIgnoreCase("" + compoundButton.getId())) {
+                                    isDuplicateChoice = true;
+                                    break;
+                                }
+                            }
+                            if (!isDuplicateChoice) {
+                                choiceInput.add(ChoicesInputData.addChoiceData("" + compoundButton.getId()));
+                            }
+                        } else {
                             choiceInput.add(ChoicesInputData.addChoiceData("" + compoundButton.getId()));
                         }
                     } else {
                         showToast("Removed Id :" + compoundButton.getId());
-                        if (choiceInput.contains(ChoicesInputData.addChoiceData("" + compoundButton.getId()))) {
-                            choiceInput.remove(ChoicesInputData.addChoiceData("" + compoundButton.getId()));
+                        for (int j = 0; j < choiceSize; j++) {
+                            if (choiceInput.get(j).getId().equalsIgnoreCase("" + compoundButton.getId())) {
+                                choiceInput.remove(j);
+                                break;
+                            }
                         }
                     }
 
@@ -374,20 +481,28 @@ public class PlayCourseActivity extends BaseActivity {
     }
 
     private void loadWebContent(String webContent) {
-        mediaWebView.setVisibility(View.VISIBLE);
-        mediaWebView.loadData(webContent, "text/html", "utf-8");
+        if (webContent != null && webContent.length() > 0) {
+            mediaWebView.setVisibility(View.VISIBLE);
+            mediaWebView.loadData(webContent, "text/html", "utf-8");
 //        mediaWebView.loadUrl("https://www.tutorialspoint.com/java/java_basic_syntax.htm");
-        mediaWebView.getSettings().setLoadWithOverviewMode(true);
-        mediaWebView.getSettings().setUseWideViewPort(true);
+            mediaWebView.getSettings().setLoadWithOverviewMode(true);
+            mediaWebView.getSettings().setUseWideViewPort(true);
+        } else {
+            mediaWebView.setVisibility(View.GONE);
+        }
     }
 
 
     private void loadContentDescWebView(String webContent) {
-        contentDescWebView.setVisibility(View.VISIBLE);
-        contentDescWebView.loadData(webContent, "text/html", "utf-8");
+        if (webContent != null && webContent.length() > 0) {
+            contentDescWebView.setVisibility(View.VISIBLE);
+            contentDescWebView.loadData(webContent, "text/html", "utf-8");
 //        contentDescWebView.loadUrl("https://www.tutorialspoint.com/java/java_basic_syntax.htm");
 //        contentDescWebView.getSettings().setLoadWithOverviewMode(true);
 //        contentDescWebView.getSettings().setUseWideViewPort(true);
+        } else {
+            contentDescWebView.setVisibility(View.GONE);
+        }
     }
 
     private void showSurveyProgress(int progress) {
@@ -426,17 +541,32 @@ public class PlayCourseActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
 
-                JSONArray mJSONArray = new JSONArray();
+                mJSONArray = new JSONArray();
                 for (int i = 0; i < choiceInput.size(); i++) {
                     mJSONArray.put(choiceInput.get(i).getJSONObject());
                 }
-                showToast(mJSONArray.toString());
+               /* showToast(mJSONArray.toString());
                 JSONObject po = new JSONObject();
                 try {
                     po.put("choiceId", mJSONArray);
                     showToast(po.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }*/
+
+                stopCountdown();
+                if (playCourseContentResponseData != null) {
+                    String qId = playCourseContentResponseData.getQuestion_id();
+                    if (playCourseContentResponseData.getContent_type().equalsIgnoreCase(Constants.contentType_Test) || playCourseContentResponseData.getContent_type().equalsIgnoreCase(Constants.contentType_Survey)) {
+                        qId = playCourseContentResponseData.getCourse_content().getSubmit_data().getQuestion_id();
+                    }
+                    submitPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(),
+                            playCourseContentResponseData.getContent_id(),
+                            qId,
+                            playCourseContentResponseData.getContent_type(),
+                            playCourseContentResponseData.getContentcomplete_type_id(),
+                            editTxtLongAns.getText().toString(),
+                            mJSONArray);
                 }
             }
         });

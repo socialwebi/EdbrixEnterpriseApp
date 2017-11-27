@@ -87,8 +87,15 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
         Toolbar toolbar =  findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        
         toolBarTitle =  toolbar.findViewById(R.id.title);
+
         assert user != null;
         user = SettingsMy.getActiveUser();
 

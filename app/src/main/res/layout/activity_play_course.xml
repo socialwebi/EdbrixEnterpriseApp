@@ -130,12 +130,24 @@
                 android:id="@+id/txtQuestion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorActionBar"
+                android:layout_marginBottom="@dimen/app_normal_margin"
+                android:background="@color/colorDivider"
                 android:padding="@dimen/app_normal_padding"
-                android:text="Q.1 What is your name?"
                 android:textColor="@color/colorMainText"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/editTxtLongAns"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/app_normal_margin"
+                android:background="@drawable/border"
+                android:gravity="top|left"
+                android:hint="@string/enter_ans_here"
+                android:inputType="textAutoComplete|textCapSentences"
+                android:padding="@dimen/app_normal_padding"
                 android:visibility="gone" />
 
             <LinearLayout
@@ -155,6 +167,15 @@
                 android:visibility="gone">
 
             </RadioGroup>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/imageChoiceListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:listitem="@layout/list_item_image_choice">
+
+            </android.support.v7.widget.RecyclerView>
 
             <LinearLayout
                 android:id="@+id/imageContentLayout"
@@ -211,7 +232,7 @@
             android:layout_width="42dp"
             android:layout_height="match_parent"
             android:padding="@dimen/app_normal_padding"
-            android:src="@mipmap/right_arrow" />
+            android:src="@mipmap/course_prev_icon" />
 
         <TextView
             android:id="@+id/txtSubmitBtn"
@@ -239,7 +260,7 @@
             android:layout_width="42dp"
             android:layout_height="match_parent"
             android:padding="@dimen/app_normal_padding"
-            android:src="@mipmap/right_arrow" />
+            android:src="@mipmap/course_next_icon" />
 
 
     </LinearLayout>

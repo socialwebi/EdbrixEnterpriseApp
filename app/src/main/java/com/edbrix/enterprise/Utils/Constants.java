@@ -14,6 +14,7 @@ public class Constants {
 	public final static String getMeetingDetails = BASE_URL.concat("getmeetingdetails");
 	public final static String getDashboardCourseSchedules = BASE_URL.concat("getdashboardcourseandschedules");
 	public final static String playCourseContent = BASE_URL.concat("playcoursecontent");
+	public final static String playCourseContentSubmit = BASE_URL.concat("playcoursecontentsubmit");
 
 	public final static String getInstructorResources = BASE_URL.concat("getinstructorresources");
 	public final static String getCourseSections = BASE_URL.concat("getcoursesections");
@@ -28,6 +29,7 @@ public class Constants {
 	public final static String contentType_Doc ="DC";
 	public final static String contentType_Iframe ="IC";
 	public final static String contentType_Survey ="SV";
+	public final static String contentType_Test ="TEST";
 
 	public final static String submitType_Check ="check";
 	public final static String submitType_Timer ="timer";

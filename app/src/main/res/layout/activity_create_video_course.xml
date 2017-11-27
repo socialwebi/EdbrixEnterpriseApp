@@ -65,6 +65,7 @@
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
+                android:padding="@dimen/app_min_padding"
                 android:adjustViewBounds="true"
                 android:cropToPadding="false"
                 android:src="@mipmap/video_icon"/>
@@ -113,10 +114,11 @@
 
             <ImageView
                 android:layout_width="50dp"
-                android:layout_height="wrap_content"
+                android:layout_height="36dp"
+                android:padding="@dimen/app_min_padding"
                 android:adjustViewBounds="true"
                 android:cropToPadding="false"
-                android:src="@mipmap/document_icon"/>
+                android:src="@mipmap/document_icon" />
 
             <TextView
                 android:id="@+id/create_document"

@@ -53,7 +53,12 @@ public class ForgotPasswordActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         context = this;
 
         _forgot_password_edit_text_email = findViewById(R.id.forgot_password_edit_text_email);
