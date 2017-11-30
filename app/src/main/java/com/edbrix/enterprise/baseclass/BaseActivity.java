@@ -10,6 +10,8 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.edbrix.enterprise.Utils.SessionManager;
+import com.edbrix.enterprise.commons.AlertDialogManager;
+import com.edbrix.enterprise.commons.DialogManager;
 import com.edbrix.enterprise.commons.GlobalMethods;
 import com.edbrix.enterprise.commons.ToastMessage;
 
@@ -18,7 +20,7 @@ import com.edbrix.enterprise.commons.ToastMessage;
  */
 public class BaseActivity extends AppCompatActivity {
 
-    //    DialogManager dialogManager;
+        DialogManager dialogManager;
     GlobalMethods globalMethods;
     //    ConnectivityMonitor connectivityMonitor;
     protected Context mContext;
@@ -40,7 +42,7 @@ public class BaseActivity extends AppCompatActivity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             sessionManager.updateSessionDeviceType("tab");
         }
-//        dialogManager = new DialogManager(this);
+        dialogManager = new DialogManager(this);
         globalMethods = new GlobalMethods();
         toastMessage = new ToastMessage(this);
 //        connectivityMonitor = new ConnectivityMonitor(this, erisConnectionListener);
@@ -55,21 +57,30 @@ public class BaseActivity extends AppCompatActivity {
         toastMessage.showToastMsg(msg, Toast.LENGTH_LONG);
     }
 
-  /*  protected AlertDialogManager getAlertDialogManager() {
+    protected void cancelToast() {
+        toastMessage.cancelToast();
+    }
+
+    protected AlertDialogManager getAlertDialogManager() {
         return dialogManager.getAlertDialogManager();
-    }*/
+    }
 
     protected GlobalMethods getGlobalMethods() {
         return globalMethods;
     }
 
-   /* protected void showBusyProgress() {
+    protected void showBusyProgress() {
         dialogManager.showBusyProgress();
+    }
+
+    protected void showBusyProgress(String message) {
+        dialogManager.showBusyProgress(message);
     }
 
     protected void hideBusyProgress() {
         dialogManager.hideBusyProgress();
-    }*/
+    }
+
 
     protected void onNetworkStatusChanged(boolean status) {
 

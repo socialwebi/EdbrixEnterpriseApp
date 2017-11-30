@@ -45,8 +45,9 @@
         <activity android:name=".Activities.CreateVideoCourseActivity" />
         <activity android:name=".Activities.ZoomLoginActivity" />
         <activity android:name=".Activities.AddFilesActivity" />
-        <activity android:name=".Activities.SettingsActivity"></activity>
-        <activity android:name=".Activities.UploadDemo"></activity>
+        <activity android:name=".Activities.SettingsActivity" />
+        <activity android:name=".Activities.UploadDemo" />
+        <activity android:name=".Activities.PhotoPopUpActivity"></activity>
     </application>
 
 </manifest>

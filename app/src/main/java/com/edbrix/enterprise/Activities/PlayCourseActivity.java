@@ -1,10 +1,13 @@
 package com.edbrix.enterprise.Activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,18 +30,22 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.edbrix.enterprise.Adapters.CoursePlayImagePagerAdapter;
 import com.edbrix.enterprise.Adapters.ImageChoiceListAdapter;
+import com.edbrix.enterprise.Adapters.ImageDrawerAdapter;
 import com.edbrix.enterprise.Application;
 import com.edbrix.enterprise.Interfaces.ImageChoiceActionListener;
 import com.edbrix.enterprise.Models.ChoicesData;
 import com.edbrix.enterprise.Models.ChoicesInputData;
 import com.edbrix.enterprise.Models.CourseListResponseData;
 import com.edbrix.enterprise.Models.Courses;
+import com.edbrix.enterprise.Models.ImageContentData;
 import com.edbrix.enterprise.Models.PlayCourseContentResponseData;
 import com.edbrix.enterprise.Models.User;
 import com.edbrix.enterprise.R;
@@ -52,6 +59,7 @@ import com.edbrix.enterprise.baseclass.BaseActivity;
 import com.edbrix.enterprise.commons.GlobalMethods;
 //import com.nostra13.universalimageloader.core.ImageLoader;
 //import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.squareup.picasso.Picasso;
 import com.zipow.videobox.confapp.GLImage;
 
 import org.json.JSONArray;
@@ -74,6 +82,9 @@ public class PlayCourseActivity extends BaseActivity {
     private LinearLayout checkboxGroupLayout;
     private LinearLayout surveyProgressLayout;
     private LinearLayout imageContentLayout;
+    private LinearLayout timerLayout;
+    private LinearLayout audioContentLayout;
+    private RelativeLayout imageChoiceGroupLayout;
     private RadioGroup radioGroupLayout;
 
     private TextView title;
@@ -86,16 +97,24 @@ public class PlayCourseActivity extends BaseActivity {
 
     private EditText editTxtLongAns;
 
+    private ImageView imgContentPrevBtn;
+    private ImageView imgContentNextBtn;
+
     private ImageView imgPrevBtn;
     private ImageView imgNextBtn;
+
     private ImageView imgPreview;
 
     private ProgressBar pbarSurvey;
     private CheckBox checkSubmit;
     private CustomViewPager imgViewPager;
     private RecyclerView imageChoiceListView;
+    private RecyclerView imgDrawerRecyclerView;
+
+    private CustomWebView questionWebView;
 
     private CustomWebView mediaWebView;
+    private CustomWebView audioWebView;
 
     private CustomWebView contentDescWebView;
 
@@ -104,6 +123,8 @@ public class PlayCourseActivity extends BaseActivity {
     private ArrayList<ChoicesInputData> choiceInput;
 
     private PlayCourseContentResponseData playCourseContentResponseData;
+
+    private CoursePlayImagePagerAdapter imagePagerAdapter;
 
     private JSONArray mJSONArray;
 
@@ -128,19 +149,36 @@ public class PlayCourseActivity extends BaseActivity {
 
         imgPrevBtn = (ImageView) findViewById(R.id.imgPrevBtn);
         imgNextBtn = (ImageView) findViewById(R.id.imgNextBtn);
+
+        imgContentPrevBtn = (ImageView) findViewById(R.id.imgContentPrevBtn);
+        imgContentNextBtn = (ImageView) findViewById(R.id.imgContentNextBtn);
+
         imgPreview = (ImageView) findViewById(R.id.imgPreview);
         checkSubmit = (CheckBox) findViewById(R.id.checkSubmit);
 
         imgViewPager = (CustomViewPager) findViewById(R.id.imgViewPager);
+
+        questionWebView = (CustomWebView) findViewById(R.id.questionWebView);
         mediaWebView = (CustomWebView) findViewById(R.id.mediaWebView);
+        audioWebView = (CustomWebView) findViewById(R.id.audioWebView);
         contentDescWebView = (CustomWebView) findViewById(R.id.contentDescWebView);
 
         pbarSurvey = (ProgressBar) findViewById(R.id.pbarSurvey);
+
+        questionWebView.getSettings().setJavaScriptEnabled(true);
+        questionWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        questionWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
+        questionWebView.setWebChromeClient(new WebChromeClient());
 
         mediaWebView.getSettings().setJavaScriptEnabled(true);
         mediaWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         mediaWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
         mediaWebView.setWebChromeClient(new WebChromeClient());
+
+        audioWebView.getSettings().setJavaScriptEnabled(true);
+        audioWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        audioWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
+        audioWebView.setWebChromeClient(new WebChromeClient());
 
         contentDescWebView.getSettings().setJavaScriptEnabled(true);
         contentDescWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
@@ -151,8 +189,12 @@ public class PlayCourseActivity extends BaseActivity {
         checkboxGroupLayout = (LinearLayout) findViewById(R.id.checkboxGroupLayout);
         surveyProgressLayout = (LinearLayout) findViewById(R.id.surveyProgressLayout);
         imageContentLayout = (LinearLayout) findViewById(R.id.imageContentLayout);
+        timerLayout = (LinearLayout) findViewById(R.id.timerLayout);
+        audioContentLayout = (LinearLayout) findViewById(R.id.audioContentLayout);
+        imageChoiceGroupLayout = (RelativeLayout) findViewById(R.id.imageChoiceGroupLayout);
         radioGroupLayout = (RadioGroup) findViewById(R.id.radioGroupLayout);
         imageChoiceListView = (RecyclerView) findViewById(R.id.imageChoiceListView);
+        imgDrawerRecyclerView = (RecyclerView) findViewById(R.id.imgDrawerRecyclerView);
 
         courseItem = (Courses) getIntent().getSerializableExtra(courseItemBundleKey);
 
@@ -179,6 +221,7 @@ public class PlayCourseActivity extends BaseActivity {
      */
     private void getPlayCourseContent(final User activeUser, String courseId, String contentId, String questionId) {
         try {
+            showBusyProgress();
             JSONObject jo = new JSONObject();
 
             jo.put("UserId", activeUser.getId());
@@ -187,16 +230,17 @@ public class PlayCourseActivity extends BaseActivity {
             jo.put("contentId", contentId);
             jo.put("questionId", questionId);
 
+
            /* jo.put("UserId", "1");
             jo.put("AccessToken", "sdfsdf");
             jo.put("courseId", "1687");
             jo.put("contentId", "21856");
             jo.put("questionId", "0");*/
 
-          /*  jo.put("UserId", "1");
+           /* jo.put("UserId", "1");
             jo.put("AccessToken", "sdfsdf");
             jo.put("courseId", "1774");
-            jo.put("contentId", "0");
+            jo.put("contentId", "23250");
             jo.put("questionId", "0");*/
 
 //            {"UserId":"1",
@@ -232,16 +276,19 @@ public class PlayCourseActivity extends BaseActivity {
 
                             if (response.getErrorCode() != null && response.getErrorCode().length() > 0) {
 //                            Timber.d("Error: %s", response.getErrorCode());
-
+                                hideBusyProgress();
+                                showToast(response.getErrorMessage());
                             } else {
                                 playCourseContentResponseData = response;
                                 clearData();
                                 setContentData(response);
+                                hideBusyProgress();
                             }
                         }
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    hideBusyProgress();
                     Timber.d("Error: %s", error.getMessage());
                     showToast(SettingsMy.getErrorMessage(error));
                 }
@@ -250,6 +297,7 @@ public class PlayCourseActivity extends BaseActivity {
             getPlayCourseContentRequest.setShouldCache(false);
             Application.getInstance().addToRequestQueue(getPlayCourseContentRequest, "playcoursecontent");
         } catch (JSONException e) {
+            hideBusyProgress();
             Timber.e(e, "Parse getCourseList exception");
             showToast("Something went wrong. Please try again later.");
         }
@@ -257,6 +305,8 @@ public class PlayCourseActivity extends BaseActivity {
 
     private void submitPlayCourseContent(final User activeUser, final String courseId, String contentId, String questionId, String contentType, String contentCompleteTypeId, String longAnswer, JSONArray choiceJsonArray) {
         try {
+            showBusyProgress();
+
             JSONObject jo = new JSONObject();
 
             jo.put("UserId", activeUser.getId());
@@ -292,6 +342,7 @@ public class PlayCourseActivity extends BaseActivity {
 
                             if (response.getErrorCode() != null && response.getErrorCode().length() > 0) {
 //                            Timber.d("Error: %s", response.getErrorCode());
+                                hideBusyProgress();
                                 showToast(response.getErrorMessage());
                             } else {
                                 getPlayCourseContent(SettingsMy.getActiveUser(), courseId, response.getNext_content_id(), response.getQuestion_id());
@@ -300,6 +351,7 @@ public class PlayCourseActivity extends BaseActivity {
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    hideBusyProgress();
                     Timber.d("Error: %s", error.getMessage());
                     showToast(SettingsMy.getErrorMessage(error));
                 }
@@ -308,30 +360,66 @@ public class PlayCourseActivity extends BaseActivity {
             submitPlayCourseContentRequest.setShouldCache(false);
             Application.getInstance().addToRequestQueue(submitPlayCourseContentRequest, "playcoursecontentsubmit");
         } catch (JSONException e) {
+            hideBusyProgress();
             Timber.e(e, "Parse submitPlayCourseContentRequest exception");
             showToast("Something went wrong. Please try again later.");
         }
     }
 
     private void clearData() {
+
         contentDescWebView.setVisibility(View.GONE);
+        contentDescWebView.reload();
+
         surveyProgressLayout.setVisibility(View.GONE);
         checkSubmit.setVisibility(View.GONE);
+
         txtQuestion.setText("");
         txtQuestion.setVisibility(View.GONE);
+
+        questionWebView.setVisibility(View.GONE);
+        questionWebView.reload();
+
         checkboxGroupLayout.removeAllViewsInLayout();
         checkboxGroupLayout.setVisibility(View.GONE);
+
         radioGroupLayout.removeAllViewsInLayout();
         radioGroupLayout.setVisibility(View.GONE);
         imageContentLayout.setVisibility(View.GONE);
+
         mediaWebView.setVisibility(View.GONE);
+        mediaWebView.reload();
+
+        audioContentLayout.setVisibility(View.GONE);
+        audioWebView.setVisibility(View.GONE);
+        audioWebView.reload();
+
         editTxtLongAns.setText("");
         editTxtLongAns.setVisibility(View.GONE);
+
+        imageChoiceGroupLayout.setVisibility(View.GONE);
         imageChoiceListView.setAdapter(null);
         imageChoiceListView.setVisibility(View.GONE);
+
+        imgDrawerRecyclerView.setAdapter(null);
+        imgDrawerRecyclerView.setVisibility(View.GONE);
+
+        timerLayout.setVisibility(View.GONE);
+        txtSubmitBtn.setVisibility(View.VISIBLE);
     }
 
     private void setContentData(PlayCourseContentResponseData response) {
+       if( response.getPrev_content_id().equalsIgnoreCase("0")){
+           imgContentPrevBtn.setVisibility(View.INVISIBLE);
+       }else{
+           imgContentPrevBtn.setVisibility(View.VISIBLE);
+       }
+        if( response.getNext_content_id().equalsIgnoreCase("0")){
+            imgContentNextBtn.setVisibility(View.INVISIBLE);
+        }else{
+            imgContentNextBtn.setVisibility(View.VISIBLE);
+        }
+
         choiceInput = new ArrayList<>();
 //        txtContentDesc.setText(Html.fromHtml(response.getCourse_content().getDescription()));
         loadContentDescWebView(response.getCourse_content().getDescription());
@@ -345,27 +433,40 @@ public class PlayCourseActivity extends BaseActivity {
         // Course content load
 
         switch (response.getContent_type()) {
+            case Constants.contentType_C:
+                txtContentType.setText(getString(R.string.simple_content));
+                break;
             case Constants.contentType_Audio:
-                loadWebContent(response.getCourse_content().getAudio_content());
+                txtContentType.setText(getString(R.string.audio_content));
+                loadAudioContent(response.getCourse_content().getAudio_content());
                 break;
             case Constants.contentType_Video:
+                txtContentType.setText(getString(R.string.video_content));
                 loadWebContent(response.getCourse_content().getVideo_content());
                 break;
             case Constants.contentType_Iframe:
+                txtContentType.setText(getString(R.string.iframe_content));
                 loadWebContent("<html><body>" + response.getCourse_content().getIframe_content() + "</body></html>");
                 break;
             case Constants.contentType_Doc:
+                txtContentType.setText(getString(R.string.document_content));
                 loadWebContent(response.getCourse_content().getDoc_content());
                 break;
             case Constants.contentType_WC:
+                txtContentType.setText(getString(R.string.web_content));
                 loadWebContent(response.getCourse_content().getWebContent());
                 break;
             case Constants.contentType_IMG:
+                txtContentType.setText(getString(R.string.image_content));
+                loadImageContent(PlayCourseActivity.this, response.getCourse_content().getImg_content());
                 break;
             case Constants.contentType_Survey:
-                showSurveyProgress(10);
+                txtContentType.setText(getString(R.string.survey));
+                showSurveyProgress(0,10);
+                break;
             case Constants.contentType_Test:
-                showSurveyProgress(10);
+                txtContentType.setText(getString(R.string.test));
+                showSurveyProgress(0,10);
                 break;
         }
 
@@ -375,27 +476,27 @@ public class PlayCourseActivity extends BaseActivity {
             checkSubmit.setVisibility(View.VISIBLE);
         } else if (response.getCourse_content().getSubmit_type().equalsIgnoreCase(Constants.submitType_Timer)) {
             checkSubmit.setVisibility(View.GONE);
-            txtQuestion.setText(response.getCourse_content().getSubmit_data().getTime());
             startTimer(Integer.parseInt(response.getCourse_content().getSubmit_data().getTime()));
         } else if (response.getCourse_content().getSubmit_type().equalsIgnoreCase(Constants.submitType_Question)) {
             checkSubmit.setVisibility(View.GONE);
-            txtQuestion.setVisibility(View.VISIBLE);
+//            txtQuestion.setVisibility(View.VISIBLE);
             txtQuestion.setText("Q. " + response.getCourse_content().getSubmit_data().getTitle());
+            loadQuestionTextInWebView("<b>Q. " + response.getCourse_content().getSubmit_data().getTitle()+"</b>");
             if (response.getCourse_content().getSubmit_data().getChoices() != null && response.getCourse_content().getSubmit_data().getChoices().size() > 0) {
                 if (response.getCourse_content().getSubmit_data().getType().equalsIgnoreCase(Constants.submitDataType_TrueFalse)) {
                     radioGroupLayout.setVisibility(View.VISIBLE);
-                    addTrueFalseRadioButton(response.getCourse_content().getSubmit_data().getChoices());
+                    addSingleChoiceRadioButton(response.getCourse_content().getSubmit_data().getChoices());
                 } else if (response.getCourse_content().getSubmit_data().getType().equalsIgnoreCase(Constants.submitDataType_SingleChoice)) {
                     radioGroupLayout.setVisibility(View.VISIBLE);
                     addSingleChoiceRadioButton(response.getCourse_content().getSubmit_data().getChoices());
                 } else if (response.getCourse_content().getSubmit_data().getType().equalsIgnoreCase(Constants.submitDataType_MultiChoice)) {
                     checkboxGroupLayout.setVisibility(View.VISIBLE);
                     addMultiChoiceCheckBox(response.getCourse_content().getSubmit_data().getChoices());
-                }else if (response.getCourse_content().getSubmit_data().getType().equalsIgnoreCase(Constants.submitDataType_ImageChoice)) {
-                    radioGroupLayout.setVisibility(View.VISIBLE);
+                } else if (response.getCourse_content().getSubmit_data().getType().equalsIgnoreCase(Constants.submitDataType_ImageChoice)) {
+                    imageChoiceGroupLayout.setVisibility(View.VISIBLE);
                     addImageChoiceRadioButton(response.getCourse_content().getSubmit_data().getChoices());
                 }
-            }else if (response.getCourse_content().getSubmit_data().getType().equalsIgnoreCase(Constants.submitDataType_LongAnswer)) {
+            } else if (response.getCourse_content().getSubmit_data().getType().equalsIgnoreCase(Constants.submitDataType_LongAnswer)) {
                 editTxtLongAns.setVisibility(View.VISIBLE);
             }
         }
@@ -413,10 +514,14 @@ public class PlayCourseActivity extends BaseActivity {
 
     private void addSingleChoiceRadioButton(ArrayList<ChoicesData> choiceList) {
         radioGroupLayout.setOrientation(LinearLayout.VERTICAL);
+        RadioGroup.LayoutParams params
+                = new RadioGroup.LayoutParams(PlayCourseActivity.this, null);
+        params.setMargins(10, 10, 10, 10);
         for (int i = 0; i < choiceList.size(); i++) {
             RadioButton rdbtn = new RadioButton(this);
             rdbtn.setId(Integer.parseInt(choiceList.get(i).getId()));
             rdbtn.setText((char) (65 + i) + ". " + choiceList.get(i).getChoice());
+            rdbtn.setLayoutParams(params);
             radioGroupLayout.addView(rdbtn);
         }
     }
@@ -427,6 +532,13 @@ public class PlayCourseActivity extends BaseActivity {
             public void onImageChoiceSelected(ChoicesData choicesData) {
                 choiceInput.clear();
                 choiceInput.add(ChoicesInputData.addChoiceData(choicesData.getId()));
+            }
+
+            @Override
+            public void onImageClick(ChoicesData choicesData) {
+                Intent photo = new Intent(PlayCourseActivity.this, PhotoPopUpActivity.class);
+                photo.putExtra("IMGURL",choicesData.getChoice());
+                startActivity(photo);
             }
         });
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(PlayCourseActivity.this);
@@ -440,8 +552,12 @@ public class PlayCourseActivity extends BaseActivity {
 
     private void addMultiChoiceCheckBox(final ArrayList<ChoicesData> choiceList) {
         checkboxGroupLayout.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams params
+                = new LinearLayout.LayoutParams(PlayCourseActivity.this, null);
+        params.setMargins(10, 10, 10, 10);
         for (int i = 0; i < choiceList.size(); i++) {
             CheckBox checkBox = new CheckBox(this);
+            checkBox.setLayoutParams(params);
             checkBox.setId(Integer.parseInt(choiceList.get(i).getId()));
             checkBox.setText((char) (65 + i) + ". " + choiceList.get(i).getChoice());
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -484,14 +600,44 @@ public class PlayCourseActivity extends BaseActivity {
         if (webContent != null && webContent.length() > 0) {
             mediaWebView.setVisibility(View.VISIBLE);
             mediaWebView.loadData(webContent, "text/html", "utf-8");
-//        mediaWebView.loadUrl("https://www.tutorialspoint.com/java/java_basic_syntax.htm");
-            mediaWebView.getSettings().setLoadWithOverviewMode(true);
-            mediaWebView.getSettings().setUseWideViewPort(true);
+            if (!isTablet()) {
+                mediaWebView.getSettings().setLoadWithOverviewMode(true);
+                mediaWebView.getSettings().setUseWideViewPort(true);
+            }
         } else {
             mediaWebView.setVisibility(View.GONE);
         }
     }
 
+    private void loadAudioContent(String webContent) {
+        if (webContent != null && webContent.length() > 0) {
+//            mediaWebView.clearCache(true);
+//            mediaWebView.clearFormData();
+//            Intent intent = new Intent();
+//            intent.setAction(Intent.ACTION_VIEW);
+//            intent.setDataAndType(Uri.parse(webContent), "audio/mp3");
+//            startActivity(intent);
+            audioContentLayout.setVisibility(View.VISIBLE);
+            audioWebView.setVisibility(View.VISIBLE);
+            String dt="\u003Cdiv\n" +
+                    "class=\"row margin_zero\"\u003E\u003Ciframe width=\"100%\" height=\"100%\"\n" +
+                    "src=\"https://edbrixcbuilder.storage.googleapis.com/storage/uploads/coursecontent/audio/23233/59ad27e3adc0a.mp3\" frameborder=\"0\"allowfullscreen\u003E\u003C/iframe\u003E\u003C/div\u003E";
+            audioWebView.loadData(webContent,"text/html", "utf-8");
+        } else {
+            audioContentLayout.setVisibility(View.GONE);
+            audioWebView.setVisibility(View.GONE);
+        }
+    }
+
+
+    private void loadQuestionTextInWebView(String questionContent) {
+        if (questionContent != null && questionContent.length() > 0) {
+            questionWebView.setVisibility(View.VISIBLE);
+            questionWebView.loadData(questionContent, "text/html", "utf-8");
+        } else {
+            questionWebView.setVisibility(View.GONE);
+        }
+    }
 
     private void loadContentDescWebView(String webContent) {
         if (webContent != null && webContent.length() > 0) {
@@ -505,10 +651,43 @@ public class PlayCourseActivity extends BaseActivity {
         }
     }
 
-    private void showSurveyProgress(int progress) {
+    private void loadImageContent(Context context, ArrayList<ImageContentData> imageContentList) {
+        if (imageContentList != null && imageContentList.size() > 0) {
+            //load image slider at upper side
+            imagePagerAdapter = new CoursePlayImagePagerAdapter(getSupportFragmentManager(), imageContentList);
+            if (imageContentList.get(0).getImg_url() != null && !imageContentList.get(0).getImg_url().isEmpty()) {
+                Picasso.with(context)
+                        .load(imageContentList.get(0).getImg_url())
+                        .error(R.drawable.edbrix_logo)
+                        .into(imgPreview);
+            }
+            imgPreview.setVisibility(View.GONE);
+            imgViewPager.setAdapter(imagePagerAdapter);
+            imageContentLayout.setVisibility(View.VISIBLE);
+
+            //load horizontal image drawer
+            ImageDrawerAdapter imageDrawerAdapter = new ImageDrawerAdapter(context, imageContentList, new ImageDrawerAdapter.ImageSelectionListener() {
+                @Override
+                public void onSelect(ImageContentData imageContentData, int position) {
+                    imgViewPager.setCurrentItem(position);
+                }
+            });
+
+            imgDrawerRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+            imgDrawerRecyclerView.setAdapter(imageDrawerAdapter);
+            imgDrawerRecyclerView.setVisibility(View.VISIBLE);
+        } else {
+            imageContentLayout.setVisibility(View.GONE);
+        }
+    }
+
+    private void showSurveyProgress(int qIndex , int qCount) {
+
+        int percentage =(qIndex*100)/qCount;
+
         surveyProgressLayout.setVisibility(View.VISIBLE);
-        txtSurveyProgress.setText(progress + "% Completed");
-        pbarSurvey.setProgress(progress);
+        txtSurveyProgress.setText(percentage + "% Completed");
+        pbarSurvey.setProgress(percentage);
     }
 
     //Stop Countdown method
@@ -521,6 +700,8 @@ public class PlayCourseActivity extends BaseActivity {
 
     //Start Countdown method
     private void startTimer(int seconds) {
+        timerLayout.setVisibility(View.VISIBLE);
+        txtSubmitBtn.setVisibility(View.GONE);
         countDownTimer = new CountDownTimer((seconds * 1000), 1000) {
             public void onTick(long millisUntilFinished) {
                 long millis = millisUntilFinished;
@@ -532,6 +713,8 @@ public class PlayCourseActivity extends BaseActivity {
             public void onFinish() {
                 txtTimer.setText("00:00:00");//set text
                 countDownTimer = null;//set CountDownTimer to null
+                timerLayout.setVisibility(View.GONE);
+                txtSubmitBtn.setVisibility(View.VISIBLE);
             }
         }.start();
     }
@@ -574,14 +757,42 @@ public class PlayCourseActivity extends BaseActivity {
         imgPrevBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (imgViewPager.getCurrentItem() > 0) {
+                    imgViewPager.setCurrentItem(imgViewPager.getCurrentItem() - 1);
+                }
             }
         });
 
         imgNextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (imgViewPager.getCurrentItem() < imgViewPager.getAdapter().getCount() - 1) {
+                    imgViewPager.setCurrentItem(imgViewPager.getCurrentItem() + 1);
+                }
+            }
+        });
 
+        imgContentNextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (playCourseContentResponseData.getErrorCode() != null && playCourseContentResponseData.getErrorCode().length() > 0) {
+//                            Timber.d("Error: %s", response.getErrorCode());
+                    showToast(playCourseContentResponseData.getErrorMessage());
+                } else {
+                    getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), playCourseContentResponseData.getNext_content_id(), playCourseContentResponseData.getQuestion_id());
+                }
+            }
+        });
+
+        imgContentPrevBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (playCourseContentResponseData.getErrorCode() != null && playCourseContentResponseData.getErrorCode().length() > 0) {
+//                            Timber.d("Error: %s", response.getErrorCode());
+                    showToast(playCourseContentResponseData.getErrorMessage());
+                } else {
+                    getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), playCourseContentResponseData.getPrev_content_id(), playCourseContentResponseData.getQuestion_id());
+                }
             }
         });
 
@@ -590,6 +801,38 @@ public class PlayCourseActivity extends BaseActivity {
             public void onCheckedChanged(RadioGroup radioGroup, int id) {
                 choiceInput.clear();
                 choiceInput.add(ChoicesInputData.addChoiceData("" + id));
+            }
+        });
+
+        imgViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                Log.v("ImageContent", "onPageScrolled : position :" + position);
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Log.v("ImageContent", "onPageSelected : position : " + position);
+
+                if (imgDrawerRecyclerView.getAdapter() != null)
+                    ((ImageDrawerAdapter) imgDrawerRecyclerView.getAdapter()).setSelectedIndex(position);
+
+                if (position == 0 && imagePagerAdapter.getCount() > 1) {
+                    imgPrevBtn.setVisibility(View.INVISIBLE);
+                    imgNextBtn.setVisibility(View.VISIBLE);
+                } else if (position == (imagePagerAdapter.getCount() - 1)) {
+                    imgPrevBtn.setVisibility(View.VISIBLE);
+                    imgNextBtn.setVisibility(View.INVISIBLE);
+                } else {
+                    imgPrevBtn.setVisibility(View.VISIBLE);
+                    imgNextBtn.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                Log.v("AudioRecorder", "onPageScrollStateChanged : state : " + state);
             }
         });
 

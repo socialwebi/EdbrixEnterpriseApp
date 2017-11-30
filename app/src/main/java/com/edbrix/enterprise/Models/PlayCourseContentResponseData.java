@@ -32,6 +32,10 @@ public class PlayCourseContentResponseData {
     @SerializedName("content_type")
     private String content_type;
 
+
+    @SerializedName("prev_content_id")
+    private String prev_content_id;
+
     @SerializedName("next_content_id")
     private String next_content_id;
 
@@ -111,6 +115,14 @@ public class PlayCourseContentResponseData {
 
     public void setNext_content_id(String next_content_id) {
         this.next_content_id = next_content_id;
+    }
+
+    public String getPrev_content_id() {
+        return prev_content_id;
+    }
+
+    public void setPrev_content_id(String prev_content_id) {
+        this.prev_content_id = prev_content_id;
     }
 
     public String getErrorCode() {

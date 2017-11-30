@@ -27,6 +27,9 @@ public class SubmitData {
 
     private String question_id;
 
+    @SerializedName("total_question_count")
+    private String total_question_count;
+
     public String getTitle ()
     {
         return title;
@@ -77,6 +80,14 @@ public class SubmitData {
 
     public void setProgress(String progress) {
         this.progress = progress;
+    }
+
+    public String getTotal_question_count() {
+        return total_question_count;
+    }
+
+    public void setTotal_question_count(String total_question_count) {
+        this.total_question_count = total_question_count;
     }
 
     @Override

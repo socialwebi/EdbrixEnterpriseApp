@@ -51,12 +51,14 @@ public class ImageChoiceListAdapter extends RecyclerView.Adapter<ImageChoiceList
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        holder.rdImgChoice.setText((char) (65 + position) + "");
+        holder.rdImgChoice.setText((char) (65 + position) + ". ");
         if (!isAlreadyLoaded) {
-            Picasso.with(context)
-                    .load(list.get(position).getChoice())
-                    .error(R.drawable.edbrix_logo)
-                    .into(holder.imgChoice);
+            if (list.get(position).getChoice() != null && !list.get(position).getChoice().isEmpty()) {
+                Picasso.with(context)
+                        .load(list.get(position).getChoice())
+                        .error(R.drawable.edbrix_logo)
+                        .into(holder.imgChoice);
+            }
         } else {
             if (selectedIndex != -1 && position == selectedIndex) {
                 holder.rdImgChoice.setChecked(true);
@@ -65,7 +67,8 @@ public class ImageChoiceListAdapter extends RecyclerView.Adapter<ImageChoiceList
             }
         }
 
-        isAlreadyLoaded = true;
+        if (position == (list.size() - 1))
+            isAlreadyLoaded = true;
 
     }
 
@@ -100,11 +103,19 @@ public class ImageChoiceListAdapter extends RecyclerView.Adapter<ImageChoiceList
                 }
             });
 
+            imgChoice.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    imageChoiceActionListener.onImageClick(list.get(getLayoutPosition()));
+                }
+            });
+
             itemView.setClickable(true);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    setSelectedIndex(getLayoutPosition());
+                    imageChoiceActionListener.onImageChoiceSelected(list.get(getLayoutPosition()));
                 }
             });
         }

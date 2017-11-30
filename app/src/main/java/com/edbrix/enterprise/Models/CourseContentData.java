@@ -2,6 +2,8 @@ package com.edbrix.enterprise.Models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 /**
  * Created by rajk on 16/11/17.
  */
@@ -20,9 +22,12 @@ public class CourseContentData {
     @SerializedName("content")
     private String webContent;
 
-    private String img_content;
+    private ArrayList<ImageContentData> img_content;
+
     private String audio_content;
     private String video_content;
+
+    @SerializedName("document_content")
     private String doc_content;
     private String iframe_content;
 
@@ -65,11 +70,11 @@ public class CourseContentData {
         this.webContent = webContent;
     }
 
-    public String getImg_content() {
+    public ArrayList<ImageContentData> getImg_content() {
         return img_content;
     }
 
-    public void setImg_content(String img_content) {
+    public void setImg_content(ArrayList<ImageContentData> img_content) {
         this.img_content = img_content;
     }
 

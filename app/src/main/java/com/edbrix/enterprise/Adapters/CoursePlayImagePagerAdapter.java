@@ -2,6 +2,9 @@ package com.edbrix.enterprise.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,55 +13,33 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.edbrix.enterprise.Fragments.ImagePageFragment;
+import com.edbrix.enterprise.Models.ImageContentData;
 import com.edbrix.enterprise.R;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 /**
  * Created by rajk on 16/11/17.
  */
 
-public class CoursePlayImagePagerAdapter extends PagerAdapter {
+public class CoursePlayImagePagerAdapter extends FragmentStatePagerAdapter {
 
-    private Context aContext;
-    private LayoutInflater layoutInflater;
+    private ArrayList<ImageContentData> imageList;
 
-    public CoursePlayImagePagerAdapter(Context aContext) {
-        this.aContext = aContext;
-//        this.images = images;
-        layoutInflater = (LayoutInflater) aContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public CoursePlayImagePagerAdapter(FragmentManager fm,ArrayList<ImageContentData> imageList) {
+        super(fm);
+        this.imageList = imageList;
+    }
 
+    @Override
+    public Fragment getItem(int position) {
+        return ImagePageFragment.getInstance(imageList.get(position));
     }
 
     @Override
     public int getCount() {
-        return 0;
-    }
-
-    @Override
-    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return false;
-    }
-
-    @Override
-    public Object instantiateItem(ViewGroup container, final int position) {
-        View itemView = layoutInflater.inflate(R.layout.item_image_pager, container, false);
-        ImageView imgContent = (ImageView) itemView.findViewById(R.id.imgContent);
-//        imgContent.setImageResource(images[position]);
-
-        container.addView(itemView);
-
-        //listening to image click
-        imgContent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(aContext, "you clicked image " + (position + 1), Toast.LENGTH_LONG).show();
-            }
-        });
-
-        return itemView;
-    }
-
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((LinearLayout) object);
+        return imageList == null ? 0 : imageList.size();
     }
 }

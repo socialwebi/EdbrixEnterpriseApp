@@ -17,6 +17,7 @@ import com.edbrix.enterprise.R;
 public class ToastMessage extends ViewGroup {
 
     Context mContext;
+    Toast toast;
 
     public ToastMessage(Context context) {
         super(context);
@@ -41,7 +42,7 @@ public class ToastMessage extends ViewGroup {
             int height = displaymetrics.heightPixels;
             int width = displaymetrics.widthPixels;
 
-            Toast toast = new Toast(mContext);
+            toast = new Toast(mContext);
             toast.setGravity(Gravity.BOTTOM, 0, height / 4);
             toast.setDuration(timeDuration);
             toast.setView(toastLayout);
@@ -51,6 +52,12 @@ public class ToastMessage extends ViewGroup {
             e.printStackTrace();
         }
 
+    }
+
+    public  void cancelToast(){
+        if(toast!=null){
+            toast.cancel();
+        }
     }
 
 	/*	public Dialog getCustomeDialog(String message){
