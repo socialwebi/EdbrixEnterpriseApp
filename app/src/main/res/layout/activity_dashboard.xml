@@ -17,6 +17,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:layout_marginRight="15dp"
             android:background="@color/colorActionBar"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
@@ -121,7 +122,6 @@
                     android:layout_margin="@dimen/app_min_margin"
                     android:src="@mipmap/dashboard_course_icon" />
 
-
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
@@ -158,15 +158,55 @@
         android:layout_centerInParent="true" />
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/floatingActionButton"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
+                android:visibility="gone"
                 android:layout_margin="16dp"
                 android:clickable="true"
                 app:srcCompat="@drawable/zm_ic_add_normal_ondark" />
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/floatingActionMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        app:fab_addButtonColorNormal="@color/colorWhite"
+        app:fab_addButtonColorPressed="@color/white_pressed"
+        app:fab_addButtonPlusIconColor="@color/half_black"
+        app:fab_labelStyle="@style/menu_labels_style"
+        app:fab_addButtonStrokeVisible="false"
+        app:fab_labelsPosition="left"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp" >
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_course"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/colorWhite"
+            app:fab_size="mini"
+            app:fab_title="Add Course"
+            app:fab_icon="@mipmap/dashboard_course_icon"
+            app:fab_colorPressed="@color/white_pressed"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_meeting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/colorWhite"
+            app:fab_size="mini"
+            app:fab_icon="@mipmap/dashboard_schedule_icon"
+            app:fab_title="Add Schedule"
+            app:fab_colorPressed="@color/white_pressed"/>
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 </RelativeLayout>

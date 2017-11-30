@@ -13,6 +13,7 @@
     <string name="new_password">New Password</string>
     <string name="confirm_password">Confirm Password</string>
 
+    <string name="code">Code  </string>
     <string name="name">Name  </string>
     <string name="price">Price  </string>
     <string name="payment">PayPal Email </string>
@@ -34,8 +35,9 @@
     <string name="schedules">Schedules</string>
     <string name="meetings">Meetings</string>
     <string name="meeting_details">Meeting Details</string>
-    <string name="create_live_course">Create Live Course</string>
-    <string name="create_video_course">Create Video Course</string>
+    <string name="create_live_course">Create Course</string>
+    <string name="create_video_course">Course Content</string>
+    <string name="choose_file">Choose File</string>
     <string name="courses">Courses</string>
     <string name="settings">Settings</string>
     <string name="enter_ans_here">Enter answer here..</string>
@@ -74,8 +76,12 @@
     <string name="share">Share </string>
     <string name="logout">Logout</string>
 
-    <string name="all_meetings"> View all meetings </string>
-    <string name="all_courses"> View all courses </string>
+    <string name="all_meetings"> View All Meetings </string>
+    <string name="all_courses"> View All Courses </string>
+
+    <string name="permissions"> Permissions </string>
+
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
 
     <!--Image Descriptions-->
     <string name="image_walkthrough">Walkthrough image</string>
@@ -83,6 +89,8 @@
     <string name="image_logo">Edbrix logo</string>
     <string name="image_course">Course image</string>
     <string name="image_right_arrow">Right arrow icon</string>
+    <string name="image_toolbar_left">Toolbar left image</string>
+    <string name="image_toolbar_right">Toolbar right image</string>
 
 
     <!--Error messages-->
@@ -91,8 +99,9 @@
     <string name="error_number_not_valid">Number not valid </string>
     <string name="error_password_not_match">Password not match </string>
     <string name="error_network"> Check network connection </string>
+    <string name="error_files"> Please select a file </string>
     <string name="error_something_wrong">Something went wrong, Pleae try again</string>
-
+    <string name="error_no_files">No files found</string>
 
     <!--WalkThrough-->
     <string name="skip">Skip</string>
@@ -100,6 +109,7 @@
     <string name="start">Get Started</string>
     <string name="done">Done</string>
     <string name="ok">OK</string>
+    <string name="create">Create</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

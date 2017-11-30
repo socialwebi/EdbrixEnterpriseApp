@@ -20,6 +20,9 @@ public class Constants {
 	public final static String getCourseSections = BASE_URL.concat("getcoursesections");
 	public final static String getConnectivityTypes = BASE_URL.concat("getconnectivitytypes");
 
+	public final static String setCreateCourse = BASE_URL.concat("createcourse");
+	public final static String setCreateCourseContent = BASE_URL.concat("createcoursecontent");
+	public final static String getCourseContent = BASE_URL.concat("getcoursecontents");
 
 	public final static String contentType_C ="C";
 	public final static String contentType_WC ="WC";
@@ -49,12 +52,14 @@ public class Constants {
 	public final static String WEB_DOMAIN = "zoom.us";
 
 	// TODO Change it to your APP Key
-	final static String APP_KEY_ = "UTiw4W3on3YdNzjU1dD3dxFIa9mCVu16JOop";
-	public final static String APP_KEY = "zAJLGT0f3NjDeThGV15pwjVzDACqYf4VDkH7";
+	public final static String APP_KEY__ = "UTiw4W3on3YdNzjU1dD3dxFIa9mCVu16JOop";
+	public final static String APP_KEY_ = "zAJLGT0f3NjDeThGV15pwjVzDACqYf4VDkH7";
+	public final static String APP_KEY = "peoY0DllTnoO7yOiF9gbbc3K0SHoh4QRHMba";
 
 	// TODO Change it to your APP Secret
-	final static String APP_SECRET_ = "JC37LqI5LssCXYCXytIxNc2hyyHghHSX7CKo";
-	public final static String APP_SECRET = "HZOsMSYDYLBvtRESSpSvXW7tULBFJo2T3JYb";
+	public final static String APP_SECRET__ = "JC37LqI5LssCXYCXytIxNc2hyyHghHSX7CKo";
+	public final static String APP_SECRET_ = "HZOsMSYDYLBvtRESSpSvXW7tULBFJo2T3JYb";
+	public final static String APP_SECRET = "p2Khhd7mya7bQ2u8NFBh2hYTDskCT58yR57V";
 
 	// TODO change it to your user ID
 	final static String USER_ID = "604813"; // 604813  ijTMthVYQzSy06ba9Elxdw

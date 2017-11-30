@@ -18,9 +18,7 @@ import com.edbrix.enterprise.R;
 
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class DashBoardMeetingListAdapter extends RecyclerView.Adapter<DashBoardMeetingListAdapter.ViewHolder> {
 
     private Context context;

@@ -3,7 +3,6 @@ package com.edbrix.enterprise.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +38,8 @@ import com.edbrix.enterprise.Utils.SessionManager;
 import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,7 +60,9 @@ public class DashboardActivity extends BaseActivity {
 
     TextView _dashboard_text_all_meetings;
     TextView _dashboard_text_all_course;
-    FloatingActionButton _fab;
+    FloatingActionsMenu _floatingActionMenu;
+    FloatingActionButton _fab_course;
+    FloatingActionButton _fab_meeting;
 
     ProgressBar _dashboard_progress;
 
@@ -105,12 +108,17 @@ public class DashboardActivity extends BaseActivity {
         _dashboard_recycler_courses = findViewById(R.id.dashboard_recycler_courses);
         _dashboard_text_all_course = findViewById(R.id.dashboard_text_all_course);
         _dashboard_progress = findViewById(R.id.dashboard_progress);
-        _fab = findViewById(R.id.floatingActionButton);
+        _floatingActionMenu = findViewById(R.id.floatingActionMenu);
+        _fab_course = findViewById(R.id.fab_course);
+        _fab_meeting = findViewById(R.id.fab_meeting);
 
         courseAdapter = new DashBoardCourseListAdapter(context, courses, new DashboardListInterface() {
             @Override
             public void onListSelected(String id, String type) {
-
+                Intent intent = new Intent(DashboardActivity.this, CreateLiveCourseActivity.class);
+                intent.putExtra("courseId", id);
+                intent.putExtra("courseTitle", type);
+                startActivity(intent);
             }
         });
 
@@ -141,11 +149,20 @@ public class DashboardActivity extends BaseActivity {
             }
         });
 
-        _fab.setOnClickListener(new View.OnClickListener() {
+        _fab_course.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                _floatingActionMenu.collapse();
                 Intent intent = new Intent(DashboardActivity.this, CreateLiveCourseActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        _fab_meeting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                _floatingActionMenu.collapse();
+
             }
         });
 
@@ -264,6 +281,8 @@ public class DashboardActivity extends BaseActivity {
         switch (id) {
             case R.id.settingsOption:
 
+                Intent intent = new Intent(DashboardActivity.this, SettingsActivity.class);
+                startActivity(intent);
                 return true;
 
         }

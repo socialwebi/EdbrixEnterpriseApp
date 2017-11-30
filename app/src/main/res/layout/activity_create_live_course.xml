@@ -33,6 +33,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
+                    android:gravity="center"
                     android:text="@string/create_live_course"
                     android:textColor="@color/colorMainText"
                     android:textSize="20sp" />
@@ -43,11 +44,31 @@
 
     </android.support.design.widget.AppBarLayout>
 
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/create_text_input_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/create_AppBar"
+        android:visibility="gone"
+        android:padding="3dp">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/live_course_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/code"
+            android:imeOptions="actionNext"
+            android:focusable="false"
+            android:inputType="textCapSentences|text" />
+
+    </android.support.design.widget.TextInputLayout>
+
         <android.support.design.widget.TextInputLayout
             android:id="@+id/create_text_input_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/create_AppBar"
+            android:layout_below="@+id/create_text_input_code"
             android:padding="3dp">
 
             <android.support.design.widget.TextInputEditText
@@ -56,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/name"
                 android:imeOptions="actionNext"
-                android:inputType="text" />
+                android:inputType="textCapSentences|text" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -64,6 +85,7 @@
             android:id="@+id/create_text_input_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Price"
             android:layout_below="@+id/create_text_input_name"
             android:padding="3dp">
 
@@ -71,11 +93,11 @@
                 android:id="@+id/live_course_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/price"
                 android:imeOptions="actionNext"
                 android:inputType="number" />
 
         </android.support.design.widget.TextInputLayout>
+
 
 
         <Button

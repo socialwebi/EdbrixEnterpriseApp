@@ -87,7 +87,7 @@ public class DashBoardCourseListAdapter extends RecyclerView.Adapter<DashBoardCo
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    dashRecyclerInterface.onListSelected(list.get(getLayoutPosition()).getId(), null);
+                    dashRecyclerInterface.onListSelected(list.get(getLayoutPosition()).getId(), list.get(getLayoutPosition()).getTitle());
                 }
             });
         }

@@ -20,6 +20,9 @@ public class ResponseData {
     @SerializedName("courses")
     private ArrayList<Courses> coursesList;
 
+    @SerializedName("courseContents")
+    private ArrayList<CourseContents> courseContents;
+
     private ArrayList<TypesC> resourcesTypes;
     private ArrayList<TypesC> courseContentsTypes;
     private ArrayList<TypesC> connectivityTypes;
@@ -117,6 +120,14 @@ public class ResponseData {
         this.resourcesTypes = resourcesTypes;
     }
 
+    public ArrayList<CourseContents> getCourseContents() {
+        return courseContents;
+    }
+
+    public void setCourseContents(ArrayList<CourseContents> courseContents) {
+        this.courseContents = courseContents;
+    }
+
     public ArrayList<TypesC> getCourseContentsTypes() {
         return courseContentsTypes;
     }
@@ -170,6 +181,7 @@ public class ResponseData {
                 ", Meetings = '" + meetings + '\'' +
                 ", meeting = '" + meeting + '\'' +
                 ", coursesList = '" + coursesList + '\'' +
+                ", courseContents = '" + courseContents + '\'' +
                 ", ErrorCode= '" + ErrorCode + '\'' +
                 ", ErrorMessage= '" + ErrorMessage + '\'' +
                 ", page= '" + page + '\'' +

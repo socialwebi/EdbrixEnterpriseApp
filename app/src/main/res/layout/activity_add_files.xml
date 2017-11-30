@@ -32,6 +32,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
+                    android:gravity="center"
                     android:text="@string/create_video_course"
                     android:textColor="@color/colorMainText"
                     android:textSize="20sp" />
@@ -55,15 +56,37 @@
             android:layout_height="wrap_content"
             android:hint="@string/title"
             android:imeOptions="actionNext"
-            android:inputType="text" />
+            android:inputType="textCapSentences|text" />
 
     </android.support.design.widget.TextInputLayout>
 
     <Button
+        android:id="@+id/add_file_button_browse"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/add_file_text_input_title"
         android:text="Browse " />
+
+    <Button
+        android:id="@+id/add_file_button_youtube"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_file_button_browse"
+        android:text="Youtube video " />
+
+    <TextView
+        android:id="@+id/add_file_text_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_file_button_youtube" />
+
+    <ImageView
+        android:id="@+id/add_file_image_preview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:cropToPadding="true"
+
+        android:layout_below="@+id/add_file_text_message"/>
 
     <Button
         android:id="@+id/add_file_button_submit"
@@ -74,7 +97,33 @@
         android:layout_alignParentBottom="true"
         android:background="@color/colorAccent"
         android:textColor="@color/colorWhite"
-        android:text="@string/done" />
+        android:text="@string/submit" />
 
+    <LinearLayout
+        android:id="@+id/add_file_progress_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@color/colorWhite"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:gravity="center">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"/>
+
+        <TextView
+            android:id="@+id/add_file_progress_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:text="Progress... "/>
+
+    </LinearLayout>
 
 </RelativeLayout>
