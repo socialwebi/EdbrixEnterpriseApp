@@ -1,25 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/ganeshchaudhari/AndroidStudioProjects/EdbrixEnterpriseApp/E:\\NewWork\\EdbrixApp\\ViewPagerIndicator\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values-v24\\values-v24.xml",
-            "map": [
-                {
-                    "source": "/Users/ganeshchaudhari/AndroidStudioProjects/EdbrixEnterpriseApp/C:\\Users\\Anvesh\\.gradle\\caches\\transforms-1\\files-1.1\\support-media-compat-26.1.0.aar\\5524b66fb3728d4be99aacec65a68302\\res\\values-v24\\values-v24.xml",
-                    "from": {
-                        "startLines": "2,3,4,5",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "55,121,182,248",
-                        "endColumns": "65,60,65,66",
-                        "endOffsets": "116,177,243,310"
-                    }
-                }
-            ]
-        },
-        {
             "outputFile": "/Users/ganeshchaudhari/AndroidStudioProjects/EdbrixEnterpriseApp/ViewPagerIndicator/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-v24/values-v24.xml",
             "map": [
                 {
-                    "source": "/Users/ganeshchaudhari/.gradle/caches/transforms-1/files-1.1/support-media-compat-26.1.0.aar/54b6bdeef332f1ae1e9f1e07bebd0beb/res/values-v24/values-v24.xml",
+                    "source": "/Users/ganeshchaudhari/.gradle/caches/transforms-1/files-1.1/support-media-compat-26.1.0.aar/bbd278a579f1d77970d522ade6a3f382/res/values-v24/values-v24.xml",
                     "from": {
                         "startLines": "2,3,4,5",
                         "startColumns": "4,4,4,4",
