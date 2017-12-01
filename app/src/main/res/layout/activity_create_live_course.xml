@@ -50,11 +50,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/create_AppBar"
-        android:visibility="gone"
         android:padding="3dp">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/live_course_code"
+            android:id="@+id/create_course_code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/code"
@@ -81,12 +80,59 @@
 
         </android.support.design.widget.TextInputLayout>
 
+    <LinearLayout
+        android:id="@+id/linear_browse_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/live_course_button_browse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/live_course_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/name"
+            android:imeOptions="actionNext"
+            android:inputType="textCapSentences|text" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/create_text_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_below="@+id/create_text_input_name"
+        android:text="Category" />
+
+    <Spinner
+        android:id="@+id/create_spinner_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        android:padding="3dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_below="@+id/create_text_category"
+        android:textAlignment="center" />
+
         <android.support.design.widget.TextInputLayout
             android:id="@+id/create_text_input_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Price"
-            android:layout_below="@+id/create_text_input_name"
+            android:layout_below="@+id/create_spinner_category"
             android:padding="3dp">
 
             <android.support.design.widget.TextInputEditText

@@ -7,6 +7,15 @@
     android:paddingBottom="8dp"
     tools:context="com.edbrix.enterprise.Adapters.FileListAdapter">
 
+    <ImageView android:id="@+id/file_list_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp" />
+
     <TextView
         android:id="@+id/file_list_name"
         android:layout_width="0dp"

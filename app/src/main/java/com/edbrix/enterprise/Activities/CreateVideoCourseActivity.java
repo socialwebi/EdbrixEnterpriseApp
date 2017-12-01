@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -48,6 +49,7 @@ public class CreateVideoCourseActivity extends BaseActivity {
     CardView _create_card_video;
     CardView _create_card_document;
     RecyclerView _create_recycler;
+    ProgressBar _create_progress;
 
     private FileListAdapter adapter;
 
@@ -70,13 +72,14 @@ public class CreateVideoCourseActivity extends BaseActivity {
         price = intent.getStringExtra("price");
         courseId = intent.getStringExtra("courseId");
 
-        if (!courseId.equals("0")) {
-            getCourseContent();
-        }
-
         _create_card_video = findViewById(R.id.create_card_video);
         _create_card_document = findViewById(R.id.create_card_document);
         _create_recycler = findViewById(R.id.create_recycler);
+        _create_progress = findViewById(R.id.create_progress);
+
+        if (!courseId.equals("0")) {
+            getCourseContent();
+        }
 
         _create_card_video.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,13 +106,16 @@ public class CreateVideoCourseActivity extends BaseActivity {
         });
 
         adapter = new FileListAdapter(context, new ArrayList<CourseContents>(), new CourseContentButtonListener() {
-            @Override
-            public void onCourseDeleteClick(String id) {
 
+            @Override
+            public void onCourseDeleteClick(String id, int position) {
+                setCourseContentDelete(id, position);
             }
 
             @Override
-            public void onCoursePreviewClick(String id) {
+            public void onCoursePreviewClick(String id, String path) {
+
+
 
             }
         });
@@ -138,7 +144,7 @@ public class CreateVideoCourseActivity extends BaseActivity {
 
         User user = SettingsMy.getActiveUser();
         if (user!=null) {
-
+            _create_progress.setVisibility(View.VISIBLE);
             JSONObject jo = new JSONObject();
             try {
                 jo.put("UserId", user.getId());
@@ -155,6 +161,7 @@ public class CreateVideoCourseActivity extends BaseActivity {
                     new Response.Listener<ResponseData>() {
                         @Override
                         public void onResponse(@NonNull ResponseData response) {
+                            _create_progress.setVisibility(View.GONE);
                             Timber.d("response: %s", response.toString());
                             if (response.getErrorCode()==null) {
 
@@ -178,6 +185,7 @@ public class CreateVideoCourseActivity extends BaseActivity {
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    _create_progress.setVisibility(View.GONE);
                     try {
                         Snackbar.make(layout, getString(R.string.error_something_wrong), Snackbar.LENGTH_LONG).show();
                     } catch (Exception e2) {
@@ -193,17 +201,17 @@ public class CreateVideoCourseActivity extends BaseActivity {
         }
     }
 
-    private void setCourseContentDelete(String id) {
+    private void setCourseContentDelete(String id, final int position) {
 
         User user = SettingsMy.getActiveUser();
         if (user!=null) {
-
+            _create_progress.setVisibility(View.VISIBLE);
             JSONObject jo = new JSONObject();
             try {
                 jo.put("UserId", user.getId());
                 jo.put("AccessToken", user.getAccessToken());
                 jo.put("CourseId", courseId);
-                jo.put("ContentId", id);
+                jo.put("CourseContentId", id);
 
             } catch (JSONException e) {
                 Timber.e(e, "Parse create course exception");
@@ -211,14 +219,24 @@ public class CreateVideoCourseActivity extends BaseActivity {
             }
             if (BuildConfig.DEBUG) Timber.d("Course: %s", jo.toString());
 
-            GsonRequest<ResponseData> userChangePasswordRequest = new GsonRequest<>(Request.Method.POST, Constants.getCourseContent, jo.toString(), ResponseData.class,
+            GsonRequest<ResponseData> userChangePasswordRequest = new GsonRequest<>(Request.Method.POST, Constants.setDeleteCourseContent, jo.toString(), ResponseData.class,
                     new Response.Listener<ResponseData>() {
                         @Override
                         public void onResponse(@NonNull ResponseData response) {
+                            _create_progress.setVisibility(View.GONE);
                             Timber.d("response: %s", response.toString());
-                            if (response.getErrorCode()==null) {
+                            if (response.getErrorCode()==null || response.getErrorCode().equals("0")) {
 
-                                adapter.refresh(response.getCourseContents());
+                                try {
+                                    Timber.d("Error: %s", "Content deleted successfully ");
+                                    Snackbar.make(layout, response.getErrorMessage(), Snackbar.LENGTH_LONG).show();
+                                } catch (Exception e2) {
+                                    e2.printStackTrace();
+                                    Timber.d("Error: %s", "Content deleted successfully ");
+                                    Toast.makeText(context, response.getErrorMessage(), Toast.LENGTH_LONG).show();
+                                }
+
+                                adapter.deleteItemFromList(position);
                                 adapter.notifyDataSetChanged();
 
                             }
@@ -238,6 +256,7 @@ public class CreateVideoCourseActivity extends BaseActivity {
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    _create_progress.setVisibility(View.GONE);
                     try {
                         Snackbar.make(layout, getString(R.string.error_something_wrong), Snackbar.LENGTH_LONG).show();
                     } catch (Exception e2) {

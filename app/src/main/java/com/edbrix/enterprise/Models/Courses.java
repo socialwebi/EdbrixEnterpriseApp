@@ -34,6 +34,10 @@ public class Courses implements Serializable {
     @SerializedName("instructor_mobileno")
     private String instructor_mobileno;
 
+    private String code;
+    private String price;
+
+
     public String getId ()
     {
         return id;
@@ -120,9 +124,25 @@ public class Courses implements Serializable {
         this.instructor_image_url = instructor_image_url;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
     @Override
     public String toString()
     {
-        return "ClassPojo [id = "+id+", access_code = "+access_code+", title = "+title+", instructor_email = "+instructor_email+", instructor_name = "+instructor_name+", course_image_url = "+course_image_url+", description = "+description+", instructor_mobileno = "+instructor_mobileno+"]";
+        return "ClassPojo [id = "+id+", access_code = "+access_code+", title = "+title+", code = "+code+", price = "+price+", instructor_email = "+instructor_email+", instructor_name = "+instructor_name+", course_image_url = "+course_image_url+", description = "+description+", instructor_mobileno = "+instructor_mobileno+"]";
     }
 }

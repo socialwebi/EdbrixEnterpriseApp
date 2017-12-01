@@ -2,6 +2,7 @@ package com.edbrix.enterprise.Activities;
 
 import android.Manifest;
 import android.accounts.AccountManager;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -10,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -29,11 +31,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -61,6 +65,8 @@ import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.Channel;
 import com.google.api.services.youtube.model.ChannelListResponse;
 import com.google.api.services.youtube.model.SearchListResponse;
+import com.google.api.services.youtube.model.Video;
+import com.google.api.services.youtube.model.VideoPlayer;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -221,6 +227,38 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
             }
         });*/
 
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Dialog dialog = new Dialog(context);
+                dialog.setContentView(R.layout.custom_video_layout);
+                //dialog.setTitle("This is my custom dialog box");
+                dialog.setCancelable(true);
+                dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                final VideoView cusVideoView = dialog.findViewById(R.id.cus_video_view);
+                cusVideoView.setVideoURI(filePath);
+                cusVideoView.setZOrderOnTop(true);
+                cusVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mediaPlayer) {
+                        cusVideoView.start();
+                        mediaPlayer.setLooping(true);
+                    }
+                });
+
+                //set up button
+                ImageButton button = dialog.findViewById(R.id.cus_button_cancel);
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                //now that the dialog is set up, it's time to show it
+                dialog.show();
+            }
+        });
+
         _add_file_button_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -283,7 +321,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
             EasyPermissions.requestPermissions(this,
                     "This app needs to access your Videos.",
                     REQUEST_PERMISSION_EXTERNAL,
-                    Manifest.permission.GET_ACCOUNTS);
+                    Manifest.permission.READ_EXTERNAL_STORAGE);
         }
     }
 
@@ -294,7 +332,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
             EasyPermissions.requestPermissions(this,
                     "This app needs to access your Documents.",
                     REQUEST_PERMISSION_EXTERNAL,
-                    Manifest.permission.GET_ACCOUNTS);
+                    Manifest.permission.READ_EXTERNAL_STORAGE);
         }
 
     }
@@ -328,10 +366,10 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
                     .setMaxCount(1)
                     .setSelectedFiles(docPaths)
                     .setActivityTheme(R.style.AppTheme)
-                    .addFileSupport("DOC",docs)
-                    .addFileSupport("PDF",pdfs,R.mipmap.document_icon)
-                    .addFileSupport("PPT",ppts)
-                    .addFileSupport("XLS",xls)
+                    .addFileSupport("DOC",docs,R.mipmap.doc_icon)
+                    .addFileSupport("PDF",pdfs,R.mipmap.pdf_icon)
+                    .addFileSupport("PPT",ppts,R.mipmap.ppt_icon)
+                    .addFileSupport("XLS",xls,R.mipmap.xls_icon)
                     .enableDocSupport(false)
                     .withOrientation(Orientation.UNSPECIFIED)
                     .pickFile(this);
@@ -682,6 +720,8 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
                                     .placeholder(droidninja.filepicker.R.drawable.image_placeholder))
                             .thumbnail(0.5f)
                             .into(imageView);
+
+                    imageView.setClickable(true);
                     fileExtension = photoPaths.get(0).substring(photoPaths.get(0).lastIndexOf("."));
                     Log.d("TAG", photoPaths.toString() +" _-_ "+fileExtension);
                     // uploadToEdbrix(uri);
@@ -700,9 +740,11 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
                                     .centerCropTransform()
                                     .dontAnimate()
                                     .override(imageSize, imageSize)
-                                    .placeholder(droidninja.filepicker.R.drawable.image_placeholder))
+                                    .placeholder(R.mipmap.document_icon))
                             .thumbnail(0.5f)
                             .into(imageView);
+
+                    imageView.setClickable(false);
                     fileExtension = docPaths.get(0).substring(docPaths.get(0).lastIndexOf("."));
                     Log.d("TAG", docPaths.toString() +" _-_ "+fileExtension);
                     // uploadToEdbrix(uri);
@@ -720,6 +762,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
      *     which is either PERMISSION_GRANTED or PERMISSION_DENIED. Never null.
      */
 
+    @SuppressLint("NeedOnRequestPermissionsResult")
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,

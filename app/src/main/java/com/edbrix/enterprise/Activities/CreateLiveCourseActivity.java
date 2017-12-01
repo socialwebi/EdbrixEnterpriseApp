@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -51,11 +52,15 @@ public class CreateLiveCourseActivity extends BaseActivity {
     TextInputLayout _create_text_input_price;
     TextInputEditText _live_course_title;
     TextInputEditText _live_course_price;
+    TextInputEditText _live_course_code;
     Button _live_course_button_submit;
+    TextView _create_text_category;
+    Spinner _create_spinner_category;
 
     private String courseId;
     private String courseName;
     private String categoryId = "0";
+    private ArrayList<String> arrayList;
 
     private String title;
     private String price;
@@ -73,15 +78,21 @@ public class CreateLiveCourseActivity extends BaseActivity {
         Intent intent = getIntent();
         courseId = intent.getStringExtra("courseId");
         courseName = intent.getStringExtra("courseTitle");
-        if (courseId==null) {
-            courseId = "0";
-        }
 
         _create_text_input_price = findViewById(R.id.create_text_input_price);
+        _live_course_code = findViewById(R.id.create_course_code);
         _live_course_title = findViewById(R.id.live_course_title);
         _live_course_price = findViewById(R.id.live_course_price);
-
+        _create_text_category = findViewById(R.id.create_text_category);
+        _create_spinner_category = findViewById(R.id.create_spinner_category);
         _live_course_button_submit = findViewById(R.id.live_course_button_submit);
+
+        if (courseId==null) {
+            courseId = "0";
+            visibleCode(false);
+        } else {
+            visibleCode(true);
+        }
 
         _live_course_price.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -103,6 +114,13 @@ public class CreateLiveCourseActivity extends BaseActivity {
                 checkValidations();
             }
         });
+
+        arrayList = new ArrayList<>();
+        arrayList.add("Category");
+
+        ArrayAdapter<String> adapter3 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayList);
+        adapter3.setDropDownViewResource(R.layout.custom_text_layout);
+        _create_spinner_category.setAdapter(adapter3);
 
     }
 
@@ -139,6 +157,22 @@ public class CreateLiveCourseActivity extends BaseActivity {
             intent.putExtra("price", price);
             intent.putExtra("courseId", courseId);
             startActivity(intent);
+        }
+
+    }
+
+    private void visibleCode(boolean val){
+
+        if (val) {
+            _create_text_category.setVisibility(View.VISIBLE);
+            _live_course_code.setVisibility(View.VISIBLE);
+            _create_spinner_category.setVisibility(View.VISIBLE);
+            _live_course_button_submit.setText(" SAVE ");
+        } else {
+            _create_text_category.setVisibility(View.GONE);
+            _live_course_code.setVisibility(View.GONE);
+            _create_spinner_category.setVisibility(View.GONE);
+            _live_course_button_submit.setText(" NEXT ");
         }
 
     }
@@ -192,6 +226,20 @@ public class CreateLiveCourseActivity extends BaseActivity {
             Application.getInstance().addToRequestQueue(req, "create_course_requests");
 
         }
+    }
+
+    private void getData(Courses courses) {
+
+        _live_course_code.setText(courses.getCode());
+        _live_course_title.setText(courses.getTitle());
+        _live_course_price.setText(courses.getPrice());
+
+        arrayList = new ArrayList<>();
+
+        ArrayAdapter<String> adapter3 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, arrayList);
+        adapter3.setDropDownViewResource(R.layout.custom_text_layout);
+        _create_spinner_category.setAdapter(adapter3);
+
     }
 
 }

@@ -189,7 +189,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/app_normal_margin"
-                android:background="@drawable/border"
+                android:background="@drawable/border_color"
                 android:gravity="top|left"
                 android:hint="@string/enter_ans_here"
                 android:inputType="textAutoComplete|textCapSentences"

@@ -6,6 +6,7 @@ public class CourseContents {
     private String id;
     private String title;
     private String type;
+    private String preview;
 
     public String getId() {
         return id;
@@ -31,12 +32,21 @@ public class CourseContents {
         this.type = type;
     }
 
+    public String getPreview() {
+        return preview;
+    }
+
+    public void setPreview(String preview) {
+        this.preview = preview;
+    }
+
     @Override
     public String toString() {
         return "CourseContents { " +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", type='" + type + '\'' +
+                ", preview='" + preview + '\'' +
                 '}';
     }
 
