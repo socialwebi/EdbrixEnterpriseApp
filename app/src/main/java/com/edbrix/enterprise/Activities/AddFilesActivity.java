@@ -112,6 +112,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
     RelativeLayout layout;
     Context context;
 
+
     TextInputEditText _add_file_file_title;
     private TextView mOutputText;
     LinearLayout _add_file_progress_layout;

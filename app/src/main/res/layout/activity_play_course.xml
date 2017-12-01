@@ -26,7 +26,7 @@
                 android:id="@+id/relativeLayoutLogo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginRight="15dp"
+                android:layout_marginRight="@dimen/app_big_margin"
                 android:visibility="visible">
 
                 <TextView
@@ -34,6 +34,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
+                    android:paddingRight="@dimen/app_big_margin"
                     android:text="@string/course_content"
                     android:textColor="@color/colorMainText"
                     android:textSize="20sp" />
@@ -94,9 +95,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/app_normal_margin"
+                android:orientation="vertical"
                 android:padding="@dimen/app_normal_padding"
-                android:visibility="gone"
-                android:orientation="vertical">
+                android:visibility="gone">
 
 
                 <com.edbrix.enterprise.Utils.CustomWebView
@@ -113,10 +114,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:paddingLeft="@dimen/app_normal_padding"
                     android:layout_marginLeft="@dimen/app_normal_margin"
+                    android:paddingLeft="@dimen/app_normal_padding"
                     android:text="Note: Click on play to listen"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
 
             </LinearLayout>
@@ -157,9 +158,9 @@
                 android:id="@+id/checkSubmit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/app_normal_margin"
                 android:layout_marginLeft="@dimen/app_big_margin"
                 android:layout_marginTop="@dimen/app_normal_margin"
-                android:layout_marginBottom="@dimen/app_normal_margin"
                 android:visibility="gone" />
 
             <TextView
@@ -210,8 +211,8 @@
                 android:id="@+id/radioGroupLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_margin="@dimen/app_normal_margin"
+                android:orientation="vertical"
                 android:visibility="gone">
 
             </RadioGroup>
