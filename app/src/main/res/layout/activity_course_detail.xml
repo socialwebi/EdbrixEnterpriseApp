@@ -103,7 +103,7 @@
                         android:layout_marginRight="@dimen/app_min_margin"
                         android:layout_marginTop="@dimen/app_min_margin"
                         android:padding="@dimen/app_min_padding"
-                        android:src="@drawable/play_course_icon" />
+                        android:src="@mipmap/play_course_icon" />
 
                     <ImageView
                         android:id="@+id/btnCourseMsg"
