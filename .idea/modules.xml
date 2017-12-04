@@ -2,17 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/EdbrixEnterpriseApp.iml" filepath="$PROJECT_DIR$/EdbrixEnterpriseApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/EdbrixEnterpriseApp.iml" filepath="$PROJECT_DIR$/.idea/EdbrixEnterpriseApp.iml" />
       <module fileurl="file://E:\NewWork\EdbrixEnterpriseApp\EdbrixEnterpriseApp.iml" filepath="E:\NewWork\EdbrixEnterpriseApp\EdbrixEnterpriseApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/ViewPagerIndicator/ViewPagerIndicator.iml" filepath="$PROJECT_DIR$/ViewPagerIndicator/ViewPagerIndicator.iml" />
-      <module fileurl="file://E:\NewWork\EdbrixEnterpriseApp\ViewPagerIndicator\ViewPagerIndicator.iml" filepath="E:\NewWork\EdbrixEnterpriseApp\ViewPagerIndicator\ViewPagerIndicator.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://E:\NewWork\EdbrixEnterpriseApp\app\app.iml" filepath="E:\NewWork\EdbrixEnterpriseApp\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/zoomcommonlib/zoomcommonlib.iml" filepath="$PROJECT_DIR$/zoomcommonlib/zoomcommonlib.iml" />
-      <module fileurl="file://E:\NewWork\EdbrixEnterpriseApp\zoomcommonlib\zoomcommonlib.iml" filepath="E:\NewWork\EdbrixEnterpriseApp\zoomcommonlib\zoomcommonlib.iml" />
       <module fileurl="file://$PROJECT_DIR$/zoommobilertc/zoommobilertc.iml" filepath="$PROJECT_DIR$/zoommobilertc/zoommobilertc.iml" />
-      <module fileurl="file://E:\NewWork\EdbrixEnterpriseApp\zoommobilertc\zoommobilertc.iml" filepath="E:\NewWork\EdbrixEnterpriseApp\zoommobilertc\zoommobilertc.iml" />
     </modules>
   </component>
 </project>
