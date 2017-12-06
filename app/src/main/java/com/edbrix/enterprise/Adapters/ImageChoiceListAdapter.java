@@ -56,7 +56,7 @@ public class ImageChoiceListAdapter extends RecyclerView.Adapter<ImageChoiceList
             if (list.get(position).getChoice() != null && !list.get(position).getChoice().isEmpty()) {
                 Picasso.with(context)
                         .load(list.get(position).getChoice())
-                        .error(R.drawable.edbrix_logo)
+                        .error(R.drawable.image_placeholder)
                         .into(holder.imgChoice);
             }
         } else {

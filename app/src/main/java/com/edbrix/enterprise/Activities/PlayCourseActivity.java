@@ -115,6 +115,9 @@ public class PlayCourseActivity extends BaseActivity {
     private CustomWebView questionWebView;
 
     private CustomWebView mediaWebView;
+
+    private CustomWebView docWebView;
+
     private CustomWebView audioWebView;
 
     private CustomWebView contentDescWebView;
@@ -126,6 +129,8 @@ public class PlayCourseActivity extends BaseActivity {
     private PlayCourseContentResponseData playCourseContentResponseData;
 
     private CoursePlayImagePagerAdapter imagePagerAdapter;
+
+    private int questionIndex = 0;
 
     private JSONArray mJSONArray;
 
@@ -161,6 +166,7 @@ public class PlayCourseActivity extends BaseActivity {
 
         questionWebView = (CustomWebView) findViewById(R.id.questionWebView);
         mediaWebView = (CustomWebView) findViewById(R.id.mediaWebView);
+        docWebView = (CustomWebView) findViewById(R.id.docWebView);
         audioWebView = (CustomWebView) findViewById(R.id.audioWebView);
         contentDescWebView = (CustomWebView) findViewById(R.id.contentDescWebView);
 
@@ -175,6 +181,11 @@ public class PlayCourseActivity extends BaseActivity {
         mediaWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         mediaWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
         mediaWebView.setWebChromeClient(new WebChromeClient());
+
+        docWebView.getSettings().setJavaScriptEnabled(true);
+        docWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        docWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
+        docWebView.setWebChromeClient(new WebChromeClient());
 
         audioWebView.getSettings().setJavaScriptEnabled(true);
         audioWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
@@ -203,6 +214,7 @@ public class PlayCourseActivity extends BaseActivity {
             title.setText(courseItem.getTitle());
             //set Course Details
 //            setCourseDetails();
+            showBusyProgress();
             getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), "0", "0");
         } else {
             //show message and finish activity
@@ -233,7 +245,7 @@ public class PlayCourseActivity extends BaseActivity {
      */
     private void getPlayCourseContent(final User activeUser, String courseId, String contentId, String questionId) {
         try {
-            showBusyProgress();
+
             JSONObject jo = new JSONObject();
 
             jo.put("UserId", activeUser.getId());
@@ -243,39 +255,13 @@ public class PlayCourseActivity extends BaseActivity {
             jo.put("questionId", questionId);
 
 
-           /* jo.put("UserId", "1");
-            jo.put("AccessToken", "sdfsdf");
-            jo.put("courseId", "1687");
-            jo.put("contentId", "21856");
-            jo.put("questionId", "0");*/
-
-           /* jo.put("UserId", "1");
-            jo.put("AccessToken", "sdfsdf");
-            jo.put("courseId", "1774");
-            jo.put("contentId", "23250");
-            jo.put("questionId", "0");*/
-
-//            {"UserId":"1",
-//                    "AccessToken":"sdfsdf",
-//                    "courseId":"1774",
-//                    "contentId":"23230",
-//                    "questionId":"0"
-//            }
-
 //            jo.put("UserId", "1");
-//            jo.put("AccessToken", "NTI1LTg1REEyUzMtQURTUzVELUVJNUI0QkM1MTE=");
-//            jo.put("UserType", "I");
-//            jo.put("DeviceType", "mob");
-//            jo.put("DataType", "course");
-//            jo.put("Page", "1");
-
-//            jo.put("UserId", "3");
-//            jo.put("AccessToken", "NTI1LTg1REEyUzMtQURTUzVELUVJNUI0QkM1MTM=");
-//            jo.put("UserType", "L");
-//            jo.put("DeviceType", deviceType);
-//            jo.put("DataType", dataType);
-//            jo.put("Page", pageNo);
-
+//            jo.put("AccessToken", "sdfsdf");
+//            jo.put("courseId", "1774");
+////            jo.put("contentId", "27659");
+//            jo.put("contentId", "27648");
+////            jo.put("contentId", "23236");
+//            jo.put("questionId", "0");
 
 //        if (BuildConfig.DEBUG) Timber.d("getCourseList Request Param: %s", jo.toString());
 
@@ -380,6 +366,7 @@ public class PlayCourseActivity extends BaseActivity {
 
     private void clearData() {
 
+        // questionIndex = 0;
         contentDescWebView.setVisibility(View.GONE);
         contentDescWebView.reload();
 
@@ -402,6 +389,9 @@ public class PlayCourseActivity extends BaseActivity {
         mediaWebView.setVisibility(View.GONE);
         mediaWebView.reload();
 
+        docWebView.setVisibility(View.GONE);
+        docWebView.reload();
+
         audioContentLayout.setVisibility(View.GONE);
         audioWebView.setVisibility(View.GONE);
         audioWebView.reload();
@@ -421,14 +411,27 @@ public class PlayCourseActivity extends BaseActivity {
     }
 
     private void setContentData(PlayCourseContentResponseData response) {
-       if( response.getPrev_content_id().equalsIgnoreCase("0")){
-           imgContentPrevBtn.setVisibility(View.INVISIBLE);
-       }else{
-           imgContentPrevBtn.setVisibility(View.VISIBLE);
-       }
-        if( response.getNext_content_id().equalsIgnoreCase("0")){
+        if (response.getPrev_content_id().equalsIgnoreCase("0")) {
+            imgContentPrevBtn.setVisibility(View.INVISIBLE);
+        } else {
+            // if Test or Survey Content
+            if (playCourseContentResponseData.getContent_type().equalsIgnoreCase(Constants.contentType_Test) ||
+                    playCourseContentResponseData.getContent_type().equalsIgnoreCase(Constants.contentType_Survey)) {
+                // if Submit data not null and previous question id == 0
+
+                if (playCourseContentResponseData.getCourse_content().getSubmit_data() != null &&
+                        playCourseContentResponseData.getCourse_content().getSubmit_data().getPrev_question_id().equalsIgnoreCase("0")) {
+                    imgContentPrevBtn.setVisibility(View.VISIBLE);
+                } else {
+                    imgContentPrevBtn.setVisibility(View.INVISIBLE);
+                }
+            } else {
+                imgContentPrevBtn.setVisibility(View.VISIBLE);
+            }
+        }
+        if (response.getNext_content_id().equalsIgnoreCase("0")) {
             imgContentNextBtn.setVisibility(View.INVISIBLE);
-        }else{
+        } else {
             imgContentNextBtn.setVisibility(View.VISIBLE);
         }
 
@@ -444,41 +447,46 @@ public class PlayCourseActivity extends BaseActivity {
 
         // Course content load
 
+        txtContentType.setText(response.getCourse_content().getTitle());
         switch (response.getContent_type()) {
             case Constants.contentType_C:
-                txtContentType.setText(getString(R.string.simple_content));
+//                txtContentType.setText(getString(R.string.simple_content));
                 break;
             case Constants.contentType_Audio:
-                txtContentType.setText(getString(R.string.audio_content));
+//                txtContentType.setText(getString(R.string.audio_content));
                 loadAudioContent(response.getCourse_content().getAudio_content());
                 break;
             case Constants.contentType_Video:
-                txtContentType.setText(getString(R.string.video_content));
+//                txtContentType.setText(getString(R.string.video_content));
                 loadWebContent(response.getCourse_content().getVideo_content());
                 break;
             case Constants.contentType_Iframe:
-                txtContentType.setText(getString(R.string.iframe_content));
+//                txtContentType.setText(getString(R.string.iframe_content));
                 loadWebContent("<html><body>" + response.getCourse_content().getIframe_content() + "</body></html>");
                 break;
             case Constants.contentType_Doc:
-                txtContentType.setText(getString(R.string.document_content));
-                loadWebContent(response.getCourse_content().getDoc_content());
+//                txtContentType.setText(getString(R.string.document_content));
+                if (response.getCourse_content().getDocument_content_type().equalsIgnoreCase(Constants.docContentType_Img)) {
+                    loadPdfImageContent(response.getCourse_content().getDoc_content());
+                } else {
+                    loadDocWebContent(response.getCourse_content().getDoc_content()[0]);
+                }
                 break;
             case Constants.contentType_WC:
-                txtContentType.setText(getString(R.string.web_content));
+//                txtContentType.setText(getString(R.string.web_content));
                 loadWebContent(response.getCourse_content().getWebContent());
                 break;
             case Constants.contentType_IMG:
-                txtContentType.setText(getString(R.string.image_content));
-                loadImageContent(PlayCourseActivity.this, response.getCourse_content().getImg_content());
+//                txtContentType.setText(getString(R.string.image_content));
+                loadImageContent(PlayCourseActivity.this, response.getCourse_content().getImg_content(), true);
                 break;
             case Constants.contentType_Survey:
-                txtContentType.setText(getString(R.string.survey));
-                showSurveyProgress(0,10);
+//                txtContentType.setText(getString(R.string.survey));
+                showSurveyProgress(questionIndex, playCourseContentResponseData.getCourse_content().getSubmit_data().getTotal_question_count());
                 break;
             case Constants.contentType_Test:
-                txtContentType.setText(getString(R.string.test));
-                showSurveyProgress(0,10);
+//                txtContentType.setText(getString(R.string.test));
+                showSurveyProgress(questionIndex, playCourseContentResponseData.getCourse_content().getSubmit_data().getTotal_question_count());
                 break;
         }
 
@@ -493,7 +501,7 @@ public class PlayCourseActivity extends BaseActivity {
             checkSubmit.setVisibility(View.GONE);
 //            txtQuestion.setVisibility(View.VISIBLE);
             txtQuestion.setText("Q. " + response.getCourse_content().getSubmit_data().getTitle());
-            loadQuestionTextInWebView("<b>Q. " + response.getCourse_content().getSubmit_data().getTitle()+"</b>");
+            loadQuestionTextInWebView("<b>Q. " + response.getCourse_content().getSubmit_data().getTitle() + "</b>");
             if (response.getCourse_content().getSubmit_data().getChoices() != null && response.getCourse_content().getSubmit_data().getChoices().size() > 0) {
                 if (response.getCourse_content().getSubmit_data().getType().equalsIgnoreCase(Constants.submitDataType_TrueFalse)) {
                     radioGroupLayout.setVisibility(View.VISIBLE);
@@ -549,7 +557,7 @@ public class PlayCourseActivity extends BaseActivity {
             @Override
             public void onImageClick(ChoicesData choicesData) {
                 Intent photo = new Intent(PlayCourseActivity.this, PhotoPopUpActivity.class);
-                photo.putExtra("IMGURL",choicesData.getChoice());
+                photo.putExtra("IMGURL", choicesData.getChoice());
                 startActivity(photo);
             }
         });
@@ -565,7 +573,7 @@ public class PlayCourseActivity extends BaseActivity {
     private void addMultiChoiceCheckBox(final ArrayList<ChoicesData> choiceList) {
         checkboxGroupLayout.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams params
-                = new LinearLayout.LayoutParams(PlayCourseActivity.this, null);
+                = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(10, 10, 10, 10);
         for (int i = 0; i < choiceList.size(); i++) {
             CheckBox checkBox = new CheckBox(this);
@@ -621,20 +629,23 @@ public class PlayCourseActivity extends BaseActivity {
         }
     }
 
+    private void loadDocWebContent(String docWebContent) {
+        if (docWebContent != null && docWebContent.length() > 0) {
+            docWebView.setVisibility(View.VISIBLE);
+            docWebView.loadUrl(docWebContent);
+        } else {
+            docWebView.setVisibility(View.GONE);
+        }
+    }
+
     private void loadAudioContent(String webContent) {
         if (webContent != null && webContent.length() > 0) {
-//            mediaWebView.clearCache(true);
-//            mediaWebView.clearFormData();
-//            Intent intent = new Intent();
-//            intent.setAction(Intent.ACTION_VIEW);
-//            intent.setDataAndType(Uri.parse(webContent), "audio/mp3");
-//            startActivity(intent);
             audioContentLayout.setVisibility(View.VISIBLE);
             audioWebView.setVisibility(View.VISIBLE);
-            String dt="\u003Cdiv\n" +
+            String dt = "\u003Cdiv\n" +
                     "class=\"row margin_zero\"\u003E\u003Ciframe width=\"100%\" height=\"100%\"\n" +
                     "src=\"https://edbrixcbuilder.storage.googleapis.com/storage/uploads/coursecontent/audio/23233/59ad27e3adc0a.mp3\" frameborder=\"0\"allowfullscreen\u003E\u003C/iframe\u003E\u003C/div\u003E";
-            audioWebView.loadData(webContent,"text/html", "utf-8");
+            audioWebView.loadData(webContent, "text/html", "utf-8");
         } else {
             audioContentLayout.setVisibility(View.GONE);
             audioWebView.setVisibility(View.GONE);
@@ -663,7 +674,17 @@ public class PlayCourseActivity extends BaseActivity {
         }
     }
 
-    private void loadImageContent(Context context, ArrayList<ImageContentData> imageContentList) {
+    private void loadPdfImageContent(String[] pdfImageUrls) {
+        if (pdfImageUrls != null && pdfImageUrls.length > 0) {
+            ArrayList<ImageContentData> temp = new ArrayList<>();
+            for (String imgUrl : pdfImageUrls) {
+                temp.add(ImageContentData.addImages(imgUrl));
+            }
+            loadImageContent(PlayCourseActivity.this, temp, false);
+        }
+    }
+
+    private void loadImageContent(Context context, ArrayList<ImageContentData> imageContentList, boolean showThumbnailList) {
         if (imageContentList != null && imageContentList.size() > 0) {
             //load image slider at upper side
             imagePagerAdapter = new CoursePlayImagePagerAdapter(getSupportFragmentManager(), imageContentList);
@@ -677,25 +698,27 @@ public class PlayCourseActivity extends BaseActivity {
             imgViewPager.setAdapter(imagePagerAdapter);
             imageContentLayout.setVisibility(View.VISIBLE);
 
-            //load horizontal image drawer
-            ImageDrawerAdapter imageDrawerAdapter = new ImageDrawerAdapter(context, imageContentList, new ImageDrawerAdapter.ImageSelectionListener() {
-                @Override
-                public void onSelect(ImageContentData imageContentData, int position) {
-                    imgViewPager.setCurrentItem(position);
-                }
-            });
+            if (showThumbnailList) {
+                //load horizontal image drawer
+                ImageDrawerAdapter imageDrawerAdapter = new ImageDrawerAdapter(context, imageContentList, new ImageDrawerAdapter.ImageSelectionListener() {
+                    @Override
+                    public void onSelect(ImageContentData imageContentData, int position) {
+                        imgViewPager.setCurrentItem(position);
+                    }
+                });
 
-            imgDrawerRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-            imgDrawerRecyclerView.setAdapter(imageDrawerAdapter);
-            imgDrawerRecyclerView.setVisibility(View.VISIBLE);
+                imgDrawerRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+                imgDrawerRecyclerView.setAdapter(imageDrawerAdapter);
+                imgDrawerRecyclerView.setVisibility(View.VISIBLE);
+            }
         } else {
             imageContentLayout.setVisibility(View.GONE);
         }
     }
 
-    private void showSurveyProgress(int qIndex , int qCount) {
+    private void showSurveyProgress(int qIndex, int qCount) {
 
-        int percentage =(qIndex*100)/qCount;
+        int percentage = (qIndex * 100) / qCount;
 
         surveyProgressLayout.setVisibility(View.VISIBLE);
         txtSurveyProgress.setText(percentage + "% Completed");
@@ -751,13 +774,24 @@ public class PlayCourseActivity extends BaseActivity {
 
                 stopCountdown();
                 if (playCourseContentResponseData != null) {
-                    String qId = playCourseContentResponseData.getQuestion_id();
-                    if (playCourseContentResponseData.getContent_type().equalsIgnoreCase(Constants.contentType_Test) || playCourseContentResponseData.getContent_type().equalsIgnoreCase(Constants.contentType_Survey)) {
-                        qId = playCourseContentResponseData.getCourse_content().getSubmit_data().getQuestion_id();
+//                    String qId = playCourseContentResponseData.getQuestion_id();
+//                    if (playCourseContentResponseData.getContent_type().equalsIgnoreCase(Constants.contentType_Test) || playCourseContentResponseData.getContent_type().equalsIgnoreCase(Constants.contentType_Survey)) {
+//                        qId = playCourseContentResponseData.getCourse_content().getSubmit_data().getQuestion_id();
+//                    }
+
+                    if (playCourseContentResponseData.getContent_type().equalsIgnoreCase(Constants.contentType_Test) ||
+                            playCourseContentResponseData.getContent_type().equalsIgnoreCase(Constants.contentType_Survey)) {
+                        if (playCourseContentResponseData.getCourse_content().getSubmit_data().getNext_question_id().equalsIgnoreCase("0")) {
+                            questionIndex = 0;
+                        } else {
+                            questionIndex++;
+                        }
+
                     }
+
                     submitPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(),
                             playCourseContentResponseData.getContent_id(),
-                            qId,
+                            playCourseContentResponseData.getCourse_content().getSubmit_data().getQuestion_id(),
                             playCourseContentResponseData.getContent_type(),
                             playCourseContentResponseData.getContentcomplete_type_id(),
                             editTxtLongAns.getText().toString(),
@@ -791,7 +825,17 @@ public class PlayCourseActivity extends BaseActivity {
 //                            Timber.d("Error: %s", response.getErrorCode());
                     showToast(playCourseContentResponseData.getErrorMessage());
                 } else {
-                    getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), playCourseContentResponseData.getNext_content_id(), playCourseContentResponseData.getQuestion_id());
+                    if ((playCourseContentResponseData.getContent_type().equalsIgnoreCase(Constants.contentType_Test) ||
+                            playCourseContentResponseData.getContent_type().equalsIgnoreCase(Constants.contentType_Survey)) &&
+                            !playCourseContentResponseData.getCourse_content().getSubmit_data().getNext_question_id().equalsIgnoreCase("0")) {
+                        showBusyProgress();
+                        getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), playCourseContentResponseData.getContent_id(), playCourseContentResponseData.getCourse_content().getSubmit_data().getNext_question_id());
+                        questionIndex++;
+                    } else {
+                        showBusyProgress();
+                        getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), playCourseContentResponseData.getNext_content_id(), "0");
+                        questionIndex = 0;
+                    }
                 }
             }
         });
@@ -803,7 +847,8 @@ public class PlayCourseActivity extends BaseActivity {
 //                            Timber.d("Error: %s", response.getErrorCode());
                     showToast(playCourseContentResponseData.getErrorMessage());
                 } else {
-                    getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), playCourseContentResponseData.getPrev_content_id(), playCourseContentResponseData.getQuestion_id());
+                    showBusyProgress();
+                    getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), playCourseContentResponseData.getPrev_content_id(), "0");
                 }
             }
         });

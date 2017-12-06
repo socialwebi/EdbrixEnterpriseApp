@@ -61,6 +61,10 @@ public class ImageDrawerAdapter extends RecyclerView.Adapter<ImageDrawerAdapter.
                     .load(list.get(position).getImg_url())
                     .error(R.drawable.image_placeholder)
                     .into(holder.imgChoice);
+            if(position ==0){
+                holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAppOrange));
+            }
+
         } else {
             if (selectedIndex != -1 && position == selectedIndex) {
                 holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAppOrange));

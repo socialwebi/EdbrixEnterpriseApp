@@ -55,7 +55,7 @@ public class ImagePageFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent photo = new Intent(getContext(), PhotoPopUpActivity.class);
-                photo.putExtra("IMGURL",imageContent.getImg_url());
+                photo.putExtra("IMGURL", imageContent.getImg_url());
                 startActivity(photo);
             }
         });

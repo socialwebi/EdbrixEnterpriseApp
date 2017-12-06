@@ -10,6 +10,9 @@ import java.util.ArrayList;
 
 public class CourseContentData {
 
+    @SerializedName("title")
+    private String title;
+
     @SerializedName("description")
     private String description;
 
@@ -28,8 +31,13 @@ public class CourseContentData {
     private String video_content;
 
     @SerializedName("document_content")
-    private String doc_content;
+    private String[] doc_content;
+
+    private String document_content_type;
+
     private String iframe_content;
+
+    private String assignment_content;
 
 
     public String getDescription ()
@@ -94,11 +102,11 @@ public class CourseContentData {
         this.video_content = video_content;
     }
 
-    public String getDoc_content() {
+    public String[] getDoc_content() {
         return doc_content;
     }
 
-    public void setDoc_content(String doc_content) {
+    public void setDoc_content(String[] doc_content) {
         this.doc_content = doc_content;
     }
 
@@ -108,6 +116,30 @@ public class CourseContentData {
 
     public void setIframe_content(String iframe_content) {
         this.iframe_content = iframe_content;
+    }
+
+    public String getAssignment_content() {
+        return assignment_content;
+    }
+
+    public void setAssignment_content(String assignment_content) {
+        this.assignment_content = assignment_content;
+    }
+
+    public String getDocument_content_type() {
+        return document_content_type;
+    }
+
+    public void setDocument_content_type(String document_content_type) {
+        this.document_content_type = document_content_type;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override

@@ -54,7 +54,6 @@
         android:layout_centerInParent="true"
         android:background="@color/colorActionBar"
         android:gravity="center"
-        android:text="Content"
         android:textColor="@color/colorMainText"
         android:textSize="18sp" />
 
@@ -321,6 +320,16 @@
                     android:scrollbars="vertical"
                     android:visibility="gone" />
 
+                <com.edbrix.enterprise.Utils.CustomWebView
+                    android:id="@+id/docWebView"
+                    android:layout_width="match_parent"
+                    android:layout_height="500dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="@dimen/app_normal_margin"
+                    android:fadeScrollbars="false"
+                    android:scrollbars="vertical"
+                    android:visibility="gone" />
+
             </LinearLayout>
 
         </LinearLayout>
@@ -342,6 +351,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:padding="@dimen/app_normal_padding"
+            android:visibility="invisible"
             android:src="@mipmap/course_prev_icon" />
 
         <TextView
@@ -392,6 +402,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:padding="@dimen/app_normal_padding"
+            android:visibility="invisible"
             android:src="@mipmap/course_next_icon" />
 
 

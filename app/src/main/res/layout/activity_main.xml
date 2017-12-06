@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/app_min_padding"
     android:background="@color/colorWhite"
     tools:context="com.edbrix.enterprise.MainActivity">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/black_overlay_background" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#90ffffff"
+        android:padding="@dimen/app_min_padding">
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/main_image_logo"
@@ -24,7 +33,7 @@
         android:layout_margin="@dimen/app_normal_margin"
         android:gravity="center"
         android:text="@string/welcome_title"
-        android:textColor="@color/colorMainText"
+        android:textColor="@color/colorWhite"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -36,7 +45,7 @@
         android:layout_margin="@dimen/app_big_margin"
         android:layout_below="@+id/main_text_view_welcome_title"
         android:text="@string/welcome_description"
-        android:textColor="@color/colorSubText"
+        android:textColor="@color/colorWhite"
         android:textSize="14sp" />
 
     <LinearLayout
@@ -55,7 +64,7 @@
             android:padding="@dimen/app_normal_padding"
             android:layout_margin="@dimen/app_min_margin"
             android:text="@string/signin"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/colorMainText" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/main_button_register"
@@ -69,5 +78,5 @@
             android:textColor="@android:color/white" />
 
     </LinearLayout>
-
-</RelativeLayout>
+    </RelativeLayout>
+</FrameLayout>

@@ -10,6 +10,14 @@ import java.io.Serializable;
 
 public class ImageContentData implements Serializable{
 
+    public static ImageContentData addImages(String img_url){
+        return new ImageContentData(img_url);
+    }
+
+    public ImageContentData(String img_url) {
+        this.img_url = img_url;
+    }
+
     @SerializedName("img_url")
     private String img_url;
 

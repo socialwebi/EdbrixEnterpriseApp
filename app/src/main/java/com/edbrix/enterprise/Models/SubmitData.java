@@ -27,8 +27,12 @@ public class SubmitData {
 
     private String question_id;
 
+    private String next_question_id;
+
+    private String prev_question_id;
+
     @SerializedName("total_question_count")
-    private String total_question_count;
+    private int total_question_count;
 
     public String getTitle ()
     {
@@ -82,12 +86,28 @@ public class SubmitData {
         this.progress = progress;
     }
 
-    public String getTotal_question_count() {
+    public int getTotal_question_count() {
         return total_question_count;
     }
 
-    public void setTotal_question_count(String total_question_count) {
+    public void setTotal_question_count(int total_question_count) {
         this.total_question_count = total_question_count;
+    }
+
+    public String getNext_question_id() {
+        return next_question_id;
+    }
+
+    public void setNext_question_id(String next_question_id) {
+        this.next_question_id = next_question_id;
+    }
+
+    public String getPrev_question_id() {
+        return prev_question_id;
+    }
+
+    public void setPrev_question_id(String prev_question_id) {
+        this.prev_question_id = prev_question_id;
     }
 
     @Override

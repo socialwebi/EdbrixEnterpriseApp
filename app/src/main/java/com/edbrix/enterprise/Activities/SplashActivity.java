@@ -1,6 +1,7 @@
 package com.edbrix.enterprise.Activities;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.edbrix.enterprise.MainActivity;
 import com.edbrix.enterprise.R;
+import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
 
 public class SplashActivity extends BaseActivity {
@@ -30,7 +32,7 @@ public class SplashActivity extends BaseActivity {
 
 //         Set Application Version
         try {
-            vNm =getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            vNm = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
 
         } catch (PackageManager.NameNotFoundException e) {
 
@@ -70,13 +72,38 @@ public class SplashActivity extends BaseActivity {
 
         @Override
         protected void onPostExecute(Void result) {
-            Intent mainIntent = new Intent();
-            mainIntent.setClass(SplashActivity.this, MainActivity.class);
-            mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(mainIntent);
-            finish();
+
+            if (SettingsMy.getActiveUser() != null) {
+                Intent dashBoardIntent = new Intent();
+                dashBoardIntent.setClass(SplashActivity.this, DashboardActivity.class);
+                dashBoardIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                dashBoardIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                dashBoardIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(dashBoardIntent);
+                finish();
+
+            } else {
+                if (!isTablet()) {
+                    Intent mainIntent = new Intent();
+                    mainIntent.setClass(SplashActivity.this, MainActivity.class);
+                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(mainIntent);
+                    finish();
+
+                } else {
+                    Intent loginIntent = new Intent();
+                    loginIntent.setClass(SplashActivity.this, LoginActivity.class);
+                    loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(loginIntent);
+                    finish();
+                }
+            }
+
+
         }
     }
 }
