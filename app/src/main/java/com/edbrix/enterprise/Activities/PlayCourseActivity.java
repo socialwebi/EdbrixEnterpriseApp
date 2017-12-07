@@ -259,7 +259,7 @@ public class PlayCourseActivity extends BaseActivity {
 //            jo.put("AccessToken", "sdfsdf");
 //            jo.put("courseId", "1774");
 ////            jo.put("contentId", "27659");
-//            jo.put("contentId", "27648");
+//            jo.put("contentId", "23236");
 ////            jo.put("contentId", "23236");
 //            jo.put("questionId", "0");
 
@@ -469,7 +469,12 @@ public class PlayCourseActivity extends BaseActivity {
                 if (response.getCourse_content().getDocument_content_type().equalsIgnoreCase(Constants.docContentType_Img)) {
                     loadPdfImageContent(response.getCourse_content().getDoc_content());
                 } else {
-                    loadDocWebContent(response.getCourse_content().getDoc_content()[0]);
+                    if (response.getCourse_content().getDoc_content()[0].contains("www.slideshare.net")) {
+                        loadWebContent(response.getCourse_content().getDoc_content()[0]);
+                    } else {
+                        loadDocWebContent(response.getCourse_content().getDoc_content()[0]);
+                    }
+
                 }
                 break;
             case Constants.contentType_WC:

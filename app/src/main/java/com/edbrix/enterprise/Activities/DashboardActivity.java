@@ -112,13 +112,18 @@ public class DashboardActivity extends BaseActivity {
         _fab_course = findViewById(R.id.fab_course);
         _fab_meeting = findViewById(R.id.fab_meeting);
 
-        courseAdapter = new DashBoardCourseListAdapter(context, courses, new DashboardListInterface() {
+        courseAdapter = new DashBoardCourseListAdapter(context, courses, new DashBoardCourseListAdapter.DashboardListInterface() {
             @Override
-            public void onListSelected(String id, String type) {
-                Intent intent = new Intent(DashboardActivity.this, CreateLiveCourseActivity.class);
-                intent.putExtra("courseId", id);
-                intent.putExtra("courseTitle", type);
-                startActivity(intent);
+            public void onListSelected(Courses course) {
+                if (course != null) {
+                    Intent courseDetail = new Intent(context, CourseDetailActivity.class);
+                    courseDetail.putExtra(CourseDetailActivity.courseDetailBundleKey, course);
+                    startActivity(courseDetail);
+                }
+              /*  Intent intent = new Intent(DashboardActivity.this, CreateLiveCourseActivity.class);
+                intent.putExtra("courseId", course.getId());
+                intent.putExtra("courseTitle", course.getTitle());
+                startActivity(intent);*/
             }
         });
 

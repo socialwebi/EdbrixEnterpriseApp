@@ -79,7 +79,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:src="@mipmap/right_arrow"
+        android:src="@mipmap/right_arrow_start_icon_orange"
         android:contentDescription="@string/image_right_arrow" />
 
 </LinearLayout>

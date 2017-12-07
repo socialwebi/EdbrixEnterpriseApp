@@ -10,8 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -62,6 +66,9 @@ public class LoginActivity extends BaseActivity {
         _login_text_view_register = findViewById(R.id.login_text_view_register);
         _login_text_view_forgot_password = findViewById(R.id.login_text_view_forgot_password);
         _login_progress_bar = findViewById(R.id.login_progress_bar);
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
 
         _login_button_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,7 +101,7 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!charSequence.toString().isEmpty() && charSequence.toString().trim().length()>3) {
+                if (!charSequence.toString().isEmpty() && charSequence.toString().trim().length() > 3) {
                     checkEmail = true;
                 } else {
                     checkEmail = false;
@@ -120,7 +127,7 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!charSequence.toString().isEmpty() && charSequence.toString().trim().length()>3) {
+                if (!charSequence.toString().isEmpty() && charSequence.toString().trim().length() > 3) {
                     checkPassword = true;
                 } else {
                     checkPassword = false;
@@ -135,6 +142,21 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable editable) {
 
+            }
+        });
+
+        _login_edit_text_password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    // hide virtual keyboard
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(_login_edit_text_password.getWindowToken(), 0);
+                    //doLogin
+                    checkValidations();
+                    return true;
+                }
+                return false;
             }
         });
 
@@ -161,22 +183,18 @@ public class LoginActivity extends BaseActivity {
 
         if (email.isEmpty()) {
             _login_edit_text_email.setError(getString(R.string.error_edit_text));
-        }
-        else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             _login_edit_text_email.setError(getString(R.string.error_email_not_valid));
-        }
-        else if (password.isEmpty()) {
+        } else if (password.isEmpty()) {
             _login_edit_text_email.setError(null);
             _login_edit_text_password.setError(getString(R.string.error_edit_text));
-        }
-        else {
+        } else {
             _login_edit_text_password.setError(null);
 
             if (Conditions.isNetworkConnected(LoginActivity.this)) {
                 signIn(email, password);
                 // ((MainActivity) getActivity()).onMeetingListSelected();
-            }
-            else {
+            } else {
                 try {
                     Snackbar.make(layout, getString(R.string.error_network), Snackbar.LENGTH_LONG).show();
                 } catch (Exception e) {
@@ -203,30 +221,28 @@ public class LoginActivity extends BaseActivity {
         }
         if (BuildConfig.DEBUG) Timber.d("Login user: %s", jo.toString());
 
-        GsonRequest<ResponseData> userLoginEmailRequest = new GsonRequest<>(Request.Method.POST, Constants.userLogin , jo.toString(), ResponseData.class,
+        GsonRequest<ResponseData> userLoginEmailRequest = new GsonRequest<>(Request.Method.POST, Constants.userLogin, jo.toString(), ResponseData.class,
                 new Response.Listener<ResponseData>() {
                     @Override
                     public void onResponse(@NonNull ResponseData response) {
                         Timber.d("response: %s", response.toString());
                         _login_progress_bar.setVisibility(View.INVISIBLE);
-                        if (response.getErrorCode()==null) {
+                        if (response.getErrorCode() == null) {
                             //((MainActivity) getActivity()).onCategoryListSelected();  //onCategoryMenuSelected
-                            if (response.getIsOrganizationListShow().equals("0")){
+                            if (response.getIsOrganizationListShow().equals("0")) {
                                 SettingsMy.setActiveUser(response.getUser());
 
                                 Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                                 finish();
-                            }
-                            else {
+                            } else {
                                 Intent intent = new Intent(getApplicationContext(), OrganizationListActivity.class);
                                 intent.putExtra("email", email);
                                 intent.putExtra("password", password);
                                 startActivity(intent);
                             }
-                        }
-                        else {
+                        } else {
                             try {
                                 Timber.d("Error: %s", response.getErrorCode());
                                 Snackbar.make(layout, response.getErrorMessage(), Snackbar.LENGTH_LONG).show();

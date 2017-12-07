@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="com.edbrix.enterprise.Activities.MeetingDetailActivity">
 
@@ -41,93 +41,109 @@
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="3dp"
-        android:paddingEnd="10dp"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp"
-        android:paddingStart="10dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/meeting_detail_day"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_marginTop="@dimen/app_min_margin"
+            android:orientation="horizontal">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:background="@color/colorAccent" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/app_min_margin"
+                android:orientation="vertical"
+                android:padding="@dimen/app_normal_padding">
 
-        <TextView
-            android:id="@+id/meeting_detail_date"
-            android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/meeting_detail_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="jdfjdfjd" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="@dimen/app_min_margin"
+                    android:layout_marginTop="@dimen/app_min_margin"
+                    android:background="@color/colorAccent"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp" />
+
+                <TextView
+                    android:id="@+id/meeting_detail_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="dfdfdf" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/meeting_detail_view"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/gray" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            />
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingEnd="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingStart="10dp">
+
+            <TextView
+                android:id="@+id/meeting_detail_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/app_min_margin"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/meeting_detail_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/app_min_margin"
+                android:drawableLeft="@mipmap/clock"
+                android:drawablePadding="10dp"
+                android:drawableStart="@mipmap/clock" />
+
+            <TextView
+                android:id="@+id/meeting_detail_des"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/app_min_margin"
+                android:layout_marginTop="@dimen/app_min_margin"
+                android:maxLines="5" />
+
+            <Button
+                android:id="@+id/meeting_detail_button_connect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/app_normal_padding"
+                android:text="@string/connect" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <View
-        android:id="@+id/meeting_detail_view"
-        android:layout_width="1dp"
-        android:layout_height="match_parent"
-        android:background="@color/gray" />
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:layout_gravity="center_vertical"
-        android:paddingLeft="10dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:paddingRight="10dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/meeting_detail_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/meeting_detail_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@mipmap/clock"
-            android:drawableLeft="@mipmap/clock"
-            android:drawablePadding="10dp" />
-
-        <TextView
-            android:id="@+id/meeting_detail_des"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="5" />
-
-    </LinearLayout>
-
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/meeting_detail_button_connect"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/connect" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/meeting_detail_recycler"
+        android:layout_margin="@dimen/app_normal_margin"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        tools:listitem="@layout/adapter_participant_list"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

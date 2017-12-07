@@ -223,6 +223,7 @@
                 android:textAllCaps="true"
                 android:textColor="@color/colorBlack"
                 android:visibility="invisible" />
+
         </LinearLayout>
 
         <ProgressBar

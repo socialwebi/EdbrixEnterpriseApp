@@ -11,8 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.edbrix.enterprise.Interfaces.DashboardListInterface;
-import com.edbrix.enterprise.Interfaces.OrganizationListInterface;
 import com.edbrix.enterprise.Models.Courses;
 import com.edbrix.enterprise.Models.Meeting;
 import com.edbrix.enterprise.R;
@@ -28,6 +26,10 @@ public class DashBoardCourseListAdapter extends RecyclerView.Adapter<DashBoardCo
     private Context context;
     private ArrayList<Courses> list;
     private DashboardListInterface dashRecyclerInterface;
+
+    public interface DashboardListInterface{
+        void onListSelected(Courses course);
+    }
 
     public DashBoardCourseListAdapter(Context context, ArrayList<Courses> list, DashboardListInterface dashRecyclerInterface) {
         this.context = context;
@@ -87,7 +89,7 @@ public class DashBoardCourseListAdapter extends RecyclerView.Adapter<DashBoardCo
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    dashRecyclerInterface.onListSelected(list.get(getLayoutPosition()).getId(), list.get(getLayoutPosition()).getTitle());
+                    dashRecyclerInterface.onListSelected(list.get(getLayoutPosition()));
                 }
             });
         }

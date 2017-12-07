@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -78,14 +79,14 @@ public class CourseDetailActivity extends BaseActivity {
         btnCourseCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialContactPhone((String)view.getTag());
+                dialContactPhone((String) view.getTag());
             }
         });
 
         btnCourseMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendSMS((String)view.getTag(),"Hi..,");
+                sendSMS((String) view.getTag(), "Hi..,");
             }
         });
 
@@ -99,20 +100,38 @@ public class CourseDetailActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.course_details_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                return true;
+            case R.id.editOption:
+                goToEditCourse();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    private void goToEditCourse() {
+        if (courseDetailItem != null) {
+            Intent intent = new Intent(CourseDetailActivity.this, CreateLiveCourseActivity.class);
+            intent.putExtra("courseId", courseDetailItem.getId());
+            intent.putExtra("courseTitle", courseDetailItem.getTitle());
+            startActivity(intent);
+            finish();
+        }
+    }
 
     private void setCourseDetails() {
         title.setText(courseDetailItem.getTitle());
-        txtCourseBy.setText("By "+courseDetailItem.getInstructor_name());
+        txtCourseBy.setText("By " + courseDetailItem.getInstructor_name());
         courseDesc.setText(courseDetailItem.getDescription());
         btnCourseCall.setTag(courseDetailItem.getInstructor_mobileno());
         btnCourseMsg.setTag(courseDetailItem.getInstructor_mobileno());

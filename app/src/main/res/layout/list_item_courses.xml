@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/app_min_margin"
-    android:background="@color/colorActionBar">
+    android:background="@color/colorActionBar"
+    android:padding="@dimen/app_min_margin">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -47,6 +47,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:text="Mathematic"
                 android:textColor="@color/colorAppOrange"
                 android:textSize="18sp"
@@ -80,6 +82,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="By John Doe"
                     android:textColor="@color/colorMainText"
                     android:textSize="13sp" />
@@ -116,8 +120,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/app_min_margin"
                 android:layout_weight="1"
-                android:maxLines="3"
                 android:ellipsize="end"
+                android:maxLines="3"
                 android:paddingLeft="@dimen/app_normal_padding"
                 android:paddingRight="@dimen/app_min_margin"
                 android:text="dfjdkjfdjfkldjfkldjfkldjfkldjfkldjkfdsfdffdfdfdfdfdfdffdfdfdfdfdfdfdfdfdfdsfdfdserewrererefdfdfdfdfdffdfdsfdfdfdfdfdfdfdfdfdfdfdfdlfjdklfjdkljfkldjfkldjfkldjfkldjfkldfdfdfddfdffdfdfdfjfjdlkjfldjkfkljdkljfldkjfkl"
