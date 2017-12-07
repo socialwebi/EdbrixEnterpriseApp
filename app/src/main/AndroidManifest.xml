@@ -50,45 +50,47 @@
         <activity android:name=".Activities.AddFilesActivity" />
         <activity android:name=".Activities.SettingsActivity" />
         <activity android:name=".Activities.UploadDemo" />
-        <activity android:name=".Activities.PhotoPopUpActivity"></activity>
-        <activity android:name=".Activities.FileListActivity"/>
+        <activity android:name=".Activities.PhotoPopUpActivity" />
+        <activity android:name=".Activities.FileListActivity" />
 
-        <service
-            android:name=".Services.MyFirebaseInstanceIDService">
+        <service android:name=".Services.MyFirebaseInstanceIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <service
-            android:name=".Services.MyFirebaseMessagingService">
+        <service android:name=".Services.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
-        <service android:name=".Services.MyJobService"
+        <service
+            android:name=".Services.MyJobService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
 
-        <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
-     See README(https://goo.gl/l4GJaQ) for more. -->
+        <!--
+     Set custom default icon. This is used when no icon is set for incoming notification messages.
+     See README(https://goo.gl/l4GJaQ) for more.
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher" />
-        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
-             notification message. See README(https://goo.gl/6BKBk7) for more. -->
+        <!--
+             Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more.
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id"/>
+            android:value="@string/default_notification_channel_id" />
 
+        <activity android:name=".Activities.CreateScheduleActivity" />
+        <activity android:name=".Activities.EditProfileActivity"></activity>
     </application>
 
 </manifest>

@@ -76,6 +76,7 @@ public class DashboardActivity extends BaseActivity {
     private String dataType = "all";
     private int pageNo = 1;
 
+    User activeUser;
     private SessionManager sessionManager;
 
     private int val;
@@ -96,12 +97,11 @@ public class DashboardActivity extends BaseActivity {
             deviceType = sessionManager.getSessionDeviceType();
         // else
             // deviceType = "tab";
-        sessionManager = new SessionManager(context);
-
-        deviceType =sessionManager.getSessionDeviceType();
 
         meetings = new ArrayList<>();
         courses = new ArrayList<>();
+
+        activeUser = SettingsMy.getActiveUser();
 
         _dashboard_recycler_meetings = findViewById(R.id.dashboard_recycler_meetings);
         _dashboard_text_all_meetings = findViewById(R.id.dashboard_text_all_meetings);
@@ -162,7 +162,8 @@ public class DashboardActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 _floatingActionMenu.collapse();
-
+                Intent intent = new Intent(DashboardActivity.this, CreateScheduleActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -181,6 +182,11 @@ public class DashboardActivity extends BaseActivity {
         registerForContextMenu(_dashboard_recycler_courses);
         _dashboard_recycler_courses.setAdapter(courseAdapter);
 
+        if (activeUser.getUserType().equals("L")) {
+            _floatingActionMenu.setVisibility(View.GONE);
+        } else {
+            _floatingActionMenu.setVisibility(View.VISIBLE);
+        }
 
         if (Conditions.isNetworkConnected(DashboardActivity.this)) {
             getDashBoardList();
@@ -200,7 +206,6 @@ public class DashboardActivity extends BaseActivity {
     private void getDashBoardList() {
 
         _dashboard_progress.setVisibility(View.VISIBLE);
-        User activeUser = SettingsMy.getActiveUser();
         if (activeUser!=null) {
 
             JSONObject jo = new JSONObject();

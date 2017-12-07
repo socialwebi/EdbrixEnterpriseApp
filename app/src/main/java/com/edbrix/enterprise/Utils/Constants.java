@@ -25,6 +25,7 @@ public class Constants {
 	public final static String getCourseContent = BASE_URL.concat("getcoursecontents");
 	//
 	public final static String setDeleteCourseContent = BASE_URL.concat("deletecoursecontent");
+	public final static String getCourseDetails = BASE_URL.concat("getcourseeditdetails");
 
 
 	public final static String contentType_C ="C";

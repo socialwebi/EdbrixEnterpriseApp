@@ -140,7 +140,6 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
     private ArrayList<String> photoPaths = new ArrayList<>();
     private ArrayList<String> docPaths = new ArrayList<>();
 
-    static final int REQUEST_FROM_LIBRARY = 999;
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
@@ -339,7 +338,6 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
     }
 
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
-    @AfterPermissionGranted(REQUEST_PERMISSION_EXTERNAL)
     public void onPickPhoto() {
 
             FilePickerBuilder.getInstance()
@@ -357,7 +355,6 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
     }
 
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
-    @AfterPermissionGranted(REQUEST_PERMISSION_EXTERNAL)
     public void onPickDoc() {
         String[] ppts = {".ppt",".pptx"};
         String[] pdfs = {".pdf"};
@@ -661,17 +658,9 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
      *     activity result.
      */
     @Override
-    protected void onActivityResult(
-            int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch(requestCode) {
-            case REQUEST_FROM_LIBRARY:
-                if (resultCode != RESULT_OK) {
-                    filePath = data.getData();
-                    assert filePath != null;
-                    Log.d("TAG", filePath.toString());
-                }
-                break;
 
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
@@ -682,6 +671,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
                     getResultsFromApi();
                 }
                 break;
+
             case REQUEST_ACCOUNT_PICKER:
                 if (resultCode == RESULT_OK && data != null &&
                         data.getExtras() != null) {
@@ -783,6 +773,11 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
     @Override
     public void onPermissionsGranted(int requestCode, List<String> list) {
         // Do nothing.
+        if (fileType.equals("1")) {
+            getVideos();
+        } else {
+            getDocuments();
+        }
     }
 
     /**

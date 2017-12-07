@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/create_live_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -81,26 +82,6 @@
 
         </android.support.design.widget.TextInputLayout>
 
-    <LinearLayout
-        android:id="@+id/linear_browse_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/live_course_button_browse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/live_course_image"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/name"
-            android:imeOptions="actionNext"
-            android:inputType="textCapSentences|text" />
-
-    </LinearLayout>
 
     <TextView
         android:id="@+id/create_text_category"
@@ -118,15 +99,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/border"
-        android:padding="3dp"
+        android:padding="4dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="4dp"
         android:layout_marginTop="8dp"
-        android:layout_below="@+id/create_text_category"
-        android:textAlignment="center" />
+        android:layout_below="@+id/create_text_category" />
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/create_text_input_price"
@@ -145,6 +125,30 @@
 
         </android.support.design.widget.TextInputLayout>
 
+
+    <LinearLayout
+        android:id="@+id/linear_browse_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/create_text_input_price"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/live_course_button_browse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/browse" />
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/live_course_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/course_image"
+            android:focusable="false"
+            android:imeOptions="actionNext"
+            android:inputType="textCapSentences|text" />
+
+    </LinearLayout>
 
 
         <Button

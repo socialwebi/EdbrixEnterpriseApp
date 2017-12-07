@@ -167,11 +167,9 @@ public class BottomTabMenuActivity extends BaseActivity {
                 tabSettingIcon.setImageResource(R.mipmap.footer_schedule_menu_active);
                 tabSettingText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAppOrange));
                 titleText.setText(tabSettingText.getText());
-                SettingsMy.setActiveUser(null);
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
                 startActivity(intent);
-                finish();
 //                menuFragment = new SettingsFragment();
 //                Bundle bundleLogs = new Bundle();
 //                bundleLogs.putSerializable(LogFragment.INFO, stringInfo);

@@ -3,6 +3,7 @@ package com.edbrix.enterprise.Models;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 
 public class Courses implements Serializable {
@@ -34,8 +35,15 @@ public class Courses implements Serializable {
     @SerializedName("instructor_mobileno")
     private String instructor_mobileno;
 
+    @SerializedName("accesscode")
     private String code;
     private String price;
+    private String coursecategoryId;
+    @SerializedName("courseCategoryList")
+    private ArrayList<CourseContents> courseCategory;
+
+    private String ErrorCode;
+    private String ErrorMessage;
 
 
     public String getId ()
@@ -111,8 +119,7 @@ public class Courses implements Serializable {
         return instructor_mobileno;
     }
 
-    public void setInstructor_mobileno (String instructor_mobileno)
-    {
+    public void setInstructor_mobileno (String instructor_mobileno) {
         this.instructor_mobileno = instructor_mobileno;
     }
 
@@ -140,9 +147,41 @@ public class Courses implements Serializable {
         this.price = price;
     }
 
+    public String getCoursecategoryId() {
+        return coursecategoryId;
+    }
+
+    public void setCoursecategoryId(String coursecategoryId) {
+        this.coursecategoryId = coursecategoryId;
+    }
+
+    public ArrayList<CourseContents> getCourseCategory() {
+        return courseCategory;
+    }
+
+    public void setCourseCategory(ArrayList<CourseContents> courseCategory) {
+        this.courseCategory = courseCategory;
+    }
+
+    public String getErrorCode() {
+        return ErrorCode;
+    }
+
+    public void setErrorCode(String errorCode) {
+        ErrorCode = errorCode;
+    }
+
+    public String getErrorMessage() {
+        return ErrorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        ErrorMessage = errorMessage;
+    }
+
     @Override
     public String toString()
     {
-        return "ClassPojo [id = "+id+", access_code = "+access_code+", title = "+title+", code = "+code+", price = "+price+", instructor_email = "+instructor_email+", instructor_name = "+instructor_name+", course_image_url = "+course_image_url+", description = "+description+", instructor_mobileno = "+instructor_mobileno+"]";
+        return "Courses [id = "+id+", access_code = "+access_code+", title = "+title+", code = "+code+", price = "+price+", coursecategoryId = "+coursecategoryId+", courseCategory = "+courseCategory+", instructor_email = "+instructor_email+", instructor_name = "+instructor_name+", course_image_url = "+course_image_url+", description = "+description+", instructor_mobileno = "+instructor_mobileno+"]";
     }
 }
