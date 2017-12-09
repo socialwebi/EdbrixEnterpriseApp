@@ -78,7 +78,7 @@ public class DashBoardMeetingListAdapter extends RecyclerView.Adapter<DashBoardM
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    dashRecyclerInterface.onListSelected(list.get(getLayoutPosition()).getId(), list.get(getLayoutPosition()).getType());
+                    dashRecyclerInterface.onListSelected(list.get(getLayoutPosition()));
                 }
             });
         }

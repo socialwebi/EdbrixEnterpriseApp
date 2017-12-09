@@ -43,61 +43,64 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/add_file_text_input_title"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/add_file_app_bar"
-        android:padding="3dp">
+        android:scrollbars="none">
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/add_file_file_title"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/title"
-            android:imeOptions="actionNext"
-            android:inputType="textCapSentences|text" />
+            android:layout_height="wrap_content">
 
-    </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/add_file_text_input_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="3dp">
 
-    <Button
-        android:id="@+id/add_file_button_browse"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/add_file_text_input_title"
-        android:text="Browse " />
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/add_file_file_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/title"
+                    android:imeOptions="actionNext"
+                    android:inputType="textCapSentences|text" />
 
-    <Button
-        android:id="@+id/add_file_button_youtube"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/add_file_button_browse"
-        android:text="Youtube video " />
+            </android.support.design.widget.TextInputLayout>
 
-    <TextView
-        android:id="@+id/add_file_text_message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/add_file_button_youtube" />
+            <Button
+                android:id="@+id/add_file_button_browse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/add_file_text_input_title"
+                android:text="Browse " />
 
-    <ImageView
-        android:id="@+id/add_file_image_preview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:cropToPadding="true"
-        android:layout_below="@+id/add_file_text_message"/>
+            <Button
+                android:id="@+id/add_file_button_youtube"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/add_file_button_browse"
+                android:text="Youtube video " />
 
-    <Button
-        android:id="@+id/add_file_button_submit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:padding="5dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/colorAccent"
-        android:textColor="@color/colorWhite"
-        android:text="@string/submit" />
+            <TextView
+                android:id="@+id/add_file_text_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/add_file_button_youtube" />
+
+            <ImageView
+                android:id="@+id/add_file_image_preview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:cropToPadding="true"
+                android:layout_below="@+id/add_file_text_message"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
 
     <LinearLayout
         android:id="@+id/add_file_progress_layout"
@@ -125,5 +128,16 @@
             android:text="Progress... "/>
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/add_file_button_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:padding="5dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorAccent"
+        android:textColor="@color/colorWhite"
+        android:text="@string/submit" />
 
 </RelativeLayout>

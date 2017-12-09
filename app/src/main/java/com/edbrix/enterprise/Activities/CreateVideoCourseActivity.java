@@ -89,7 +89,7 @@ public class CreateVideoCourseActivity extends BaseActivity {
                 intent.putExtra("price", price);
                 intent.putExtra("type", "1");
                 intent.putExtra("courseId", courseId);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -101,7 +101,7 @@ public class CreateVideoCourseActivity extends BaseActivity {
                 intent.putExtra("price", price);
                 intent.putExtra("type", "2");
                 intent.putExtra("courseId", courseId);
-                startActivity(intent);
+                startActivityForResult(intent,2);
             }
         });
 
@@ -114,8 +114,6 @@ public class CreateVideoCourseActivity extends BaseActivity {
 
             @Override
             public void onCoursePreviewClick(String id, String path) {
-
-
 
             }
         });
@@ -137,6 +135,30 @@ public class CreateVideoCourseActivity extends BaseActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch(requestCode) {
+
+            case 1:
+                if (resultCode == RESULT_OK && data != null &&
+                        data.getExtras() != null) {
+                    courseId = data.getStringExtra("newCourseId");
+                    getCourseContent();
+                    break;
+                }
+
+            case 2:
+                if (resultCode == RESULT_OK && data != null &&
+                        data.getExtras() != null) {
+                    courseId = data.getStringExtra("newCourseId");
+                    getCourseContent();
+                    break;
+                }
         }
     }
 

@@ -433,6 +433,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
                         double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
 //                        mProgressBar.setProgress((int) progress);
 //                        textPercentage.setText("Uploading completed " + (int) progress + "%");
+                        setProgressBar(true, "Uploading file.. " +progress);
                     }
                 });
 
@@ -548,15 +549,22 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.dismiss();
+                                                _add_file_file_title.setText(null);
+                                                fileName="";
+                                                fileExtension = "";
+                                                filePath=Uri.EMPTY;
+                                                imageView.setVisibility(View.INVISIBLE);
                                             }
                                         })
                                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
-                                                Intent intent = new Intent(AddFilesActivity.this, CreateVideoCourseActivity.class);
-                                                intent.putExtra("courseId", courseId);
-                                                startActivity(intent);
+
+                                                Intent intent=new Intent();
+                                                intent.putExtra("newCourseId", courseId);
+                                                setResult(1, intent);
                                                 finish();
+
                                             }
                                         })
                                         .show();
@@ -702,6 +710,8 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
                     photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
                     // mOutputText.setText(photoPaths.toString());
                     filePath = Uri.fromFile(new File(photoPaths.get(0)));
+
+                    imageView.setVisibility(View.VISIBLE);
 
                     Glide.with(context).load(filePath)
                             .apply(RequestOptions

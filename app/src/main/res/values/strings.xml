@@ -45,6 +45,7 @@
     <string name="meetings">Meetings</string>
     <string name="meeting_details">Meeting Details</string>
     <string name="create_live_course">Create Course</string>
+    <string name="edit_live_course">Edit Create</string>
     <string name="create_video_course">Course Content</string>
     <string name="choose_file">Choose File</string>
     <string name="courses">Courses</string>
