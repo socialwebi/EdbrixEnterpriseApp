@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -78,7 +79,11 @@ public class PasswordActivity extends BaseActivity {
         _password_button_submit = findViewById(R.id.password_button_submit);
         _password_progress_bar = findViewById(R.id.password_progress_bar);
 
-        if (orgImage !=null) {
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
+
+        if (orgImage != null && !orgImage.isEmpty()) {
             Picasso.with(context)
                     .load(orgImage)
                     .error(R.drawable.edbrix_logo)
@@ -114,15 +119,13 @@ public class PasswordActivity extends BaseActivity {
 
         if (password.isEmpty()) {
             _password_edit_text_password.setError(getString(R.string.error_edit_text));
-        }
-        else {
+        } else {
             _password_edit_text_password.setError(null);
 
             if (Conditions.isNetworkConnected(PasswordActivity.this)) {
                 signIn(password);
                 // ((MainActivity) getActivity()).onMeetingListSelected();
-            }
-            else {
+            } else {
                 try {
                     Snackbar.make(layout, getString(R.string.error_network), Snackbar.LENGTH_LONG).show();
                 } catch (Exception e) {
@@ -156,7 +159,7 @@ public class PasswordActivity extends BaseActivity {
                     public void onResponse(@NonNull ResponseData response) {
                         Timber.d("response: %s", response.toString());
                         _password_progress_bar.setVisibility(View.INVISIBLE);
-                        if (response.getErrorCode()==null) {
+                        if (response.getErrorCode() == null) {
 
                             SettingsMy.setActiveUser(response.getUser());
 
@@ -169,8 +172,7 @@ public class PasswordActivity extends BaseActivity {
                             finish();
 
 
-                        }
-                        else {
+                        } else {
                             try {
                                 Timber.d("Error: %s", response.getErrorMessage());
                                 Snackbar.make(layout, response.getErrorMessage(), Snackbar.LENGTH_LONG).show();

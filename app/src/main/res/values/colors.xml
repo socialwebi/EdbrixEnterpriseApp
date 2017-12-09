@@ -16,6 +16,7 @@
     <color name="colorBlueLink">#4285f4</color>
     <color name="colorAppOrange">#ff6600</color>
     <color name="colorActionBar">#f5f5f5</color>
+    <color name="colorWhiteSmoke">#F8F8F8</color>
     <color name="colorDivider">#dddddd</color>
     <color name="colorHintText">#CCCCCC</color>
     <color name="colorFooterMenuText">#777777</color>

@@ -13,6 +13,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -64,6 +65,10 @@ public class ForgotPasswordActivity extends BaseActivity {
         _forgot_password_edit_text_email = findViewById(R.id.forgot_password_edit_text_email);
         _forgot_password_button_submit = findViewById(R.id.forgot_password_button_submit);
         _forgot_password_progress_bar = findViewById(R.id.forgot_password_progress_bar);
+
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
 
         _forgot_password_button_submit.setOnClickListener(new View.OnClickListener() {
             @Override

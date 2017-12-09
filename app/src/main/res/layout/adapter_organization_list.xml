@@ -1,35 +1,41 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/org_relative_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:padding="@dimen/app_normal_padding"
     tools:context="com.edbrix.enterprise.Adapters.OrganizationListAdapter">
 
-
-    <ImageView
-        android:id="@+id/org_image"
-        android:layout_width="56dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/app_min_margin"
-        android:adjustViewBounds="true"
-        android:src="@drawable/edbrix_logo"
-        android:layout_centerVertical="true"
-        android:contentDescription="@string/image_org"
-        android:scaleType="fitXY" />
-
-    <TextView
-        android:id="@+id/org_name"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_margin="@dimen/app_normal_margin"
-        android:layout_toEndOf="@+id/org_image"
-        android:layout_toRightOf="@+id/org_image"
-        android:drawableEnd="@mipmap/right_arrow"
-        android:drawableRight="@mipmap/right_arrow"
-        android:gravity="center_vertical"
-        android:textSize="18sp" />
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/app_normal_margin">
 
+        <ImageView
+            android:id="@+id/org_image"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/app_min_margin"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/image_org"
+            android:scaleType="fitXY"
+            android:src="@drawable/edbrix_logo" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/org_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_margin="@dimen/app_normal_margin"
+            android:layout_toEndOf="@+id/org_image"
+            android:layout_toRightOf="@+id/org_image"
+            android:drawableEnd="@mipmap/right_arrow"
+            android:drawableRight="@mipmap/right_arrow"
+            android:gravity="center_vertical"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+</LinearLayout>

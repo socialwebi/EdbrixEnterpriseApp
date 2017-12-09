@@ -89,6 +89,9 @@
     <string name="signup"> Sign Up </string>
     <string name="register">Register</string>
     <string name="cancel"> Cancel </string>
+    <string name="enter_email_forgot_pwd">Please enter email address you provided during the registration process. </string>
+    <string name="enter_pwd_for_change_pwd">Please enter password of selected organisation. </string>
+    <string name="enter_pwd_confirm_pwd">Please enter password and confirm password. </string>
 
     <string name="pay_content">Please use desktop web browser to Pay and Join the meeting. </string>
     <string name="connect">Connect</string>

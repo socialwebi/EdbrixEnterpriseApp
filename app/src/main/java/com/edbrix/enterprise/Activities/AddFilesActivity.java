@@ -433,7 +433,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
                         double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
 //                        mProgressBar.setProgress((int) progress);
 //                        textPercentage.setText("Uploading completed " + (int) progress + "%");
-                        setProgressBar(true, "Uploading file.. " +progress);
+                        setProgressBar(true, "Uploading completed " + (int) progress + "%");
                     }
                 });
 

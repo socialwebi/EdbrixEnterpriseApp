@@ -13,6 +13,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -56,7 +57,7 @@ public class SignupActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        /*Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -64,7 +65,7 @@ public class SignupActivity extends BaseActivity {
             public void onClick(View v) {
                 finish();
             }
-        });
+        });*/
         context = this;
 
         _register_edit_text_first_name = findViewById(R.id.register_edit_text_first_name);
@@ -75,6 +76,9 @@ public class SignupActivity extends BaseActivity {
         _register_text_view_login = findViewById(R.id.register_text_view_login);
         _register_progress_bar = findViewById(R.id.register_progress_bar);
 
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
 
         _register_button_register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,7 +104,7 @@ public class SignupActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!charSequence.toString().isEmpty() && charSequence.toString().trim().length()>3) {
+                if (!charSequence.toString().isEmpty() && charSequence.toString().trim().length() > 3) {
                     checkFname = true;
                 } else {
                     checkFname = false;
@@ -126,7 +130,7 @@ public class SignupActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!charSequence.toString().isEmpty() && charSequence.toString().trim().length()>3) {
+                if (!charSequence.toString().isEmpty() && charSequence.toString().trim().length() > 3) {
                     checkLname = true;
                 } else {
                     checkLname = false;
@@ -194,33 +198,26 @@ public class SignupActivity extends BaseActivity {
 
         if (fName.isEmpty()) {
             _register_edit_text_first_name.setError(getString(R.string.error_edit_text));
-        }
-        else if (lName.isEmpty()) {
+        } else if (lName.isEmpty()) {
             _register_edit_text_first_name.setError(null);
             _register_edit_text_last_name.setError(getString(R.string.error_edit_text));
-        }
-        else if (email.isEmpty()) {
+        } else if (email.isEmpty()) {
             _register_edit_text_last_name.setError(null);
             _register_edit_text_email.setError(getString(R.string.error_edit_text));
-        }
-        else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             _register_edit_text_email.setError(getString(R.string.error_email_not_valid));
-        }
-        else if (number.isEmpty()) {
+        } else if (number.isEmpty()) {
             _register_edit_text_email.setError(null);
             _register_edit_text_number.setError(getString(R.string.error_edit_text));
-        }
-        else if (number.length()!=10) {
+        } else if (number.length() != 10) {
             _register_edit_text_number.setError(getString(R.string.error_number_not_valid));
-        }
-        else {
+        } else {
             _register_edit_text_number.setError(null);
 
             if (Conditions.isNetworkConnected(SignupActivity.this)) {
                 register(email, number, fName, lName);
                 // ((MainActivity) getActivity()).onMeetingListSelected();
-            }
-            else {
+            } else {
                 try {
                     Snackbar.make(layout, getString(R.string.error_network), Snackbar.LENGTH_LONG).show();
                 } catch (Exception e) {
@@ -249,13 +246,13 @@ public class SignupActivity extends BaseActivity {
         }
         if (BuildConfig.DEBUG) Timber.d("Register user: %s", jo.toString());
 
-        GsonRequest<ResponseData> userLoginEmailRequest = new GsonRequest<>(Request.Method.POST, Constants.userRegister , jo.toString(), ResponseData.class,
+        GsonRequest<ResponseData> userLoginEmailRequest = new GsonRequest<>(Request.Method.POST, Constants.userRegister, jo.toString(), ResponseData.class,
                 new Response.Listener<ResponseData>() {
                     @Override
                     public void onResponse(@NonNull ResponseData response) {
                         _register_progress_bar.setVisibility(View.INVISIBLE);
                         Timber.d("response: %s", response.toString());
-                        if (response.getErrorCode()==null) {
+                        if (response.getErrorCode() == null) {
                             SettingsMy.setActiveUser(response.getUser());
 
                             Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
@@ -263,8 +260,7 @@ public class SignupActivity extends BaseActivity {
                             startActivity(intent);
                             finish();
 
-                        }
-                        else {
+                        } else {
                             try {
                                 Timber.d("Error: %s", response.getErrorCode());
                                 Snackbar.make(layout, response.getErrorMessage(), Snackbar.LENGTH_LONG).show();

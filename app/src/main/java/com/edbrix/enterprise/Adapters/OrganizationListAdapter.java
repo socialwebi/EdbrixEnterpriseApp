@@ -42,9 +42,9 @@ public class OrganizationListAdapter extends RecyclerView.Adapter<OrganizationLi
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         if (position % 2 == 1) {
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhite));
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhiteSmoke));
         } else {
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorActionBar));
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorDivider));
         }
         holder.name.setText(list.get(position).getOrganizationName());
 

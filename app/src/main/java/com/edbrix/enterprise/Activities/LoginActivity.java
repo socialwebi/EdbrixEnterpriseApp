@@ -82,6 +82,7 @@ public class LoginActivity extends BaseActivity {
             public void onClick(View view) {
                 Intent registerIntent = new Intent(LoginActivity.this, SignupActivity.class);
                 startActivity(registerIntent);
+                finish();
             }
         });
 

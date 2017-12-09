@@ -59,10 +59,10 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorActionBar"
                 android:gravity="center_vertical"
-                android:paddingBottom="15dp"
-                android:paddingLeft="@dimen/app_normal_padding"
-                android:paddingRight="@dimen/app_normal_padding"
-                android:paddingTop="15dp">
+                android:paddingBottom="@dimen/app_big_padding"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="@dimen/app_big_padding">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -109,10 +109,10 @@
                 android:layout_below="@+id/dashboard_text_all_meetings"
                 android:background="@color/colorActionBar"
                 android:gravity="center_vertical"
-                android:paddingBottom="15dp"
-                android:paddingLeft="@dimen/app_normal_padding"
-                android:paddingRight="@dimen/app_normal_padding"
-                android:paddingTop="15dp">
+                android:paddingBottom="@dimen/app_big_padding"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="@dimen/app_big_padding">
 
                 <TextView
                     android:layout_width="wrap_content"
