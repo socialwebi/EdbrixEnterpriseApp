@@ -3,11 +3,9 @@ package com.edbrix.enterprise.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -30,7 +28,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.edbrix.enterprise.Adapters.DashBoardCourseListAdapter;
 import com.edbrix.enterprise.Adapters.DashBoardMeetingListAdapter;
-import com.edbrix.enterprise.Adapters.MeetingListAdapter;
 import com.edbrix.enterprise.Application;
 import com.edbrix.enterprise.BuildConfig;
 import com.edbrix.enterprise.Interfaces.DashboardListInterface;
@@ -53,7 +50,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import timber.log.Timber;
 import us.zoom.sdk.JoinMeetingOptions;
@@ -67,38 +63,28 @@ import us.zoom.sdk.ZoomSDKInitializeListener;
 
 public class DashboardActivity extends BaseActivity implements ZoomSDKInitializeListener, MeetingServiceListener {
 
+    private static String DISPLAY_NAME = "User";
     Context context;
-
     RelativeLayout layout;
-
     RecyclerView _dashboard_recycler_meetings;
     RecyclerView _dashboard_recycler_courses;
-
     TextView _dashboard_text_all_meetings;
     TextView _dashboard_text_all_course;
     FloatingActionsMenu _floatingActionMenu;
     FloatingActionButton _fab_course;
     FloatingActionButton _fab_meeting;
-
     ProgressBar _dashboard_progress;
-
     DashBoardCourseListAdapter courseAdapter;
     DashBoardMeetingListAdapter meetingAdapter;
-
+    User user;
     private ArrayList<Meeting> meetings;
     private ArrayList<Courses> courses;
-
     private String deviceType;
     private String dataType = "all";
     private int pageNo = 1;
     private String meetingNo;
-    private static String DISPLAY_NAME = "User";
-
     private View positiveAction;
-
     private boolean mbPendingStartMeeting = false;
-
-    User user;
     private SessionManager sessionManager;
 
     private int val;
@@ -116,9 +102,9 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
 
         sessionManager = new SessionManager(context);
         // if ()
-            deviceType = sessionManager.getSessionDeviceType();
+        deviceType = sessionManager.getSessionDeviceType();
         // else
-            // deviceType = "tab";
+        // deviceType = "tab";
 
         meetings = new ArrayList<>();
         courses = new ArrayList<>();
@@ -257,7 +243,7 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
                             }
                         });
 
-                        if (meeting.getMeetingUsers() != null && meeting.getMeetingUsers().size()>0) {
+                        if (meeting.getMeetingUsers() != null && meeting.getMeetingUsers().size() > 0) {
 
                             TextView textViewName = (TextView) dialog.getCustomView().findViewById(R.id.custom_user_name);
                             textViewName.setText(meeting.getMeetingUsers().get(0).getName());
@@ -272,8 +258,7 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
 
                         }
                         dialog.show();
-                    }
-                    else {
+                    } else {
 
                         new MaterialDialog.Builder(context)
                                 .title(title)
@@ -348,8 +333,7 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
 
         if (Conditions.isNetworkConnected(DashboardActivity.this)) {
             getDashBoardList();
-        }
-        else {
+        } else {
             try {
                 Snackbar.make(layout, getString(R.string.error_network), Snackbar.LENGTH_LONG).show();
             } catch (Exception e) {
@@ -358,7 +342,7 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
             }
         }
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             ZoomSDK sdk = ZoomSDK.getInstance();
             sdk.initialize(context, Constants.APP_KEY, Constants.APP_SECRET, Constants.WEB_DOMAIN, this);
         } else {
@@ -370,7 +354,7 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
     private void getDashBoardList() {
 
         _dashboard_progress.setVisibility(View.VISIBLE);
-        if (user!=null) {
+        if (user != null) {
 
             JSONObject jo = new JSONObject();
             try {
@@ -394,19 +378,19 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
                         public void onResponse(@NonNull ResponseData response) {
                             Timber.d("response: %s", response.toString());
                             _dashboard_progress.setVisibility(View.INVISIBLE);
-                            if (response.getErrorCode()==null) {
+                            if (response.getErrorCode() == null) {
 
-                                if (response.getCoursesList()!=null) {
+                                if (response.getCoursesList() != null) {
                                     courseAdapter.refresh(response.getCoursesList());
                                     courseAdapter.notifyDataSetChanged();
-                                } if (response.getMeetings()!=null){
+                                }
+                                if (response.getMeetings() != null) {
                                     meetingAdapter.refresh(response.getMeetings());
                                     meetingAdapter.notifyDataSetChanged();
                                 } else {
                                     _dashboard_text_all_meetings.setText("No meetings available ");
                                 }
-                            }
-                            else {
+                            } else {
                                 try {
                                     Timber.d("Error: %s", response.getErrorMessage());
                                     Snackbar.make(layout, response.getErrorMessage(), Snackbar.LENGTH_LONG).show();
@@ -463,7 +447,7 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
     public void onDestroy() {
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
 
-        if(zoomSDK.isInitialized()) {
+        if (zoomSDK.isInitialized()) {
             MeetingService meetingService = zoomSDK.getMeetingService();
             meetingService.removeListener(this);
         }
@@ -474,7 +458,7 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
     private void registerMeetingServiceListener() {
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
         MeetingService meetingService = zoomSDK.getMeetingService();
-        if(meetingService != null) {
+        if (meetingService != null) {
             meetingService.addListener(this);
         }
     }
@@ -486,11 +470,11 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
         Log.i("TAG", "onMeetingEvent, meetingEvent=" + meetingEvent + ", errorCode=" + errorCode
                 + ", internalErrorCode=" + internalErrorCode);
 
-        if(meetingEvent == MeetingEvent.MEETING_CONNECT_FAILED && errorCode == MeetingError.MEETING_ERROR_CLIENT_INCOMPATIBLE) {
+        if (meetingEvent == MeetingEvent.MEETING_CONNECT_FAILED && errorCode == MeetingError.MEETING_ERROR_CLIENT_INCOMPATIBLE) {
             Toast.makeText(context, "App version is too low!", Toast.LENGTH_LONG).show();
         }
 
-        if(mbPendingStartMeeting && meetingEvent == MeetingEvent.MEETING_DISCONNECTED) {
+        if (mbPendingStartMeeting && meetingEvent == MeetingEvent.MEETING_DISCONNECTED) {
             mbPendingStartMeeting = false;
         }
     }
@@ -499,7 +483,7 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
     public void onZoomSDKInitializeResult(int errorCode, int internalErrorCode) {
         Log.i("TAG", "onZoomSDKInitializeResult, errorCode=" + errorCode + ", internalErrorCode=" + internalErrorCode);
 
-        if(errorCode != ZoomError.ZOOM_ERROR_SUCCESS) {
+        if (errorCode != ZoomError.ZOOM_ERROR_SUCCESS) {
             Toast.makeText(context, "Something went wrong, Please try again", Toast.LENGTH_LONG).show();
         } else {
             // Toast.makeText(context, "Initialize Zoom SDK successfully.", Toast.LENGTH_LONG).show();
@@ -512,14 +496,14 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
 
         String meetingPassword = "";
 
-        if(meetingNo.length() == 0) {
+        if (meetingNo.length() == 0) {
             Toast.makeText(context, "You need a meeting number which you want to join.", Toast.LENGTH_LONG).show();
             return;
         }
 
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
 
-        if(!zoomSDK.isInitialized()) {
+        if (!zoomSDK.isInitialized()) {
             Toast.makeText(context, "Something went wrong, Please try again", Toast.LENGTH_LONG).show();
             return;
         }
@@ -544,7 +528,7 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
 //		opts.no_meeting_error_message = true;
 //		opts.participant_id = "participant id";
 
-        DISPLAY_NAME = user != null ? user.getFirstName() : "User" ;
+        DISPLAY_NAME = user != null ? user.getFirstName() : "User";
         int ret = meetingService.joinMeeting(context, meetingNo, DISPLAY_NAME, meetingPassword, opts);
         Log.i("TAG", "onClickBtnJoinMeeting, ret=" + ret);
 

@@ -139,6 +139,16 @@
 
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
 
+    <string name="title_settings_dialog">Permissions Required</string>
+    <string name="rationale_video_app">This app needs access to your camera and mic to make video calls</string>
+    <string name="rationale_ask_again">This app may not work correctly without the requested permissions. Open the app settings screen to modify app permissions.</string>
+
+    <string name="setting">Settings</string>
+
+    <string name="action_start_archive">Start Archive</string>
+    <string name="action_stop_archive">Stop Archive</string>
+    <string name="action_play_archive">Play Archive</string>
+
     <!--Image Descriptions-->
     <string name="image_walkthrough">Walkthrough image</string>
     <string name="image_org">Organization image</string>

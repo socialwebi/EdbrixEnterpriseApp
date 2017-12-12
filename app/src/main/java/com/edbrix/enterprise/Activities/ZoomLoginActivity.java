@@ -2,7 +2,6 @@ package com.edbrix.enterprise.Activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -24,13 +23,12 @@ import us.zoom.sdk.ZoomSDKAuthenticationListener;
 
 public class ZoomLoginActivity extends BaseActivity implements ZoomSDKAuthenticationListener, View.OnClickListener {
 
+    Context context;
+    String meetingNo;
     private EditText mEdtUserName;
     private EditText mEdtPassord;
     private Button mBtnLogin;
     private View mProgressPanel;
-
-    Context context;
-    String meetingNo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +47,8 @@ public class ZoomLoginActivity extends BaseActivity implements ZoomSDKAuthentica
         Intent intent = getIntent();
         meetingNo = intent.getStringExtra("meetingId");
 
-        if (meetingNo!=null)
-            mZoomMeetingId.setText("Meeting ID: "+meetingNo);
+        if (meetingNo != null)
+            mZoomMeetingId.setText("Meeting ID: " + meetingNo);
     }
 
     @Override
@@ -69,7 +67,7 @@ public class ZoomLoginActivity extends BaseActivity implements ZoomSDKAuthentica
         super.onResume();
 
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
-        if(zoomSDK.isInitialized()) {
+        if (zoomSDK.isInitialized()) {
             zoomSDK.addAuthenticationListener(this);
         }
     }
@@ -78,14 +76,14 @@ public class ZoomLoginActivity extends BaseActivity implements ZoomSDKAuthentica
     protected void onPause() {
         super.onPause();
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
-        if(zoomSDK.isInitialized()) {
+        if (zoomSDK.isInitialized()) {
             zoomSDK.removeAuthenticationListener(this);
         }
     }
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.btnLogin) {
+        if (v.getId() == R.id.btnLogin) {
             onClickBtnLogin();
         }
     }
@@ -93,12 +91,12 @@ public class ZoomLoginActivity extends BaseActivity implements ZoomSDKAuthentica
     public void onClickBtnLogin() {
         String userName = mEdtUserName.getText().toString().trim();
         String password = mEdtPassord.getText().toString().trim();
-        if(userName.length() == 0 || password.length() == 0) {
+        if (userName.length() == 0 || password.length() == 0) {
             Toast.makeText(this, "You need to enter user name and password.", Toast.LENGTH_LONG).show();
             return;
         }
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
-        if(!(zoomSDK.loginWithZoom(userName, password) == ZoomApiError.ZOOM_API_ERROR_SUCCESS)) {
+        if (!(zoomSDK.loginWithZoom(userName, password) == ZoomApiError.ZOOM_API_ERROR_SUCCESS)) {
             Toast.makeText(this, "Something went wrong, Please try again", Toast.LENGTH_LONG).show();
         } else {
             mBtnLogin.setVisibility(View.GONE);
@@ -108,14 +106,14 @@ public class ZoomLoginActivity extends BaseActivity implements ZoomSDKAuthentica
 
     public void onClickBtnLoginUserStart() {
 
-        if(meetingNo.length() == 0) {
+        if (meetingNo.length() == 0) {
             Toast.makeText(ZoomLoginActivity.this, "You need a scheduled meeting id.", Toast.LENGTH_LONG).show();
             return;
         }
 
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
 
-        if(!zoomSDK.isInitialized()) {
+        if (!zoomSDK.isInitialized()) {
             Toast.makeText(ZoomLoginActivity.this, "Something went wrong, Please try again", Toast.LENGTH_LONG).show();
             return;
         }
@@ -145,7 +143,7 @@ public class ZoomLoginActivity extends BaseActivity implements ZoomSDKAuthentica
 
     @Override
     public void onZoomSDKLoginResult(long result) {
-        if(result == ZoomAuthenticationError.ZOOM_AUTH_ERROR_SUCCESS) {
+        if (result == ZoomAuthenticationError.ZOOM_AUTH_ERROR_SUCCESS) {
             Toast.makeText(this, "Login successfully", Toast.LENGTH_SHORT).show();
             onClickBtnLoginUserStart();
         } else {
@@ -157,7 +155,7 @@ public class ZoomLoginActivity extends BaseActivity implements ZoomSDKAuthentica
 
     @Override
     public void onZoomSDKLogoutResult(long result) {
-        if(result == ZoomAuthenticationError.ZOOM_AUTH_ERROR_SUCCESS) {
+        if (result == ZoomAuthenticationError.ZOOM_AUTH_ERROR_SUCCESS) {
             Toast.makeText(this, "Logout successfully", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "Logout failed, error code = " + result, Toast.LENGTH_SHORT).show();

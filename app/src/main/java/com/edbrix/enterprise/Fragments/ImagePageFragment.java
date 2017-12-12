@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.edbrix.enterprise.Activities.PhotoPopUpActivity;
-import com.edbrix.enterprise.Activities.PlayCourseActivity;
 import com.edbrix.enterprise.Models.ImageContentData;
 import com.edbrix.enterprise.R;
 import com.squareup.picasso.Picasso;

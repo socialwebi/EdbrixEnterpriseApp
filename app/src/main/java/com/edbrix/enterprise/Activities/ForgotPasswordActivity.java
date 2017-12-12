@@ -2,12 +2,10 @@ package com.edbrix.enterprise.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -121,17 +119,14 @@ public class ForgotPasswordActivity extends BaseActivity {
 
         if (email.isEmpty()) {
             _forgot_password_edit_text_email.setError(getString(R.string.error_edit_text));
-        }
-        else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             _forgot_password_edit_text_email.setError(getString(R.string.error_email_not_valid));
-        }
-        else {
+        } else {
             _forgot_password_edit_text_email.setError(null);
 
             if (Conditions.isNetworkConnected(ForgotPasswordActivity.this)) {
                 forgotPassword(email);
-            }
-            else {
+            } else {
                 try {
                     Snackbar.make(layout, getString(R.string.error_network), Snackbar.LENGTH_LONG).show();
                 } catch (Exception e) {
@@ -164,9 +159,9 @@ public class ForgotPasswordActivity extends BaseActivity {
                     public void onResponse(@NonNull ResponseData response) {
                         _forgot_password_progress_bar.setVisibility(View.INVISIBLE);
                         Timber.d("response: %s", response.toString());
-                        if (response.getErrorCode()==null) {
+                        if (response.getErrorCode() == null) {
 
-                            if (response.getIsOrganizationListShow().equals("0")){
+                            if (response.getIsOrganizationListShow().equals("0")) {
                                 Toast.makeText(context, "Success, Please login with new password ", Toast.LENGTH_SHORT).show();
                                 SettingsMy.setActiveUser(null);
 
@@ -174,17 +169,15 @@ public class ForgotPasswordActivity extends BaseActivity {
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                                 finish();
-                            }
-                            else {
+                            } else {
                                 Intent intent = new Intent(getApplicationContext(), OrganizationListActivity.class);
-                                intent.putExtra("key",true);
-                                intent.putExtra("email",emailId);
+                                intent.putExtra("key", true);
+                                intent.putExtra("email", emailId);
                                 startActivity(intent);
 
                             }
 
-                        }
-                        else {
+                        } else {
 
                             try {
                                 Timber.d("Error: %s", response.getErrorMessage());

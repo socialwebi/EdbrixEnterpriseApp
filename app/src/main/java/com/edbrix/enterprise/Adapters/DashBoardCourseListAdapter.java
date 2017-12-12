@@ -2,7 +2,6 @@ package com.edbrix.enterprise.Adapters;
 
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.edbrix.enterprise.Models.Courses;
-import com.edbrix.enterprise.Models.Meeting;
 import com.edbrix.enterprise.R;
 import com.squareup.picasso.Picasso;
 
@@ -27,16 +25,11 @@ public class DashBoardCourseListAdapter extends RecyclerView.Adapter<DashBoardCo
     private ArrayList<Courses> list;
     private DashboardListInterface dashRecyclerInterface;
 
-    public interface DashboardListInterface{
-        void onListSelected(Courses course);
-    }
-
     public DashBoardCourseListAdapter(Context context, ArrayList<Courses> list, DashboardListInterface dashRecyclerInterface) {
         this.context = context;
         this.list = list;
         this.dashRecyclerInterface = dashRecyclerInterface;
     }
-
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -64,12 +57,15 @@ public class DashBoardCourseListAdapter extends RecyclerView.Adapter<DashBoardCo
         return list == null ? 0 : list.size();
     }
 
-    public void refresh(ArrayList<Courses> list)
-    {
+    public void refresh(ArrayList<Courses> list) {
         this.list = new ArrayList<>();
         this.list = list;
         notifyDataSetChanged();
 
+    }
+
+    public interface DashboardListInterface {
+        void onListSelected(Courses course);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

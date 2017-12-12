@@ -6,10 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -45,30 +44,25 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class SettingsActivity extends BaseActivity {
 
+    static final int REQUEST_PERMISSION_EXTERNAL = 1006;
     Context context;
     RoundedImageView _settings_image_profile_pic;
-
     TextView _settings_text_user_name;
     TextView _settings_text_user_email;
-
     LinearLayout _settings_linear_share;
     LinearLayout _settings_linear_edit_profile;
     LinearLayout _settings_linear_upload_pic;
     LinearLayout _settings_linear_logout;
     LinearLayout _settings_linear_change_password;
     ProgressBar _settings_progress;
-
     User user;
     private Uri filePath;
     private String fileExtension;
     private String fileName;
-
     private FirebaseStorage storage;
     private StorageReference storageRef;
     private UploadTask uploadTask;
-
     private ArrayList<String> photoPaths = new ArrayList<>();
-    static final int REQUEST_PERMISSION_EXTERNAL = 1006;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,12 +142,12 @@ public class SettingsActivity extends BaseActivity {
 
                                 SettingsMy.setActiveUser(null);
 
-                                if(isTablet()){
+                                if (isTablet()) {
                                     Intent intent = new Intent(context, LoginActivity.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
                                     finish();
-                                }else {
+                                } else {
                                     Intent intent = new Intent(context, MainActivity.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
@@ -168,11 +162,11 @@ public class SettingsActivity extends BaseActivity {
         });
 
         if (user != null) {
-            String name = user.getFirstName()+" "+ user.getLastName();
+            String name = user.getFirstName() + " " + user.getLastName();
             _settings_text_user_name.setText(name);
             _settings_text_user_email.setText(user.getOrganizationName());
 
-            if (user.getProfileImageUrl()!=null && !user.getProfileImageUrl().isEmpty()) {
+            if (user.getProfileImageUrl() != null && !user.getProfileImageUrl().isEmpty()) {
                 Picasso.with(context)
                         .load(user.getProfileImageUrl())
                         .placeholder(R.mipmap.user_profile)
@@ -225,21 +219,20 @@ public class SettingsActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
+        switch (requestCode) {
 
             case FilePickerConst.REQUEST_CODE_PHOTO:
-                if(resultCode== Activity.RESULT_OK && data!=null)
-                {
+                if (resultCode == Activity.RESULT_OK && data != null) {
                     photoPaths = new ArrayList<>();
                     photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
                     // mOutputText.setText(photoPaths.toString());
                     filePath = Uri.fromFile(new File(photoPaths.get(0)));
 
                     fileName = photoPaths.get(0).substring(photoPaths.get(0).lastIndexOf("/"));
-                    fileName = fileName.replace("/","");
+                    fileName = fileName.replace("/", "");
 
                     fileExtension = photoPaths.get(0).substring(photoPaths.get(0).lastIndexOf("."));
-                    Log.d("TAG", photoPaths.toString() +" _-_ "+fileExtension);
+                    Log.d("TAG", photoPaths.toString() + " _-_ " + fileExtension);
                     uploadToEdbrix(filePath);
                 }
                 break;

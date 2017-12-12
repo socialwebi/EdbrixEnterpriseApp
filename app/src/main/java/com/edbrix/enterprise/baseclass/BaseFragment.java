@@ -19,12 +19,10 @@ import com.edbrix.enterprise.commons.ToastMessage;
  */
 public class BaseFragment extends Fragment {
 
-//    private DialogManager dialogManager;
+    protected Context mContext;
+    //    private DialogManager dialogManager;
     private GlobalMethods globalMethods;
     private ToastMessage toastMessage;
-
-    protected Context mContext;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

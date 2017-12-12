@@ -12,7 +12,7 @@ public class ResponseData {
     private String accessToken;
     private String isOrganizationListShow;
 
-    private User   user;
+    private User user;
     private ArrayList<Organizations> organizations;
     private ArrayList<Meetings> meeting;
     private ArrayList<Meeting> meetings;

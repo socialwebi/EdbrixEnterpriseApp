@@ -56,7 +56,6 @@ public class JsonRequest extends JsonObjectRequest {
     }
 
 
-
     /**
      * Create a new unauthorized request.
      *
@@ -71,7 +70,6 @@ public class JsonRequest extends JsonObjectRequest {
                        Response.ErrorListener errorListener) {
         this(method, requestUrl, jsonRequest, successListener, errorListener, null, null);
     }
-
 
 
     @Override

@@ -44,8 +44,7 @@ public class CourseListResponseData {
     }
 
     @Override
-    public String toString()
-    {
-        return "ClassPojo [courses = "+coursesList.toString()+", ErrorCode = "+ErrorCode+", ErrorMessage = "+ErrorMessage+"]";
+    public String toString() {
+        return "ClassPojo [courses = " + coursesList.toString() + ", ErrorCode = " + ErrorCode + ", ErrorMessage = " + ErrorMessage + "]";
     }
 }

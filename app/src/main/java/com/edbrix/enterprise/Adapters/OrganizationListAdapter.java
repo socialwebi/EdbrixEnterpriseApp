@@ -48,7 +48,7 @@ public class OrganizationListAdapter extends RecyclerView.Adapter<OrganizationLi
         }
         holder.name.setText(list.get(position).getOrganizationName());
 
-        if (list.get(position).getOrganizationImage()!=null && !list.get(position).getOrganizationImage().isEmpty())
+        if (list.get(position).getOrganizationImage() != null && !list.get(position).getOrganizationImage().isEmpty())
             Picasso.with(context)
                     .load(list.get(position).getOrganizationImage())
                     .error(R.drawable.edbrix_logo)
@@ -61,8 +61,7 @@ public class OrganizationListAdapter extends RecyclerView.Adapter<OrganizationLi
         return list.size();
     }
 
-    public void refreshList(ArrayList<Organizations> newList)
-    {
+    public void refreshList(ArrayList<Organizations> newList) {
         list = new ArrayList<>();
         list = newList;
         notifyDataSetChanged();

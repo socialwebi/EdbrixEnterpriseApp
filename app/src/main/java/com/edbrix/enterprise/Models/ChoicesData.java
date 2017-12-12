@@ -14,30 +14,25 @@ public class ChoicesData {
     @SerializedName("choice")
     private String choice;
 
-    public String getId ()
-    {
+    public String getId() {
         return id;
     }
 
-    public void setId (String id)
-    {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getChoice ()
-    {
+    public String getChoice() {
         return choice;
     }
 
-    public void setChoice (String choice)
-    {
+    public void setChoice(String choice) {
         this.choice = choice;
     }
 
     @Override
-    public String toString()
-    {
-        return "ClassPojo [id = "+id+", choice = "+choice+"]";
+    public String toString() {
+        return "ClassPojo [id = " + id + ", choice = " + choice + "]";
     }
 
 }

@@ -28,15 +28,11 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.edbrix.enterprise.Activities.DashboardActivity;
 import com.edbrix.enterprise.Activities.MeetingDetailActivity;
-import com.edbrix.enterprise.Adapters.CourseListAdapter;
 import com.edbrix.enterprise.Adapters.MeetingListAdapter;
 import com.edbrix.enterprise.Application;
 import com.edbrix.enterprise.BuildConfig;
 import com.edbrix.enterprise.Interfaces.MeetingListInterface;
-import com.edbrix.enterprise.Models.CourseListResponseData;
-import com.edbrix.enterprise.Models.Courses;
 import com.edbrix.enterprise.Models.Meeting;
 import com.edbrix.enterprise.Models.ResponseData;
 import com.edbrix.enterprise.Models.User;
@@ -66,30 +62,24 @@ import us.zoom.sdk.ZoomSDKInitializeListener;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MeetingListFragment extends Fragment  implements SearchView.OnQueryTextListener, ZoomSDKInitializeListener, MeetingServiceListener {
-
-    Context context;
-    private ProgressBar _meeting_list_progress;
-    private ImageView _meeting_list_No_Meetings;
-    RelativeLayout layout;
-
-    MeetingListAdapter adapter;
-
-    private ArrayList<Meeting> list;
+public class MeetingListFragment extends Fragment implements SearchView.OnQueryTextListener, ZoomSDKInitializeListener, MeetingServiceListener {
 
     private static String DISPLAY_NAME = "User";
+    Context context;
+    RelativeLayout layout;
+    MeetingListAdapter adapter;
+    SessionManager sessionManager;
+    private ProgressBar _meeting_list_progress;
+    private ImageView _meeting_list_No_Meetings;
+    private ArrayList<Meeting> list;
     private boolean mbPendingStartMeeting = false;
     private boolean isLastPage = false;
     private boolean isLoading = true;
-
     private String deviceType;
     private String dataType = "meeting";
     private String pageNo = "1";
-
     private View positiveAction;
     private String meetingNo;
-    SessionManager sessionManager;
-
     private User user;
 
     public MeetingListFragment() {
@@ -113,10 +103,10 @@ public class MeetingListFragment extends Fragment  implements SearchView.OnQuery
         deviceType = sessionManager.getSessionDeviceType();
 
         RecyclerView _meeting_list_recycler = view.findViewById(R.id.meeting_list_recycler);
-        _meeting_list_progress= view.findViewById(R.id.meeting_list_progress);
-        _meeting_list_No_Meetings= view.findViewById(R.id.meeting_list_No_Meetings);
+        _meeting_list_progress = view.findViewById(R.id.meeting_list_progress);
+        _meeting_list_No_Meetings = view.findViewById(R.id.meeting_list_No_Meetings);
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             ZoomSDK sdk = ZoomSDK.getInstance();
             sdk.initialize(context, Constants.APP_KEY, Constants.APP_SECRET, Constants.WEB_DOMAIN, this);
         } else {
@@ -228,7 +218,7 @@ public class MeetingListFragment extends Fragment  implements SearchView.OnQuery
                             }
                         });
 
-                        if (meeting.getMeetingUsers() != null && meeting.getMeetingUsers().size()>0) {
+                        if (meeting.getMeetingUsers() != null && meeting.getMeetingUsers().size() > 0) {
 
                             TextView textViewName = (TextView) dialog.getCustomView().findViewById(R.id.custom_user_name);
                             textViewName.setText(meeting.getMeetingUsers().get(0).getName());
@@ -243,8 +233,7 @@ public class MeetingListFragment extends Fragment  implements SearchView.OnQuery
 
                         }
                         dialog.show();
-                    }
-                    else {
+                    } else {
 
                         new MaterialDialog.Builder(context)
                                 .title(title)
@@ -261,8 +250,7 @@ public class MeetingListFragment extends Fragment  implements SearchView.OnQuery
         if (Conditions.isNetworkConnected(context)) {
             _meeting_list_progress.setVisibility(View.VISIBLE);
             getMeetingeList();
-        }
-        else {
+        } else {
             try {
                 Snackbar.make(layout, getString(R.string.error_network), Snackbar.LENGTH_LONG).show();
             } catch (Exception e) {
@@ -278,7 +266,7 @@ public class MeetingListFragment extends Fragment  implements SearchView.OnQuery
         registerForContextMenu(_meeting_list_recycler);
         _meeting_list_recycler.setAdapter(adapter);
 
-        return  view;
+        return view;
 
     }
 
@@ -286,7 +274,7 @@ public class MeetingListFragment extends Fragment  implements SearchView.OnQuery
     private void getMeetingeList() {
 
         User activeUser = SettingsMy.getActiveUser();
-        if (activeUser!=null) {
+        if (activeUser != null) {
 
             JSONObject jo = new JSONObject();
             try {
@@ -304,55 +292,54 @@ public class MeetingListFragment extends Fragment  implements SearchView.OnQuery
 
             if (BuildConfig.DEBUG) Timber.d("getCourseList Request Param: %s", jo.toString());
 
-                GsonRequest<ResponseData> getDashboardCourseSchedulesRequest = new GsonRequest<>(Request.Method.POST, Constants.getDashboardCourseSchedules, jo.toString(), ResponseData.class,
-                        new Response.Listener<ResponseData>() {
-                            @Override
-                            public void onResponse(@NonNull ResponseData response) {
-                                _meeting_list_progress.setVisibility(View.INVISIBLE);
+            GsonRequest<ResponseData> getDashboardCourseSchedulesRequest = new GsonRequest<>(Request.Method.POST, Constants.getDashboardCourseSchedules, jo.toString(), ResponseData.class,
+                    new Response.Listener<ResponseData>() {
+                        @Override
+                        public void onResponse(@NonNull ResponseData response) {
+                            _meeting_list_progress.setVisibility(View.INVISIBLE);
                             Timber.d("response: %s", response.toString());
-                                if (response.getErrorCode()==null) {
+                            if (response.getErrorCode() == null) {
 
-                                    if (response.getMeetings()!=null) {
-                                        _meeting_list_No_Meetings.setVisibility(View.GONE);
-                                        adapter.refresh(response.getMeetings());
-                                        adapter.notifyDataSetChanged();
-                                        pageNo = response.getPage();
-                                    } else {
-                                            _meeting_list_No_Meetings.setVisibility(View.VISIBLE);
-                                            // mRecyclerView.setVisibility(View.GONE);
-                                    }
-
-                                    //
-                                }
-                                else {
-                                    try {
-                                        Timber.d("Error: %s", response.getErrorMessage());
-                                        Snackbar.make(layout, response.getErrorMessage(), Snackbar.LENGTH_LONG).show();
-                                    } catch (Exception e2) {
-                                        e2.printStackTrace();
-                                        Timber.d("Error: %s", response.getErrorMessage());
-                                        Toast.makeText(context, response.getErrorMessage(), Toast.LENGTH_LONG).show();
-                                    }
+                                if (response.getMeetings() != null) {
+                                    _meeting_list_No_Meetings.setVisibility(View.GONE);
+                                    adapter.refresh(response.getMeetings());
+                                    adapter.notifyDataSetChanged();
+                                    pageNo = response.getPage();
+                                } else {
+                                    _meeting_list_No_Meetings.setVisibility(View.VISIBLE);
+                                    // mRecyclerView.setVisibility(View.GONE);
                                 }
 
-
+                                //
+                            } else {
+                                try {
+                                    Timber.d("Error: %s", response.getErrorMessage());
+                                    Snackbar.make(layout, response.getErrorMessage(), Snackbar.LENGTH_LONG).show();
+                                } catch (Exception e2) {
+                                    e2.printStackTrace();
+                                    Timber.d("Error: %s", response.getErrorMessage());
+                                    Toast.makeText(context, response.getErrorMessage(), Toast.LENGTH_LONG).show();
+                                }
                             }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        _meeting_list_progress.setVisibility(View.INVISIBLE);
-                        Timber.d("Error: %s", error.getMessage());
-                        try {
-                            Snackbar.make(layout, getString(R.string.error_something_wrong), Snackbar.LENGTH_LONG).show();
-                        } catch (Exception e2) {
-                            e2.printStackTrace();
-                            Toast.makeText(context, getString(R.string.error_something_wrong), Toast.LENGTH_LONG).show();
+
+
                         }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    _meeting_list_progress.setVisibility(View.INVISIBLE);
+                    Timber.d("Error: %s", error.getMessage());
+                    try {
+                        Snackbar.make(layout, getString(R.string.error_something_wrong), Snackbar.LENGTH_LONG).show();
+                    } catch (Exception e2) {
+                        e2.printStackTrace();
+                        Toast.makeText(context, getString(R.string.error_something_wrong), Toast.LENGTH_LONG).show();
                     }
-                });
-                getDashboardCourseSchedulesRequest.setRetryPolicy(Application.getDefaultRetryPolice());
-                getDashboardCourseSchedulesRequest.setShouldCache(false);
-                Application.getInstance().addToRequestQueue(getDashboardCourseSchedulesRequest, "meeting_list_requests");
+                }
+            });
+            getDashboardCourseSchedulesRequest.setRetryPolicy(Application.getDefaultRetryPolice());
+            getDashboardCourseSchedulesRequest.setShouldCache(false);
+            Application.getInstance().addToRequestQueue(getDashboardCourseSchedulesRequest, "meeting_list_requests");
         }
     }
 
@@ -369,7 +356,7 @@ public class MeetingListFragment extends Fragment  implements SearchView.OnQuery
     private void registerMeetingServiceListener() {
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
         MeetingService meetingService = zoomSDK.getMeetingService();
-        if(meetingService != null) {
+        if (meetingService != null) {
             meetingService.addListener(this);
         }
     }
@@ -378,7 +365,7 @@ public class MeetingListFragment extends Fragment  implements SearchView.OnQuery
     public void onDestroy() {
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
 
-        if(zoomSDK.isInitialized()) {
+        if (zoomSDK.isInitialized()) {
             MeetingService meetingService = zoomSDK.getMeetingService();
             meetingService.removeListener(this);
         }
@@ -393,11 +380,11 @@ public class MeetingListFragment extends Fragment  implements SearchView.OnQuery
         Log.i("TAG", "onMeetingEvent, meetingEvent=" + meetingEvent + ", errorCode=" + errorCode
                 + ", internalErrorCode=" + internalErrorCode);
 
-        if(meetingEvent == MeetingEvent.MEETING_CONNECT_FAILED && errorCode == MeetingError.MEETING_ERROR_CLIENT_INCOMPATIBLE) {
+        if (meetingEvent == MeetingEvent.MEETING_CONNECT_FAILED && errorCode == MeetingError.MEETING_ERROR_CLIENT_INCOMPATIBLE) {
             Toast.makeText(context, "App version is too low!", Toast.LENGTH_LONG).show();
         }
 
-        if(mbPendingStartMeeting && meetingEvent == MeetingEvent.MEETING_DISCONNECTED) {
+        if (mbPendingStartMeeting && meetingEvent == MeetingEvent.MEETING_DISCONNECTED) {
             mbPendingStartMeeting = false;
         }
     }
@@ -406,7 +393,7 @@ public class MeetingListFragment extends Fragment  implements SearchView.OnQuery
     public void onZoomSDKInitializeResult(int errorCode, int internalErrorCode) {
         Log.i("TAG", "onZoomSDKInitializeResult, errorCode=" + errorCode + ", internalErrorCode=" + internalErrorCode);
 
-        if(errorCode != ZoomError.ZOOM_ERROR_SUCCESS) {
+        if (errorCode != ZoomError.ZOOM_ERROR_SUCCESS) {
             Toast.makeText(context, "Something went wrong, Please try again", Toast.LENGTH_LONG).show();
         } else {
             // Toast.makeText(context, "Initialize Zoom SDK successfully.", Toast.LENGTH_LONG).show();
@@ -419,14 +406,14 @@ public class MeetingListFragment extends Fragment  implements SearchView.OnQuery
 
         String meetingPassword = "";
 
-        if(meetingNo.length() == 0) {
+        if (meetingNo.length() == 0) {
             Toast.makeText(context, "You need a meeting number which you want to join.", Toast.LENGTH_LONG).show();
             return;
         }
 
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
 
-        if(!zoomSDK.isInitialized()) {
+        if (!zoomSDK.isInitialized()) {
             Toast.makeText(context, "Something went wrong, Please try again", Toast.LENGTH_LONG).show();
             return;
         }
@@ -451,7 +438,7 @@ public class MeetingListFragment extends Fragment  implements SearchView.OnQuery
 //		opts.no_meeting_error_message = true;
 //		opts.participant_id = "participant id";
 
-        DISPLAY_NAME = user != null ? user.getFirstName() : "User" ;
+        DISPLAY_NAME = user != null ? user.getFirstName() : "User";
         int ret = meetingService.joinMeeting(context, meetingNo, DISPLAY_NAME, meetingPassword, opts);
         Log.i("TAG", "onClickBtnJoinMeeting, ret=" + ret);
 

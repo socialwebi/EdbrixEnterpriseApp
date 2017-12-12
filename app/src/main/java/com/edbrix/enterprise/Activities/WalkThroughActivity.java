@@ -1,37 +1,31 @@
 package com.edbrix.enterprise.Activities;
 
 import android.content.Intent;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.edbrix.enterprise.Adapters.WalkthroughAdapter;
+import com.edbrix.enterprise.MainActivity;
+import com.edbrix.enterprise.R;
 import com.edbrix.enterprise.baseclass.BaseActivity;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
-import com.edbrix.enterprise.MainActivity;
-import com.edbrix.enterprise.R;
 
 public class WalkThroughActivity extends BaseActivity {
 
+    WalkthroughAdapter mAdapter;
     private ViewPager mPager;
-
     private RelativeLayout indicatorLayout;
-
     private TextView gotItText;
     private TextView nextText;
     private TextView skipText;
-
     private int itemCount;
-
     private Intent intent;
-    WalkthroughAdapter mAdapter;
-
-    private String isCouch="";
+    private String isCouch = "";
     private boolean isMain;
 
     @Override
@@ -39,10 +33,10 @@ public class WalkThroughActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_walk_through);
 
-        gotItText =  findViewById(R.id.gotitTextView);
-        nextText =  findViewById(R.id.nextTextView);
-        skipText =  findViewById(R.id.skipTextView);
-        indicatorLayout =  findViewById(R.id.indicatorLayout);
+        gotItText = findViewById(R.id.gotitTextView);
+        nextText = findViewById(R.id.nextTextView);
+        skipText = findViewById(R.id.skipTextView);
+        indicatorLayout = findViewById(R.id.indicatorLayout);
 
         gotItText.setVisibility(View.GONE);
 
@@ -77,18 +71,17 @@ public class WalkThroughActivity extends BaseActivity {
 
         };
 
-        mPager =  findViewById(R.id.pager);
+        mPager = findViewById(R.id.pager);
         mPager.setClipToPadding(false);
         mPager.setPadding(0, 100, 0, 0);
         mPager.setPageMargin(0);
 
-        if (isCouch!=null) {
+        if (isCouch != null) {
             if (isCouch.equals("i"))
                 mAdapter = new WalkthroughAdapter(this, mResources1);
             else if (isCouch.equals("l"))
                 mAdapter = new WalkthroughAdapter(this, mResources2);
-        }
-        else
+        } else
             mAdapter = new WalkthroughAdapter(this, mResources);
 
         PageIndicator mIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
@@ -106,7 +99,7 @@ public class WalkThroughActivity extends BaseActivity {
                     skipText.setVisibility(View.GONE);
                     nextText.setVisibility(View.GONE);
                     gotItText.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     indicatorLayout.setVisibility(View.VISIBLE);
                     skipText.setVisibility(View.VISIBLE);
                     nextText.setVisibility(View.VISIBLE);

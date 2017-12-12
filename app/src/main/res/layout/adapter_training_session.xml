@@ -101,14 +101,15 @@
                     android:id="@+id/training_session_place"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@mipmap/clock"
-                    android:drawableLeft="@mipmap/clock"
+                    android:drawableStart="@mipmap/location_icon"
+                    android:drawableLeft="@mipmap/location_icon"
                     android:drawablePadding="10dp" />
 
                 <ImageButton
                     android:id="@+id/training_session_button_info"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/info_icon"/>
 
             </LinearLayout>
 

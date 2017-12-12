@@ -45,7 +45,7 @@ public class ParticipantListAdapter extends RecyclerView.Adapter<ParticipantList
 
         holder.name.setText(meeting.get(position).getName());
 
-        if (meeting.get(position).getProfileImageURL()!=null) {
+        if (meeting.get(position).getProfileImageURL() != null) {
             Picasso.with(context)
                     .load(meeting.get(position).getProfileImageURL())
                     .fit()
@@ -61,9 +61,8 @@ public class ParticipantListAdapter extends RecyclerView.Adapter<ParticipantList
                     Intent dialIntent = new Intent(Intent.ACTION_DIAL);
                     dialIntent.setData(Uri.parse("tel:" + meeting.get(holder.getAdapterPosition()).getPhoneNo()));
                     context.startActivity(dialIntent);
-                } catch (Exception e)
-                {
-                    Toast.makeText(context,"This feature not supported ",Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Toast.makeText(context, "This feature not supported ", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
 
@@ -73,12 +72,12 @@ public class ParticipantListAdapter extends RecyclerView.Adapter<ParticipantList
         holder.messageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {Intent sendIntent = new Intent(Intent.ACTION_VIEW);
-                    sendIntent.setData(Uri.parse("sms:"+ meeting.get(holder.getAdapterPosition()).getPhoneNo()));
+                try {
+                    Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+                    sendIntent.setData(Uri.parse("sms:" + meeting.get(holder.getAdapterPosition()).getPhoneNo()));
                     context.startActivity(sendIntent);
-                } catch (Exception e)
-                {
-                    Toast.makeText(context,"This feature not supported ",Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Toast.makeText(context, "This feature not supported ", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
             }
@@ -91,7 +90,7 @@ public class ParticipantListAdapter extends RecyclerView.Adapter<ParticipantList
         return meeting.size();
     }
 
-    public void refreshList(ArrayList<MeetingUsers> meeting){
+    public void refreshList(ArrayList<MeetingUsers> meeting) {
         this.meeting = meeting;
         notifyDataSetChanged();
     }
@@ -107,10 +106,10 @@ public class ParticipantListAdapter extends RecyclerView.Adapter<ParticipantList
         ViewHolder(View itemView) {
             super(itemView);
 
-            name =  itemView.findViewById(R.id.meetingUserName);
-            imageView =  itemView.findViewById(R.id.meetingUserImage);
-            callButton =  itemView.findViewById(R.id.meetingUserCall);
-            messageButton =  itemView.findViewById(R.id.meetingUserMessage);
+            name = itemView.findViewById(R.id.meetingUserName);
+            imageView = itemView.findViewById(R.id.meetingUserImage);
+            callButton = itemView.findViewById(R.id.meetingUserCall);
+            messageButton = itemView.findViewById(R.id.meetingUserMessage);
 
             itemView.setClickable(true);
             itemView.setOnClickListener(new View.OnClickListener() {

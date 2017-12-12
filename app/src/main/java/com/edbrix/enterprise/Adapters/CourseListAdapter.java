@@ -15,9 +15,7 @@ import android.widget.TextView;
 
 import com.edbrix.enterprise.Interfaces.CourseListActionListener;
 import com.edbrix.enterprise.Interfaces.OnLoadMoreListener;
-import com.edbrix.enterprise.Interfaces.OrganizationListInterface;
 import com.edbrix.enterprise.Models.Courses;
-import com.edbrix.enterprise.Models.Organizations;
 import com.edbrix.enterprise.R;
 import com.edbrix.enterprise.Utils.RoundedImageView;
 import com.squareup.picasso.Picasso;
@@ -26,14 +24,12 @@ import java.util.ArrayList;
 
 public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private final int VIEW_TYPE_ITEM = 0;
+    private final int VIEW_TYPE_LOADING = 1;
     private Context context;
     private ArrayList<Courses> courseList;
     private CourseListActionListener courseListActionListener;
     private OnLoadMoreListener onLoadMoreListener;
-
-    private final int VIEW_TYPE_ITEM = 0;
-    private final int VIEW_TYPE_LOADING = 1;
-
     private boolean isLoading;
     private int visibleThreshold = 5;
     private int lastVisibleItem, totalItemCount;

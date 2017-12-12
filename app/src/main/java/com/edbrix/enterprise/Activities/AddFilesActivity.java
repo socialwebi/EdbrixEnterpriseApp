@@ -4,7 +4,6 @@ import android.Manifest;
 import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -16,13 +15,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -43,13 +40,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DecodeFormat;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.VideoBitmapDecoder;
 import com.bumptech.glide.request.RequestOptions;
 import com.edbrix.enterprise.Application;
 import com.edbrix.enterprise.BuildConfig;
-import com.edbrix.enterprise.MainActivity;
 import com.edbrix.enterprise.Models.ResponseData;
 import com.edbrix.enterprise.Models.User;
 import com.edbrix.enterprise.R;
@@ -58,34 +51,25 @@ import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.JsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
-import com.edbrix.enterprise.commons.GlobalMethods;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.api.services.youtube.YouTube;
-import com.google.api.services.youtube.model.Channel;
-import com.google.api.services.youtube.model.ChannelListResponse;
-import com.google.api.services.youtube.model.SearchListResponse;
-import com.google.api.services.youtube.model.Video;
-import com.google.api.services.youtube.model.VideoPlayer;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException;
-
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.ExponentialBackOff;
-
 import com.google.api.services.youtube.YouTubeScopes;
-
+import com.google.api.services.youtube.model.Channel;
+import com.google.api.services.youtube.model.ChannelListResponse;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -94,7 +78,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import droidninja.filepicker.FilePickerBuilder;
@@ -109,47 +92,40 @@ import timber.log.Timber;
 @RuntimePermissions
 public class AddFilesActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks {
 
+    static final int REQUEST_ACCOUNT_PICKER = 1000;
+    static final int REQUEST_AUTHORIZATION = 1001;
+    static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
+    static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
+    static final int REQUEST_PERMISSION_EXTERNAL = 1004;
+    private static final String BUTTON_TEXT = "Call YouTube Data API";
+    private static final String PREF_ACCOUNT_NAME = "accountName";
+    private static final String[] SCOPES = {YouTubeScopes.YOUTUBE_READONLY};
+    private final int RC_CAMERA_AND_LOCATION = 99;
     RelativeLayout layout;
     Context context;
-
-
     TextInputEditText _add_file_file_title;
-    private TextView mOutputText;
     LinearLayout _add_file_progress_layout;
     TextView _add_file_progress_text;
     Button _add_file_button_youtube;
     Button _add_file_button_browse;
     Button _add_file_button_submit;
-
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
+    GoogleAccountCredential mCredential;
+    ProgressDialog mProgress;
+    private TextView mOutputText;
     private String fileType;
     private String fileTypeVal;
     private Uri filePath;
     private String fileName;
     private String fileExtension;
     private ImageView imageView;
-    private final int RC_CAMERA_AND_LOCATION= 99;
     private int imageSize;
-
     private FirebaseStorage storage;
     private StorageReference storageRef;
     private UploadTask uploadTask;
-
-    GoogleAccountCredential mCredential;
-    ProgressDialog mProgress;
-
     private ArrayList<String> photoPaths = new ArrayList<>();
     private ArrayList<String> docPaths = new ArrayList<>();
-
-    static final int REQUEST_ACCOUNT_PICKER = 1000;
-    static final int REQUEST_AUTHORIZATION = 1001;
-    static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
-    static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
-    static final int REQUEST_PERMISSION_EXTERNAL = 1004;
-
-    private static final String BUTTON_TEXT = "Call YouTube Data API";
-    private static final String PREF_ACCOUNT_NAME = "accountName";
-    private static final String[] SCOPES = { YouTubeScopes.YOUTUBE_READONLY };
-
     private String title;
     private String price;
     private String courseId = "0";
@@ -163,6 +139,10 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        pref = context.getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        editor = pref.edit();
+        editor.apply();
 
         Intent intent = getIntent();
         title = intent.getStringExtra("title");
@@ -296,7 +276,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
 
         if (fileName.isEmpty()) {
             _add_file_file_title.setError(getString(R.string.error_edit_text));
-        } else if (filePath.toString().isEmpty()){
+        } else if (filePath.toString().isEmpty()) {
             _add_file_file_title.setError(null);
             try {
                 Snackbar.make(layout, getString(R.string.error_files), Snackbar.LENGTH_LONG).show();
@@ -340,37 +320,37 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     public void onPickPhoto() {
 
-            FilePickerBuilder.getInstance()
-                    .setMaxCount(1)
-                    .setSelectedFiles(photoPaths)
-                    .setActivityTheme(R.style.AppTheme)
-                    .enableVideoPicker(true)
-                    .enableCameraSupport(false)
-                    .enableImagePicker(false)
-                    .showGifs(false)
-                    .showFolderView(true)
-                    .enableSelectAll(false)
-                    .withOrientation(Orientation.UNSPECIFIED)
-                    .pickPhoto(this);
+        FilePickerBuilder.getInstance()
+                .setMaxCount(1)
+                .setSelectedFiles(photoPaths)
+                .setActivityTheme(R.style.AppTheme)
+                .enableVideoPicker(true)
+                .enableCameraSupport(false)
+                .enableImagePicker(false)
+                .showGifs(false)
+                .showFolderView(true)
+                .enableSelectAll(false)
+                .withOrientation(Orientation.UNSPECIFIED)
+                .pickPhoto(this);
     }
 
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     public void onPickDoc() {
-        String[] ppts = {".ppt",".pptx"};
+        String[] ppts = {".ppt", ".pptx"};
         String[] pdfs = {".pdf"};
-        String[] docs = {".doc",".docx"};
-        String[] xls = {".xls",".xlsx"};
-            FilePickerBuilder.getInstance()
-                    .setMaxCount(1)
-                    .setSelectedFiles(docPaths)
-                    .setActivityTheme(R.style.AppTheme)
-                    .addFileSupport("DOC",docs,R.mipmap.doc_icon)
-                    .addFileSupport("PDF",pdfs,R.mipmap.pdf_icon)
-                    .addFileSupport("PPT",ppts,R.mipmap.ppt_icon)
-                    .addFileSupport("XLS",xls,R.mipmap.xls_icon)
-                    .enableDocSupport(false)
-                    .withOrientation(Orientation.UNSPECIFIED)
-                    .pickFile(this);
+        String[] docs = {".doc", ".docx"};
+        String[] xls = {".xls", ".xlsx"};
+        FilePickerBuilder.getInstance()
+                .setMaxCount(1)
+                .setSelectedFiles(docPaths)
+                .setActivityTheme(R.style.AppTheme)
+                .addFileSupport("DOC", docs, R.mipmap.doc_icon)
+                .addFileSupport("PDF", pdfs, R.mipmap.pdf_icon)
+                .addFileSupport("PPT", ppts, R.mipmap.ppt_icon)
+                .addFileSupport("XLS", xls, R.mipmap.xls_icon)
+                .enableDocSupport(false)
+                .withOrientation(Orientation.UNSPECIFIED)
+                .pickFile(this);
     }
 
 
@@ -390,7 +370,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
                 setProgressBar(true, "Uploading files..");
 
                 String userId = SettingsMy.getActiveUser().getId();// get user Id from active user
-                StorageReference childRef = storageRef.child("enterprisecoursecontent/" + userId + "/" + fileName+fileExtension);
+                StorageReference childRef = storageRef.child("enterprisecoursecontent/" + userId + "/" + fileName + fileExtension);
                 //uploading the image
                 uploadTask = childRef.putFile(fileUri);
 
@@ -449,7 +429,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
     private void setCourse() {
 
         User user = SettingsMy.getActiveUser();
-        if (user!=null) {
+        if (user != null) {
             setProgressBar(true, "Creating course..");
             JSONObject jo = new JSONObject();
             try {
@@ -473,6 +453,9 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
                     setProgressBar(false, "Creating course..");
                     try {
                         if (response.getString("ErrorCode").equals("0")) {
+
+                            editor.putString("newCourseId", courseId);
+                            editor.apply();
 
                             Timber.d("Disclaimer : %s", response.getString("id"));
                             courseId = response.getString("id");
@@ -514,7 +497,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
 
         User user = SettingsMy.getActiveUser();
 
-        if (user!=null) {
+        if (user != null) {
             setProgressBar(true, "Updating course..");
             JSONObject jo = new JSONObject();
             try {
@@ -525,7 +508,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
                 jo.put("CourseId", courseId);
                 jo.put("Title", fileName);
                 jo.put("Type", fileTypeVal);
-                jo.put("Content", fileName+fileExtension);
+                jo.put("Content", fileName + fileExtension);
 
             } catch (JSONException e) {
                 Timber.e(e, "Parse logInWithEmail exception");
@@ -539,7 +522,8 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
                         public void onResponse(@NonNull ResponseData response) {
                             Timber.d("response: %s", response.toString());
                             setProgressBar(false, "Updating course..");
-                            if (response.getErrorCode()==null) {
+                            if (response.getErrorCode() == null) {
+
 
                                 new AlertDialog.Builder(context)
                                         .setTitle("Confirmation")
@@ -550,9 +534,9 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
                                             public void onClick(DialogInterface dialog, int which) {
                                                 dialog.dismiss();
                                                 _add_file_file_title.setText(null);
-                                                fileName="";
+                                                fileName = "";
                                                 fileExtension = "";
-                                                filePath=Uri.EMPTY;
+                                                filePath = Uri.EMPTY;
                                                 imageView.setVisibility(View.INVISIBLE);
                                             }
                                         })
@@ -560,7 +544,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
 
-                                                Intent intent=new Intent();
+                                                Intent intent = new Intent();
                                                 intent.putExtra("newCourseId", courseId);
                                                 setResult(1, intent);
                                                 finish();
@@ -568,8 +552,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
                                             }
                                         })
                                         .show();
-                            }
-                            else {
+                            } else {
                                 try {
                                     Timber.d("Error: %s", response.getErrorMessage());
                                     Snackbar.make(layout, response.getErrorMessage(), Snackbar.LENGTH_LONG).show();
@@ -609,11 +592,11 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
      * appropriate.
      */
     private void getResultsFromApi() {
-        if (! isGooglePlayServicesAvailable()) {
+        if (!isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
-        } else if (! isDeviceOnline()) {
+        } else if (!isDeviceOnline()) {
             mOutputText.setText("No network connection available.");
         } else {
             new MakeRequestTask(mCredential).execute();
@@ -659,16 +642,17 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
      * Called when an activity launched here (specifically, AccountPicker
      * and authorization) exits, giving you the requestCode you started it with,
      * the resultCode it returned, and any additional data from it.
+     *
      * @param requestCode code indicating which activity result is incoming.
-     * @param resultCode code indicating the result of the incoming
-     *     activity result.
-     * @param data Intent (containing result data) returned by incoming
-     *     activity result.
+     * @param resultCode  code indicating the result of the incoming
+     *                    activity result.
+     * @param data        Intent (containing result data) returned by incoming
+     *                    activity result.
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
+        switch (requestCode) {
 
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
@@ -704,8 +688,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
                 break;
 
             case FilePickerConst.REQUEST_CODE_PHOTO:
-                if(resultCode== Activity.RESULT_OK && data!=null)
-                {
+                if (resultCode == Activity.RESULT_OK && data != null) {
                     photoPaths = new ArrayList<>();
                     photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
                     // mOutputText.setText(photoPaths.toString());
@@ -724,14 +707,13 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
 
                     imageView.setClickable(true);
                     fileExtension = photoPaths.get(0).substring(photoPaths.get(0).lastIndexOf("."));
-                    Log.d("TAG", photoPaths.toString() +" _-_ "+fileExtension);
+                    Log.d("TAG", photoPaths.toString() + " _-_ " + fileExtension);
                     // uploadToEdbrix(uri);
                 }
                 break;
 
             case FilePickerConst.REQUEST_CODE_DOC:
-                if(resultCode== Activity.RESULT_OK && data!=null)
-                {
+                if (resultCode == Activity.RESULT_OK && data != null) {
                     docPaths = new ArrayList<>();
                     docPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS));
                     //mOutputText.setText(docPaths.toString());
@@ -747,7 +729,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
 
                     imageView.setClickable(false);
                     fileExtension = docPaths.get(0).substring(docPaths.get(0).lastIndexOf("."));
-                    Log.d("TAG", docPaths.toString() +" _-_ "+fileExtension);
+                    Log.d("TAG", docPaths.toString() + " _-_ " + fileExtension);
                     // uploadToEdbrix(uri);
                 }
                 break;
@@ -756,11 +738,12 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
 
     /**
      * Respond to requests for permissions at runtime for API 23 and above.
-     * @param requestCode The request code passed in
-     *     requestPermissions(android.app.Activity, String, int, String[])
-     * @param permissions The requested permissions. Never null.
+     *
+     * @param requestCode  The request code passed in
+     *                     requestPermissions(android.app.Activity, String, int, String[])
+     * @param permissions  The requested permissions. Never null.
      * @param grantResults The grant results for the corresponding permissions
-     *     which is either PERMISSION_GRANTED or PERMISSION_DENIED. Never null.
+     *                     which is either PERMISSION_GRANTED or PERMISSION_DENIED. Never null.
      */
 
     @SuppressLint("NeedOnRequestPermissionsResult")
@@ -776,9 +759,10 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
     /**
      * Callback for when a permission is granted using the EasyPermissions
      * library.
+     *
      * @param requestCode The request code associated with the requested
-     *         permission
-     * @param list The requested permission list. Never null.
+     *                    permission
+     * @param list        The requested permission list. Never null.
      */
     @Override
     public void onPermissionsGranted(int requestCode, List<String> list) {
@@ -793,9 +777,10 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
     /**
      * Callback for when a permission is denied using the EasyPermissions
      * library.
+     *
      * @param requestCode The request code associated with the requested
-     *         permission
-     * @param list The requested permission list. Never null.
+     *                    permission
+     * @param list        The requested permission list. Never null.
      */
     @Override
     public void onPermissionsDenied(int requestCode, List<String> list) {
@@ -804,6 +789,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
 
     /**
      * Checks whether the device currently has a network connection.
+     *
      * @return true if the device has a network connection, false otherwise.
      */
     private boolean isDeviceOnline() {
@@ -815,8 +801,9 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
 
     /**
      * Check that Google Play services APK is installed and up to date.
+     *
      * @return true if Google Play Services is available and up to
-     *     date on this device; false otherwise.
+     * date on this device; false otherwise.
      */
     private boolean isGooglePlayServicesAvailable() {
         GoogleApiAvailability apiAvailability =
@@ -844,8 +831,9 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
     /**
      * Display an error dialog showing that Google Play Services is missing
      * or out of date.
+     *
      * @param connectionStatusCode code describing the presence (or lack of)
-     *     Google Play Services on this device.
+     *                             Google Play Services on this device.
      */
     void showGooglePlayServicesAvailabilityErrorDialog(
             final int connectionStatusCode) {
@@ -876,6 +864,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
 
         /**
          * Background task to call YouTube Data API.
+         *
          * @param params no parameters needed for this task.
          */
         @Override
@@ -891,6 +880,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
 
         /**
          * Fetch information about the "GoogleDevelopers" YouTube channel.
+         *
          * @return List of Strings containing information about the channel.
          * @throws IOException
          */
@@ -942,7 +932,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
                             AddFilesActivity.REQUEST_AUTHORIZATION);
                 } else {
                     mOutputText.setText("The following error occurred:\n"
-                            + mLastError.getMessage()+"\n" );
+                            + mLastError.getMessage() + "\n");
                 }
             } else {
                 mOutputText.setText("Request cancelled.");

@@ -54,8 +54,8 @@ public class ToastMessage extends ViewGroup {
 
     }
 
-    public  void cancelToast(){
-        if(toast!=null){
+    public void cancelToast() {
+        if (toast != null) {
             toast.cancel();
         }
     }

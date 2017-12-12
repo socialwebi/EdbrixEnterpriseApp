@@ -8,18 +8,18 @@ import java.io.Serializable;
  * Created by rajk on 28/11/17.
  */
 
-public class ImageContentData implements Serializable{
+public class ImageContentData implements Serializable {
 
-    public static ImageContentData addImages(String img_url){
-        return new ImageContentData(img_url);
-    }
+    @SerializedName("img_url")
+    private String img_url;
 
     public ImageContentData(String img_url) {
         this.img_url = img_url;
     }
 
-    @SerializedName("img_url")
-    private String img_url;
+    public static ImageContentData addImages(String img_url) {
+        return new ImageContentData(img_url);
+    }
 
     public String getImg_url() {
         return img_url;
@@ -30,8 +30,7 @@ public class ImageContentData implements Serializable{
     }
 
     @Override
-    public String toString()
-    {
-        return "ClassPojo [img_url = "+img_url+"]";
+    public String toString() {
+        return "ClassPojo [img_url = " + img_url + "]";
     }
 }

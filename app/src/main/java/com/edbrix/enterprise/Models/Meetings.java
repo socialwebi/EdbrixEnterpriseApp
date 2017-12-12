@@ -17,20 +17,17 @@ public class Meetings {
         this.meeting = meeting;
     }
 
-    public String getDate ()
-    {
+    public String getDate() {
         return date;
     }
 
-    public void setDate (String date)
-    {
+    public void setDate(String date) {
         this.date = date;
     }
 
     @Override
-    public String toString()
-    {
-        return "MEETINGS [ date = "+date+", meeting = "+meeting+"]";
+    public String toString() {
+        return "MEETINGS [ date = " + date + ", meeting = " + meeting + "]";
     }
 
 

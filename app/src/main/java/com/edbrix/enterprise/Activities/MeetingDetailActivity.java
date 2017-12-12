@@ -5,13 +5,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
@@ -54,7 +53,12 @@ import us.zoom.sdk.ZoomSDKInitializeListener;
 
 public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitializeListener, MeetingServiceListener {
 
+    private final static int STYPE = MeetingService.USER_TYPE_API_USER;
+    private static String DISPLAY_NAME = "User";
     Context context;
+    ArrayList<MeetingUsers> list;
+    User user;
+    Meeting meeting;
     private LinearLayout layout;
     private TextView day;
     private TextView date;
@@ -62,20 +66,11 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
     private TextView time;
     private TextView des;
     private Button _meeting_detail_button_connect;
-
     private ParticipantListAdapter adapter;
-
     private String meetingID;
     private String id;
     private String type;
-    private static String DISPLAY_NAME = "User";
-    private final static int STYPE = MeetingService.USER_TYPE_API_USER;
     private TextView toolBarTitle;
-
-    ArrayList<MeetingUsers> list;
-
-    User user;
-    Meeting meeting;
     private boolean mbPendingStartMeeting = false;
 
     @Override
@@ -84,7 +79,7 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
         setContentView(R.layout.activity_meeting_detail);
 
         context = MeetingDetailActivity.this;
-        Toolbar toolbar =  findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -93,8 +88,8 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
                 finish();
             }
         });
-        
-        toolBarTitle =  toolbar.findViewById(R.id.title);
+
+        toolBarTitle = toolbar.findViewById(R.id.title);
 
         assert user != null;
         user = SettingsMy.getActiveUser();
@@ -159,7 +154,7 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
             }
         });
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             ZoomSDK sdk = ZoomSDK.getInstance();
             sdk.initialize(context, Constants.APP_KEY, Constants.APP_SECRET, Constants.WEB_DOMAIN, this);
         } else {
@@ -169,8 +164,7 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
         if (Conditions.isNetworkConnected(context)) {
             // _meeting_list_progress.setVisibility(View.VISIBLE);
             getMeetingList();
-        }
-        else {
+        } else {
             try {
                 Snackbar.make(layout, getString(R.string.error_network), Snackbar.LENGTH_LONG).show();
             } catch (Exception e) {
@@ -186,12 +180,11 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
 
         User user = SettingsMy.getActiveUser();
 
-        if (user!=null) {
+        if (user != null) {
 
             if (user.getUserType().equals("L")) {
                 // meetingDetailParticipant.setText("Organizer ");
-            }
-            else {
+            } else {
                 // meetingDetailParticipant.setText("Participant list ");
             }
 
@@ -219,17 +212,17 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
                             Timber.d("response: %s", response.toString());
                             meeting = response;
 
-                            if (response.getMeetingUsers()!=null ) {
+                            if (response.getMeetingUsers() != null) {
 
-                                Log.d("TAG"," Size:  "+response.getMeetingUsers().size());
+                                Log.d("TAG", " Size:  " + response.getMeetingUsers().size());
 
                                 meetingID = response.getMeetingId();
 
                                 day.setText(response.getMeetingDay());
                                 title.setText(response.getTitle());
-                                String month = response.getMeetingMonth() + ", " +response.getMeetingYear();
+                                String month = response.getMeetingMonth() + ", " + response.getMeetingYear();
                                 date.setText(month);
-                                time.setText(response.getStartDateTime() +" - "+response.getEndDateTime());
+                                time.setText(response.getStartDateTime() + " - " + response.getEndDateTime());
                                 des.setText(response.getDescription());
                                 des.setMovementMethod(new ScrollingMovementMethod());
 
@@ -270,7 +263,7 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
     private void registerMeetingServiceListener() {
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
         MeetingService meetingService = zoomSDK.getMeetingService();
-        if(meetingService != null) {
+        if (meetingService != null) {
             meetingService.addListener(this);
         }
     }
@@ -279,7 +272,7 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
     public void onDestroy() {
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
 
-        if(zoomSDK.isInitialized()) {
+        if (zoomSDK.isInitialized()) {
             MeetingService meetingService = zoomSDK.getMeetingService();
             meetingService.removeListener(this);
         }
@@ -294,11 +287,11 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
         Log.i("TAG", "onMeetingEvent, meetingEvent=" + meetingEvent + ", errorCode=" + errorCode
                 + ", internalErrorCode=" + internalErrorCode);
 
-        if(meetingEvent == MeetingEvent.MEETING_CONNECT_FAILED && errorCode == MeetingError.MEETING_ERROR_CLIENT_INCOMPATIBLE) {
+        if (meetingEvent == MeetingEvent.MEETING_CONNECT_FAILED && errorCode == MeetingError.MEETING_ERROR_CLIENT_INCOMPATIBLE) {
             Toast.makeText(context, "Version of ZoomSDK is too low!", Toast.LENGTH_LONG).show();
         }
 
-        if(mbPendingStartMeeting && meetingEvent == MeetingEvent.MEETING_DISCONNECTED) {
+        if (mbPendingStartMeeting && meetingEvent == MeetingEvent.MEETING_DISCONNECTED) {
             mbPendingStartMeeting = false;
             onClickBtnStartMeeting();
         }
@@ -308,7 +301,7 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
     public void onZoomSDKInitializeResult(int errorCode, int internalErrorCode) {
         Log.i("TAG", "onZoomSDKInitializeResult, errorCode=" + errorCode + ", internalErrorCode=" + internalErrorCode);
 
-        if(errorCode != ZoomError.ZOOM_ERROR_SUCCESS) {
+        if (errorCode != ZoomError.ZOOM_ERROR_SUCCESS) {
             Toast.makeText(context, "Failed to initialize Zoom SDK. Error: " + errorCode + ", internalErrorCode=" + internalErrorCode, Toast.LENGTH_LONG).show();
         } else {
             // Toast.makeText(context, "Initialize Zoom SDK successfully.", Toast.LENGTH_LONG).show();
@@ -322,14 +315,14 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
 
         String meetingPassword = "";
 
-        if(meetingID.length() == 0) {
+        if (meetingID.length() == 0) {
             Toast.makeText(context, "You need to enter a meeting number which you want to join.", Toast.LENGTH_LONG).show();
             return;
         }
 
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
 
-        if(!zoomSDK.isInitialized()) {
+        if (!zoomSDK.isInitialized()) {
             Toast.makeText(context, "ZoomSDK has not been initialized successfully", Toast.LENGTH_LONG).show();
             return;
         }
@@ -355,7 +348,7 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
 //		opts.participant_id = "participant id";
 
 
-        DISPLAY_NAME = user != null ? user.getFirstName() : "User" ;
+        DISPLAY_NAME = user != null ? user.getFirstName() : "User";
         int ret = meetingService.joinMeeting(context, meetingID, DISPLAY_NAME, meetingPassword, opts);
         Log.i("TAG", "onClickBtnJoinMeeting, ret=" + ret);
 

@@ -2,17 +2,13 @@ package com.edbrix.enterprise.Adapters;
 
 
 import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.edbrix.enterprise.Interfaces.DashboardListInterface;
-import com.edbrix.enterprise.Models.Courses;
 import com.edbrix.enterprise.Models.Meeting;
 import com.edbrix.enterprise.R;
 
@@ -45,7 +41,7 @@ public class DashBoardMeetingListAdapter extends RecyclerView.Adapter<DashBoardM
 
         holder.name.setText(list.get(position).getTitle());
 
-        String totalTime = list.get(position).getStartDateTime() +" - "+list.get(position).getEndDateTime();
+        String totalTime = list.get(position).getStartDateTime() + " - " + list.get(position).getEndDateTime();
         holder.time.setText(totalTime);
 
     }
@@ -55,8 +51,7 @@ public class DashBoardMeetingListAdapter extends RecyclerView.Adapter<DashBoardM
         return list == null ? 0 : list.size();
     }
 
-    public void refresh(ArrayList<Meeting> list)
-    {
+    public void refresh(ArrayList<Meeting> list) {
         this.list = new ArrayList<>();
         this.list = list;
         notifyDataSetChanged();

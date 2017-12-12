@@ -1,9 +1,8 @@
 package com.edbrix.enterprise.Activities;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -57,7 +56,7 @@ public class UploadDemo extends BaseActivity {
 //                userId = sessionManager.getLoggedUserData().getId();
 //                accessToken = sessionManager.getSessionProfileToken();
 
-                String userId=""+ SettingsMy.getActiveUser().getId();// get user Id from active user
+                String userId = "" + SettingsMy.getActiveUser().getId();// get user Id from active user
                 StorageReference childRef = storageRef.child("enterprisecoursecontent/" + userId + "/" + uploadFile.getName());
                 //uploading the image
                 uploadTask = childRef.putFile(fileUri);

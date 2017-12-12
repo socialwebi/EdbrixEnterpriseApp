@@ -14,7 +14,7 @@ public class SubmitData {
     private String title;
 
     @SerializedName("choices")
-    private ArrayList<ChoicesData>choices;
+    private ArrayList<ChoicesData> choices;
 
     @SerializedName("type")
     private String type;
@@ -34,13 +34,11 @@ public class SubmitData {
     @SerializedName("total_question_count")
     private int total_question_count;
 
-    public String getTitle ()
-    {
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle (String title)
-    {
+    public void setTitle(String title) {
         this.title = title;
     }
 
@@ -52,13 +50,11 @@ public class SubmitData {
         this.choices = choices;
     }
 
-    public String getType ()
-    {
+    public String getType() {
         return type;
     }
 
-    public void setType (String type)
-    {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -111,8 +107,7 @@ public class SubmitData {
     }
 
     @Override
-    public String toString()
-    {
-        return "ClassPojo [title = "+title+", choices = "+choices+", type = "+type+"]";
+    public String toString() {
+        return "ClassPojo [title = " + title + ", choices = " + choices + ", type = " + type + "]";
     }
 }

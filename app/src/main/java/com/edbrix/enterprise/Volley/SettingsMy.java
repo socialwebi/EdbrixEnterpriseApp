@@ -183,7 +183,7 @@ public class SettingsMy {
             message = "Cannot connect to Internet...Please check your connection!";
         } else if (volleyError instanceof TimeoutError) {
             message = "Connection TimeOut! Please check your internet connection.";
-        }else{
+        } else {
             message = "Something went wrong. Please try again later.";
         }
         return message;

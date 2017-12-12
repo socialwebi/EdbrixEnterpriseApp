@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -39,8 +38,7 @@ public class MeetingListAdapter extends RecyclerView.Adapter<MeetingListAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        if (position%2==1)
-        {
+        if (position % 2 == 1) {
             holder.linear.setBackgroundColor(context.getResources().getColor(R.color.colorWhite));
             holder.view.setBackgroundColor(context.getResources().getColor(R.color.colorActionBar));
 
@@ -50,10 +48,10 @@ public class MeetingListAdapter extends RecyclerView.Adapter<MeetingListAdapter.
         }
 
         holder.day.setText(list.get(position).getMeetingDay());
-        String month = list.get(position).getMeetingMonth() + ", " +list.get(position).getMeetingYear();
+        String month = list.get(position).getMeetingMonth() + ", " + list.get(position).getMeetingYear();
         holder.date.setText(month);
         holder.title.setText(list.get(position).getTitle());
-        holder.time.setText(list.get(position).getStartDateTime() +" - "+list.get(position).getEndDateTime());
+        holder.time.setText(list.get(position).getStartDateTime() + " - " + list.get(position).getEndDateTime());
 
     }
 

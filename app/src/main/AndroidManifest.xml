@@ -7,9 +7,12 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
 
     <uses-feature
         android:name="android.hardware.telephony"
@@ -90,7 +93,8 @@
             android:value="@string/default_notification_channel_id" />
 
         <activity android:name=".Activities.CreateScheduleActivity" />
-        <activity android:name=".Activities.EditProfileActivity"></activity>
+        <activity android:name=".Activities.EditProfileActivity" />
+        <activity android:name=".Activities.TokBoxActivity"></activity>
     </application>
 
 </manifest>

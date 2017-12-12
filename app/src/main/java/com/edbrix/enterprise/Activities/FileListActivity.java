@@ -3,15 +3,13 @@ package com.edbrix.enterprise.Activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.edbrix.enterprise.Adapters.PDFListAdapter;
 import com.edbrix.enterprise.R;
@@ -22,12 +20,12 @@ import java.util.ArrayList;
 
 public class FileListActivity extends BaseActivity implements ListView.OnItemClickListener {
 
+    ProgressBar _file_progress_bar;
     private ArrayList<File> fileList;
     private String[] pdflist;
     private ListView pdfListView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private PDFListAdapter pdfListAdapter;
-    ProgressBar _file_progress_bar;
     private File directory;
     private String fileType;
     private String extention;
@@ -85,6 +83,50 @@ public class FileListActivity extends BaseActivity implements ListView.OnItemCli
         new GetFilesListAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, directory);
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        ((PDFListAdapter) adapterView.getAdapter()).toggleSelection(position);
+        File fileObject = (File) adapterView.getAdapter().getItem(position);
+        if (fileObject != null && fileObject.isFile()) {
+            double fileLength = fileObject.length();
+            double fileSizeKb = (fileLength / 1024);
+            double fileSizeMb = (fileSizeKb / 1024);
+            if (fileSizeMb > 25.0) {
+                showToast("Unable to process, file size is more than 25 MB.");
+            } else {
+                // showToast("Loading... Please wait.", Toast.LENGTH_SHORT);
+                Intent intent = new Intent();
+                Uri uri = Uri.fromFile(fileObject.getAbsoluteFile());
+                intent.setData(uri);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        } else {
+            setResult(RESULT_CANCELED, null);
+            finish();
+        }
+    }
+
+    /*public ArrayList<File> getFile(File dir) {
+        File listFile[] = dir.listFiles();
+        if (listFile != null && listFile.length > 0) {
+            for (int i = 0; i < listFile.length; i++) {
+
+                if (listFile[i].isDirectory()) {
+                    // fileList.add(listFile[i]);
+                    getFile(listFile[i]);
+
+                } else {
+                    if (listFile[i].getName().endsWith(".pdf")) {
+                        fileList.add(listFile[i]);
+                    }
+                }
+
+            }
+        }
+        return fileList;
+    }*/
+
     private class GetFilesListAsyncTask extends AsyncTask<File, Void, ArrayList<File>> {
         private ArrayList<File> fileList;
 
@@ -130,7 +172,7 @@ public class FileListActivity extends BaseActivity implements ListView.OnItemCli
                         getFile(listFile[i]);
 
                     } else {
-                        if ( listFile[i].getName().endsWith(".pdf") || listFile[i].getName().endsWith(".doc") ) {
+                        if (listFile[i].getName().endsWith(".pdf") || listFile[i].getName().endsWith(".doc")) {
                             this.fileList.add(listFile[i]);
                         }
                     }
@@ -139,50 +181,6 @@ public class FileListActivity extends BaseActivity implements ListView.OnItemCli
             }
 
             return this.fileList;
-        }
-    }
-
-    /*public ArrayList<File> getFile(File dir) {
-        File listFile[] = dir.listFiles();
-        if (listFile != null && listFile.length > 0) {
-            for (int i = 0; i < listFile.length; i++) {
-
-                if (listFile[i].isDirectory()) {
-                    // fileList.add(listFile[i]);
-                    getFile(listFile[i]);
-
-                } else {
-                    if (listFile[i].getName().endsWith(".pdf")) {
-                        fileList.add(listFile[i]);
-                    }
-                }
-
-            }
-        }
-        return fileList;
-    }*/
-
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        ((PDFListAdapter) adapterView.getAdapter()).toggleSelection(position);
-        File fileObject = (File) adapterView.getAdapter().getItem(position);
-        if (fileObject != null && fileObject.isFile()) {
-            double fileLength = fileObject.length();
-            double fileSizeKb = (fileLength / 1024);
-            double fileSizeMb = (fileSizeKb / 1024);
-            if (fileSizeMb > 25.0) {
-                showToast("Unable to process, file size is more than 25 MB.");
-            } else {
-                // showToast("Loading... Please wait.", Toast.LENGTH_SHORT);
-                Intent intent = new Intent();
-                Uri uri = Uri.fromFile(fileObject.getAbsoluteFile());
-                intent.setData(uri);
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-        } else {
-            setResult(RESULT_CANCELED, null);
-            finish();
         }
     }
 

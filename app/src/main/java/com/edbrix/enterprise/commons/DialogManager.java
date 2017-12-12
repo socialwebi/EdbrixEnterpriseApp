@@ -10,10 +10,10 @@ import android.content.res.Resources;
 public class DialogManager {
 
 
-    private AlertDialogManager alertDialogManager;
-    Context mContext;
-    private int activeBusyTasks = 0;
     protected ProgressDialog progressDialog;
+    Context mContext;
+    private AlertDialogManager alertDialogManager;
+    private int activeBusyTasks = 0;
 
     public DialogManager(Context mContext) {
         this.mContext = mContext;

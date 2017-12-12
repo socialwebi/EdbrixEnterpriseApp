@@ -28,4 +28,7 @@
 
     <color name="gray">#E0E0E0</color>   <!--# E0E0E0   BDBDBD -->
 
+    <color name="publisher_border_color">#FFFFFF</color>
+    <color name="archiving_indicator_color">#FF0000</color>
+
 </resources>

@@ -3,10 +3,8 @@ package com.edbrix.enterprise.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,8 +16,6 @@ import com.edbrix.enterprise.Models.Courses;
 import com.edbrix.enterprise.R;
 import com.edbrix.enterprise.baseclass.BaseActivity;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 public class CourseDetailActivity extends BaseActivity {
 

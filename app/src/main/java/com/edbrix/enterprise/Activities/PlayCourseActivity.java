@@ -2,27 +2,18 @@ package com.edbrix.enterprise.Activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
+import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -44,34 +35,30 @@ import com.edbrix.enterprise.Application;
 import com.edbrix.enterprise.Interfaces.ImageChoiceActionListener;
 import com.edbrix.enterprise.Models.ChoicesData;
 import com.edbrix.enterprise.Models.ChoicesInputData;
-import com.edbrix.enterprise.Models.CourseListResponseData;
 import com.edbrix.enterprise.Models.Courses;
 import com.edbrix.enterprise.Models.ImageContentData;
 import com.edbrix.enterprise.Models.PlayCourseContentResponseData;
 import com.edbrix.enterprise.Models.User;
 import com.edbrix.enterprise.R;
-import com.edbrix.enterprise.baseclass.BaseActivity;
 import com.edbrix.enterprise.Utils.Constants;
 import com.edbrix.enterprise.Utils.CustomViewPager;
 import com.edbrix.enterprise.Utils.CustomWebView;
 import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
-import com.edbrix.enterprise.commons.GlobalMethods;
-//import com.nostra13.universalimageloader.core.ImageLoader;
-//import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.squareup.picasso.Picasso;
-import com.zipow.videobox.confapp.GLImage;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import timber.log.Timber;
+
+//import com.nostra13.universalimageloader.core.ImageLoader;
+//import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 
 public class PlayCourseActivity extends BaseActivity {

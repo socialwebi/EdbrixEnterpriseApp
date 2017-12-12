@@ -2,16 +2,11 @@ package com.edbrix.enterprise.Adapters;
 
 
 import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.edbrix.enterprise.Interfaces.MeetingListInterface;
 import com.edbrix.enterprise.Models.Meeting;
 import com.edbrix.enterprise.R;
 
@@ -48,7 +43,6 @@ public class TrainingSessionAdapter extends RecyclerView.Adapter<TrainingSession
 
 
     class ViewHolder extends RecyclerView.ViewHolder {
-
 
 
         ViewHolder(View itemView) {

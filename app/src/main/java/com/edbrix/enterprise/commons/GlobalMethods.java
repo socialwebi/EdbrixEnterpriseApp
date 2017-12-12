@@ -9,9 +9,7 @@ import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.pdf.PdfRenderer;
@@ -26,7 +24,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.os.StatFs;
-import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -63,7 +60,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -96,87 +92,12 @@ public class GlobalMethods {
     public static final int network_state_permission_request_code = 106;
 
     public static final int all_permission_request_code = 107;
-
+    static SecretKey yourKey = null;
+    private static String algorithm = "AES";
+    private String encryptedFileName = "Enc_File2.txt";
 
     public GlobalMethods() {
 //        mapper = new ObjectMapper();
-    }
-
-    public void writeFileToExternalStorage(String path, String sBody, String fileName) {
-        try {
-
-            File root = new File(path);
-            boolean isDirectoryCreated = root.exists();
-            if (!isDirectoryCreated) {
-                isDirectoryCreated = root.mkdir();
-            }
-            if (isDirectoryCreated) {
-                File gpxfile = new File(root, fileName);
-
-                BufferedWriter buf = new BufferedWriter(new FileWriter(gpxfile, true));
-                buf.append(sBody);
-                buf.newLine();
-                buf.close();
-
-                Log.v("FileHanlder", "File saved");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public String readFromFile(String path, Context mContext, String locationFileName) {
-
-//        String ret = "";
-//
-//        try {
-//            InputStream inputStream = mContext.openFileInput(locationFileName);
-//
-//            if (inputStream != null) {
-//                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-//                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-//                String receiveString = "";
-//                StringBuilder stringBuilder = new StringBuilder();
-//
-//                while ((receiveString = bufferedReader.readLine()) != null) {
-//                    stringBuilder.append(receiveString);
-//                }
-//
-//                inputStream.close();
-//                ret = stringBuilder.toString();
-//            }
-//        } catch (FileNotFoundException e) {
-//            Log.e("login activity", "File not found: " + e.toString());
-//        } catch (IOException e) {
-//            Log.e("login activity", "Can not read file: " + e.toString());
-//        }
-//
-//        return ret;
-
-        //Find the directory for the SD Card using the API
-//*Don't* hardcode "/sdcard"
-
-//Get the text file
-        File file = new File(path, locationFileName);
-
-//Read text from file
-        StringBuilder text = new StringBuilder();
-
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String line;
-
-            while ((line = br.readLine()) != null) {
-                text.append(line);
-                text.append("\n");
-                System.gc();
-            }
-            br.close();
-        } catch (IOException e) {
-            //You'll need to add proper error handling here
-        }
-        return text.toString();
     }
 
     /**
@@ -188,7 +109,6 @@ public class GlobalMethods {
         return context.getPackageManager().hasSystemFeature(
                 PackageManager.FEATURE_CAMERA);
     }
-
 
     /**
      * Checking email id is in proper format
@@ -221,7 +141,6 @@ public class GlobalMethods {
         }
     }
 
-
     /**
      * validated multiple EditText blank or not
      *
@@ -240,38 +159,6 @@ public class GlobalMethods {
         }
         return forReturn;
     }
-
-
-    /**
-     * @param dateOne
-     * @param dateTwo (optional) if you send this date null will compare with current date
-     * @param format  send "" if dont want costom format
-     * @return following values
-     * 1=given dateOne is after dateTwo
-     * -1=given dateOne is before dateTwo
-     * 0=dates are equal
-     * -2= ParseException occures
-     */
-    public int compareDate(Date dateOne, Date dateTwo, String format) {
-        int retunValue = -2;
-        SimpleDateFormat formater = new SimpleDateFormat(format, Locale.US);
-        if (dateTwo == null) {
-            dateTwo = Calendar.getInstance().getTime();
-        }
-        try {
-
-            if (!format.equalsIgnoreCase("")) {
-                dateOne = formater.parse(dateOne.toString());
-                dateTwo = formater.parse(dateTwo.toString());
-            }
-
-            retunValue = dateTwo.compareTo(dateOne);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return retunValue;
-    }
-
 
     public static long megabytesAvailable(File f) {
         StatFs stat = new StatFs(f.getPath());
@@ -331,42 +218,6 @@ public class GlobalMethods {
         }
     }
 
-    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        float bitmapRatio = (float) width / (float) height;
-        if (bitmapRatio > 0) {
-            width = maxSize;
-            height = (int) (width / bitmapRatio);
-        } else {
-            height = maxSize;
-            width = (int) (height * bitmapRatio);
-        }
-        return Bitmap.createScaledBitmap(image, width, height, true);
-    }
-
-
-    public void previewImage(Context context, String path) {
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setDataAndType(Uri.parse("file:///" + path), "image/*");
-        context.startActivity(i);
-    }
-
-    public void previewVideo(Context context, String path) {
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setDataAndType(Uri.parse("file:///" + path), "video/*");
-        context.startActivity(i);
-    }
-
-    public String encodeBase64(byte[] originalBytes) {
-        return new String(Base64.encode(originalBytes, 0));
-    }
-
-    public String decodeBase64(byte[] originalBytes) {
-        return new String(Base64.decode(originalBytes, 0));
-    }
-
     public static String ConvertMetersToMiles(double meters) {
         try {
             return String.format(Locale.US, "%.2f", meters / 1609.344);
@@ -375,94 +226,6 @@ public class GlobalMethods {
             e.printStackTrace();
         }
         return "";
-    }
-
-    public Bitmap roatedBitmap(String filePath, Bitmap bitmap) {
-        ExifInterface exif = null;
-        try {
-            exif = new ExifInterface(filePath);
-        } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-        int orientation = 0;
-        if (exif != null) {
-            orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-        }
-        Matrix matrix = new Matrix();
-
-        switch (orientation) {
-            case ExifInterface.ORIENTATION_NORMAL:
-                return bitmap;
-            case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
-                matrix.setScale(-1, 1);
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                matrix.postRotate(180);
-                break;
-            case ExifInterface.ORIENTATION_FLIP_VERTICAL:
-                matrix.setRotate(180);
-                matrix.postScale(-1, 1);
-                break;
-            case ExifInterface.ORIENTATION_TRANSPOSE:
-                matrix.setRotate(90);
-                matrix.postScale(-1, 1);
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                matrix.postRotate(90);
-                break;
-            case ExifInterface.ORIENTATION_TRANSVERSE:
-                matrix.setRotate(-90);
-                matrix.postScale(-1, 1);
-                break;
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                matrix.postRotate(-90);
-                break;
-            default:
-                return bitmap;
-        }
-        try {
-            //			if (!bmRotated.isRecycled())
-//			{
-//				bmRotated.recycle();
-//			}
-            //bitmap=null;
-            return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-        } catch (OutOfMemoryError e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public String BitMapToString(Bitmap bitmap) {
-        String temp = "";
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-            byte[] b = baos.toByteArray();
-            temp = null;
-            try {
-                System.gc();
-                temp = Base64.encodeToString(b, Base64.DEFAULT);
-            } catch (Exception e) {
-                e.printStackTrace();
-            } catch (OutOfMemoryError e) {
-                baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 25, baos);
-                b = baos.toByteArray();
-                temp = Base64.encodeToString(b, Base64.DEFAULT);
-                try {
-                    baos.close();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                Log.e("EWN", "Out of memory error catched");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return temp;
     }
 
     /**
@@ -537,49 +300,6 @@ public class GlobalMethods {
         }
         return "+" + ContryISOcode;
     }
-
-   /*
-    /**
-     * replace old fragment with new one
-     * if no fragment in back-stack  create it
-     *
-     * @param fragment
-     */
-//    public void replaceFragment(Fragment fragment, FragmentActivity contextFragment) {
-//
-//        try {
-//            String backStateName = fragment.getClass().getName();
-//            String fragmentTag = backStateName;
-//
-//
-//            FragmentManager manager = contextFragment.getSupportFragmentManager();
-////            boolean fragmentPopped = manager.popBackStackImmediate (backStateName, 0);
-////
-////            if (!fragmentPopped && manager.findFragmentByTag(fragmentTag) == null){ //fragment not in back stack, create it.
-//            FragmentTransaction ft = manager.beginTransaction();
-//            ft.replace(R.id.container, fragment, fragmentTag);
-//            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//            ft.addToBackStack(null);
-//            ft.commit();
-//            //}
-//        } catch (Exception e) {
-//
-//            e.printStackTrace();
-//        }
-//    }
-/*
-    /**
-     * convert json to object
-     *
-     * @param jsonData
-     * @param clazz
-     * @param <T>
-     * @return
-     * @throws IOException User userObject=toObjects(jsonString,User.class);
-     */
-   /* public <T> T toObjects(String jsonData, Class<T> clazz) throws IOException {
-        return mapper.readValue(jsonData, clazz);
-    }*/
 
     /*
     /**
@@ -708,6 +428,48 @@ public class GlobalMethods {
         return base64;
     }
 
+   /*
+    /**
+     * replace old fragment with new one
+     * if no fragment in back-stack  create it
+     *
+     * @param fragment
+     */
+//    public void replaceFragment(Fragment fragment, FragmentActivity contextFragment) {
+//
+//        try {
+//            String backStateName = fragment.getClass().getName();
+//            String fragmentTag = backStateName;
+//
+//
+//            FragmentManager manager = contextFragment.getSupportFragmentManager();
+////            boolean fragmentPopped = manager.popBackStackImmediate (backStateName, 0);
+////
+////            if (!fragmentPopped && manager.findFragmentByTag(fragmentTag) == null){ //fragment not in back stack, create it.
+//            FragmentTransaction ft = manager.beginTransaction();
+//            ft.replace(R.id.container, fragment, fragmentTag);
+//            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//            ft.addToBackStack(null);
+//            ft.commit();
+//            //}
+//        } catch (Exception e) {
+//
+//            e.printStackTrace();
+//        }
+//    }
+/*
+    /**
+     * convert json to object
+     *
+     * @param jsonData
+     * @param clazz
+     * @param <T>
+     * @return
+     * @throws IOException User userObject=toObjects(jsonString,User.class);
+     */
+   /* public <T> T toObjects(String jsonData, Class<T> clazz) throws IOException {
+        return mapper.readValue(jsonData, clazz);
+    }*/
 
     public static Bitmap getBitmapFromURL(String src) {
         try {
@@ -937,6 +699,361 @@ public class GlobalMethods {
     }
 
     /**
+     * Check if this device has a camera front or back
+     */
+    public static boolean isCameraHardwareAvailable(Context context) {
+        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA) && context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
+            return true;
+        } else if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            return true;
+        } else if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static SecretKey generateKey(char[] passphraseOrPin, byte[] salt)
+            throws NoSuchAlgorithmException, InvalidKeySpecException {
+        // Number of PBKDF2 hardening rounds to use. Larger values increase
+        // computation time. You should select a value that causes computation
+        // to take >100ms.
+        final int iterations = 1000;
+
+        // Generate a 256-bit key
+        final int outputKeyLength = 256;
+
+        SecretKeyFactory secretKeyFactory = SecretKeyFactory
+                .getInstance("PBKDF2WithHmacSHA1");
+        KeySpec keySpec = new PBEKeySpec(passphraseOrPin, salt, iterations,
+                outputKeyLength);
+        yourKey = secretKeyFactory.generateSecret(keySpec);
+        return yourKey;
+    }
+
+    public static SecretKey generateSalt() throws NoSuchAlgorithmException {
+        // Generate a 256-bit key
+        final int outputKeyLength = 256;
+
+        SecureRandom secureRandom = new SecureRandom();
+        // Do *not* seed secureRandom! Automatically seeded from system entropy.
+        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+        keyGenerator.init(outputKeyLength, secureRandom);
+        SecretKey key = keyGenerator.generateKey();
+        return key;
+    }
+
+    public static byte[] encodeFile(SecretKey yourKey, byte[] fileData)
+            throws Exception {
+        byte[] data = yourKey.getEncoded();
+        SecretKeySpec skeySpec = new SecretKeySpec(data, 0, data.length,
+                algorithm);
+        Cipher cipher = Cipher.getInstance(algorithm);
+        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+
+        byte[] encrypted = cipher.doFinal(fileData);
+
+        return encrypted;
+    }
+
+    public static byte[] decodeFile(SecretKey yourKey, byte[] fileData)
+            throws Exception {
+        byte[] data = yourKey.getEncoded();
+        SecretKeySpec skeySpec = new SecretKeySpec(data, 0, data.length,
+                algorithm);
+        Cipher cipher = Cipher.getInstance(algorithm);
+        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
+
+        byte[] decrypted = cipher.doFinal(fileData);
+
+        return decrypted;
+    }
+
+    public static Drawable drawableFromUrl(String url) throws IOException {
+        Bitmap x;
+
+        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        connection.connect();
+        InputStream input = connection.getInputStream();
+
+        x = BitmapFactory.decodeStream(input);
+        return new BitmapDrawable(x);
+    }
+
+    public void writeFileToExternalStorage(String path, String sBody, String fileName) {
+        try {
+
+            File root = new File(path);
+            boolean isDirectoryCreated = root.exists();
+            if (!isDirectoryCreated) {
+                isDirectoryCreated = root.mkdir();
+            }
+            if (isDirectoryCreated) {
+                File gpxfile = new File(root, fileName);
+
+                BufferedWriter buf = new BufferedWriter(new FileWriter(gpxfile, true));
+                buf.append(sBody);
+                buf.newLine();
+                buf.close();
+
+                Log.v("FileHanlder", "File saved");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String readFromFile(String path, Context mContext, String locationFileName) {
+
+//        String ret = "";
+//
+//        try {
+//            InputStream inputStream = mContext.openFileInput(locationFileName);
+//
+//            if (inputStream != null) {
+//                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+//                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+//                String receiveString = "";
+//                StringBuilder stringBuilder = new StringBuilder();
+//
+//                while ((receiveString = bufferedReader.readLine()) != null) {
+//                    stringBuilder.append(receiveString);
+//                }
+//
+//                inputStream.close();
+//                ret = stringBuilder.toString();
+//            }
+//        } catch (FileNotFoundException e) {
+//            Log.e("login activity", "File not found: " + e.toString());
+//        } catch (IOException e) {
+//            Log.e("login activity", "Can not read file: " + e.toString());
+//        }
+//
+//        return ret;
+
+        //Find the directory for the SD Card using the API
+//*Don't* hardcode "/sdcard"
+
+//Get the text file
+        File file = new File(path, locationFileName);
+
+//Read text from file
+        StringBuilder text = new StringBuilder();
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                text.append(line);
+                text.append("\n");
+                System.gc();
+            }
+            br.close();
+        } catch (IOException e) {
+            //You'll need to add proper error handling here
+        }
+        return text.toString();
+    }
+
+    /**
+     * Vibrate Phone on event
+     *
+     * @param context             Context
+     * @param vibrateMilliSeconds times in milliseconds
+     */
+   /* public static void vibratePhone(Context context, int vibrateMilliSeconds) {
+        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.vibrate(vibrateMilliSeconds);
+    }*/
+
+    /**
+     * @param dateOne
+     * @param dateTwo (optional) if you send this date null will compare with current date
+     * @param format  send "" if dont want costom format
+     * @return following values
+     * 1=given dateOne is after dateTwo
+     * -1=given dateOne is before dateTwo
+     * 0=dates are equal
+     * -2= ParseException occures
+     */
+    public int compareDate(Date dateOne, Date dateTwo, String format) {
+        int retunValue = -2;
+        SimpleDateFormat formater = new SimpleDateFormat(format, Locale.US);
+        if (dateTwo == null) {
+            dateTwo = Calendar.getInstance().getTime();
+        }
+        try {
+
+            if (!format.equalsIgnoreCase("")) {
+                dateOne = formater.parse(dateOne.toString());
+                dateTwo = formater.parse(dateTwo.toString());
+            }
+
+            retunValue = dateTwo.compareTo(dateOne);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return retunValue;
+    }
+
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float) width / (float) height;
+        if (bitmapRatio > 0) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+        return Bitmap.createScaledBitmap(image, width, height, true);
+    }
+
+    public void previewImage(Context context, String path) {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setDataAndType(Uri.parse("file:///" + path), "image/*");
+        context.startActivity(i);
+    }
+
+    public void previewVideo(Context context, String path) {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setDataAndType(Uri.parse("file:///" + path), "video/*");
+        context.startActivity(i);
+    }
+
+    public String encodeBase64(byte[] originalBytes) {
+        return new String(Base64.encode(originalBytes, 0));
+    }
+
+    public String decodeBase64(byte[] originalBytes) {
+        return new String(Base64.decode(originalBytes, 0));
+    }
+
+    // bottom left : overlay=10:main_h-overlay_h-10
+
+    //bottom right with 5px of padding
+    // overlay=main_w-overlay_w-5:main_h-overlay_h-5
+
+    public Bitmap roatedBitmap(String filePath, Bitmap bitmap) {
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(filePath);
+        } catch (IOException e1) {
+
+            e1.printStackTrace();
+        }
+        int orientation = 0;
+        if (exif != null) {
+            orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+        }
+        Matrix matrix = new Matrix();
+
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_NORMAL:
+                return bitmap;
+            case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+                matrix.setScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                matrix.postRotate(180);
+                break;
+            case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+                matrix.setRotate(180);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_TRANSPOSE:
+                matrix.setRotate(90);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                matrix.postRotate(90);
+                break;
+            case ExifInterface.ORIENTATION_TRANSVERSE:
+                matrix.setRotate(-90);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                matrix.postRotate(-90);
+                break;
+            default:
+                return bitmap;
+        }
+        try {
+            //			if (!bmRotated.isRecycled())
+//			{
+//				bmRotated.recycle();
+//			}
+            //bitmap=null;
+            return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /*private Bitmap scaledBitmap(float width, float height, Uri originalImageUri, Context context) {
+        String path = FileUtils.getPath(context, originalImageUri);
+        Bitmap originalImage = (BitmapFactory.decodeFile(path));
+
+        Bitmap background = Bitmap.createBitmap((int) width, (int) height, Bitmap.Config.ARGB_8888);
+
+        float originalWidth = originalImage.getWidth();
+        float originalHeight = originalImage.getHeight();
+
+        Canvas canvas = new Canvas(background);
+
+        float scale = width / originalWidth;
+
+        float xTranslation = 0.0f;
+        float yTranslation = (height - originalHeight * scale) / 2.0f;
+
+        Matrix transformation = new Matrix();
+        transformation.postTranslate(xTranslation, yTranslation);
+        transformation.preScale(scale, scale);
+
+        Paint paint = new Paint();
+        paint.setFilterBitmap(true);
+
+        canvas.drawBitmap(originalImage, transformation, paint);
+
+        return background;
+    }*/
+
+    public String BitMapToString(Bitmap bitmap) {
+        String temp = "";
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+            byte[] b = baos.toByteArray();
+            temp = null;
+            try {
+                System.gc();
+                temp = Base64.encodeToString(b, Base64.DEFAULT);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } catch (OutOfMemoryError e) {
+                baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 25, baos);
+                b = baos.toByteArray();
+                temp = Base64.encodeToString(b, Base64.DEFAULT);
+                try {
+                    baos.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                Log.e("EWN", "Out of memory error catched");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return temp;
+    }
+
+    /**
      * Return video file duration from File Object
      *
      * @param context   Context
@@ -954,17 +1071,6 @@ public class GlobalMethods {
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration))
         );
     }
-
-    /**
-     * Vibrate Phone on event
-     *
-     * @param context             Context
-     * @param vibrateMilliSeconds times in milliseconds
-     */
-   /* public static void vibratePhone(Context context, int vibrateMilliSeconds) {
-        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(vibrateMilliSeconds);
-    }*/
 
     /**
      * Example with output video duration set to 30 seconds with -t 30:
@@ -1019,11 +1125,6 @@ public class GlobalMethods {
         return command;
     }
 
-    // bottom left : overlay=10:main_h-overlay_h-10
-
-    //bottom right with 5px of padding
-    // overlay=main_w-overlay_w-5:main_h-overlay_h-5
-
     /**
      * Create text file on sdcard
      *
@@ -1049,34 +1150,6 @@ public class GlobalMethods {
             return null;
         }
     }
-
-    /*private Bitmap scaledBitmap(float width, float height, Uri originalImageUri, Context context) {
-        String path = FileUtils.getPath(context, originalImageUri);
-        Bitmap originalImage = (BitmapFactory.decodeFile(path));
-
-        Bitmap background = Bitmap.createBitmap((int) width, (int) height, Bitmap.Config.ARGB_8888);
-
-        float originalWidth = originalImage.getWidth();
-        float originalHeight = originalImage.getHeight();
-
-        Canvas canvas = new Canvas(background);
-
-        float scale = width / originalWidth;
-
-        float xTranslation = 0.0f;
-        float yTranslation = (height - originalHeight * scale) / 2.0f;
-
-        Matrix transformation = new Matrix();
-        transformation.postTranslate(xTranslation, yTranslation);
-        transformation.preScale(scale, scale);
-
-        Paint paint = new Paint();
-        paint.setFilterBitmap(true);
-
-        canvas.drawBitmap(originalImage, transformation, paint);
-
-        return background;
-    }*/
 
     public void saveImageFromBitmap(Bitmap finalBitmap, String fileId, File appStorageDir) {
 
@@ -1209,21 +1282,6 @@ public class GlobalMethods {
     }
 
     /**
-     * Check if this device has a camera front or back
-     */
-    public static boolean isCameraHardwareAvailable(Context context) {
-        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA) && context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
-            return true;
-        } else if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-            return true;
-        } else if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * Clear content from file directory
      *
      * @param fileDirectory
@@ -1296,66 +1354,6 @@ public class GlobalMethods {
         cis.close();
     }
 
-    private String encryptedFileName = "Enc_File2.txt";
-    private static String algorithm = "AES";
-    static SecretKey yourKey = null;
-
-    public static SecretKey generateKey(char[] passphraseOrPin, byte[] salt)
-            throws NoSuchAlgorithmException, InvalidKeySpecException {
-        // Number of PBKDF2 hardening rounds to use. Larger values increase
-        // computation time. You should select a value that causes computation
-        // to take >100ms.
-        final int iterations = 1000;
-
-        // Generate a 256-bit key
-        final int outputKeyLength = 256;
-
-        SecretKeyFactory secretKeyFactory = SecretKeyFactory
-                .getInstance("PBKDF2WithHmacSHA1");
-        KeySpec keySpec = new PBEKeySpec(passphraseOrPin, salt, iterations,
-                outputKeyLength);
-        yourKey = secretKeyFactory.generateSecret(keySpec);
-        return yourKey;
-    }
-
-    public static SecretKey generateSalt() throws NoSuchAlgorithmException {
-        // Generate a 256-bit key
-        final int outputKeyLength = 256;
-
-        SecureRandom secureRandom = new SecureRandom();
-        // Do *not* seed secureRandom! Automatically seeded from system entropy.
-        KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-        keyGenerator.init(outputKeyLength, secureRandom);
-        SecretKey key = keyGenerator.generateKey();
-        return key;
-    }
-
-    public static byte[] encodeFile(SecretKey yourKey, byte[] fileData)
-            throws Exception {
-        byte[] data = yourKey.getEncoded();
-        SecretKeySpec skeySpec = new SecretKeySpec(data, 0, data.length,
-                algorithm);
-        Cipher cipher = Cipher.getInstance(algorithm);
-        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
-
-        byte[] encrypted = cipher.doFinal(fileData);
-
-        return encrypted;
-    }
-
-    public static byte[] decodeFile(SecretKey yourKey, byte[] fileData)
-            throws Exception {
-        byte[] data = yourKey.getEncoded();
-        SecretKeySpec skeySpec = new SecretKeySpec(data, 0, data.length,
-                algorithm);
-        Cipher cipher = Cipher.getInstance(algorithm);
-        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-
-        byte[] decrypted = cipher.doFinal(fileData);
-
-        return decrypted;
-    }
-
     void saveFile(String stringToSave) {
         try {
             File file = new File(Environment.getExternalStorageDirectory()
@@ -1388,6 +1386,19 @@ public class GlobalMethods {
         }
     }
 
+    /*
+    * BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(yourFile));
+bos.write(fileBytes);
+bos.flush();
+bos.close();
+
+//
+
+FileOutputStream fos = new FileOutputStream(objFile);
+fos.write(objFileBytes);
+fos.close();
+*/
+
     public byte[] readFile() {
         byte[] contents = null;
 
@@ -1408,29 +1419,5 @@ public class GlobalMethods {
             e.printStackTrace();
         }
         return contents;
-    }
-
-    /*
-    * BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(yourFile));
-bos.write(fileBytes);
-bos.flush();
-bos.close();
-
-//
-
-FileOutputStream fos = new FileOutputStream(objFile);
-fos.write(objFileBytes);
-fos.close();
-*/
-
-    public static Drawable drawableFromUrl(String url) throws IOException {
-        Bitmap x;
-
-        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
-        connection.connect();
-        InputStream input = connection.getInputStream();
-
-        x = BitmapFactory.decodeStream(input);
-        return new BitmapDrawable(x);
     }
 }

@@ -2,10 +2,9 @@ package com.edbrix.enterprise.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,13 +23,11 @@ import com.edbrix.enterprise.Application;
 import com.edbrix.enterprise.BuildConfig;
 import com.edbrix.enterprise.Interfaces.CourseContentButtonListener;
 import com.edbrix.enterprise.Models.CourseContents;
-import com.edbrix.enterprise.Models.Courses;
 import com.edbrix.enterprise.Models.ResponseData;
 import com.edbrix.enterprise.Models.User;
 import com.edbrix.enterprise.R;
 import com.edbrix.enterprise.Utils.Constants;
 import com.edbrix.enterprise.Volley.GsonRequest;
-import com.edbrix.enterprise.Volley.JsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
 
@@ -101,7 +98,7 @@ public class CreateVideoCourseActivity extends BaseActivity {
                 intent.putExtra("price", price);
                 intent.putExtra("type", "2");
                 intent.putExtra("courseId", courseId);
-                startActivityForResult(intent,2);
+                startActivityForResult(intent, 2);
             }
         });
 
@@ -142,7 +139,7 @@ public class CreateVideoCourseActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch(requestCode) {
+        switch (requestCode) {
 
             case 1:
                 if (resultCode == RESULT_OK && data != null &&
@@ -165,7 +162,7 @@ public class CreateVideoCourseActivity extends BaseActivity {
     private void getCourseContent() {
 
         User user = SettingsMy.getActiveUser();
-        if (user!=null) {
+        if (user != null) {
             _create_progress.setVisibility(View.VISIBLE);
             JSONObject jo = new JSONObject();
             try {
@@ -185,13 +182,12 @@ public class CreateVideoCourseActivity extends BaseActivity {
                         public void onResponse(@NonNull ResponseData response) {
                             _create_progress.setVisibility(View.GONE);
                             Timber.d("response: %s", response.toString());
-                            if (response.getErrorCode()==null) {
+                            if (response.getErrorCode() == null) {
 
                                 adapter.refresh(response.getCourseContents());
                                 adapter.notifyDataSetChanged();
 
-                            }
-                            else {
+                            } else {
 
                                 try {
                                     Timber.d("Error: %s", response.getErrorMessage());
@@ -226,7 +222,7 @@ public class CreateVideoCourseActivity extends BaseActivity {
     private void setCourseContentDelete(String id, final int position) {
 
         User user = SettingsMy.getActiveUser();
-        if (user!=null) {
+        if (user != null) {
             _create_progress.setVisibility(View.VISIBLE);
             JSONObject jo = new JSONObject();
             try {
@@ -247,7 +243,7 @@ public class CreateVideoCourseActivity extends BaseActivity {
                         public void onResponse(@NonNull ResponseData response) {
                             _create_progress.setVisibility(View.GONE);
                             Timber.d("response: %s", response.toString());
-                            if (response.getErrorCode()==null || response.getErrorCode().equals("0")) {
+                            if (response.getErrorCode() == null || response.getErrorCode().equals("0")) {
 
                                 try {
                                     Timber.d("Error: %s", "Content deleted successfully ");
@@ -261,8 +257,7 @@ public class CreateVideoCourseActivity extends BaseActivity {
                                 adapter.deleteItemFromList(position);
                                 adapter.notifyDataSetChanged();
 
-                            }
-                            else {
+                            } else {
 
                                 try {
                                     Timber.d("Error: %s", response.getErrorMessage());

@@ -1,4 +1,3 @@
-
 package com.edbrix.enterprise.commons;
 
 
@@ -12,11 +11,11 @@ import com.edbrix.enterprise.R;
 
 /**
  * @author rajk
- *
- * Usage
- * AlertDialogManager dialogManager=new AlertDialogManager(mContext);
- * dialogManager.Dialog("Please select state first.").show();
- * ***NOTE*** don't forget to show() after dialog's end parentheses
+ *         <p>
+ *         Usage
+ *         AlertDialogManager dialogManager=new AlertDialogManager(mContext);
+ *         dialogManager.Dialog("Please select state first.").show();
+ *         ***NOTE*** don't forget to show() after dialog's end parentheses
  */
 
 public class AlertDialogManager {
@@ -24,25 +23,17 @@ public class AlertDialogManager {
     private Context context;
     private AlertDialog alertDialog;
 
-    public interface onSingleButtonClickListner {
-        void onPositiveClick();
-    }
-
-    public interface onTwoButtonClickListner extends onSingleButtonClickListner {
-        void onNegativeClick();
-    }
-
     public AlertDialogManager(Context context) {
         this.alertDialog = new AlertDialog.Builder(context).create();
         this.context = context;
     }
 
-    public void setAlertDialogCancellable(boolean cancellable){
+    public void setAlertDialogCancellable(boolean cancellable) {
         this.alertDialog.setCancelable(cancellable);
     }
 
     public AlertDialog Dialog(String message) {
-       return Dialog(message, null);
+        return Dialog(message, null);
     }
 
     public AlertDialog Dialog(String message, onSingleButtonClickListner listener) {
@@ -151,5 +142,13 @@ public class AlertDialogManager {
         }
 
         return alertDialog;
+    }
+
+    public interface onSingleButtonClickListner {
+        void onPositiveClick();
+    }
+
+    public interface onTwoButtonClickListner extends onSingleButtonClickListner {
+        void onNegativeClick();
     }
 }

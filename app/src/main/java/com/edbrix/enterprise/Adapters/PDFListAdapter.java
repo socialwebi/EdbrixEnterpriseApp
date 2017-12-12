@@ -1,12 +1,12 @@
 package com.edbrix.enterprise.Adapters;
 
 
-import android.widget.BaseAdapter;
 import android.content.Context;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.edbrix.enterprise.R;

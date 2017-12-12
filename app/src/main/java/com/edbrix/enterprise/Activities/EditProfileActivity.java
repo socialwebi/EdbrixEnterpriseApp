@@ -2,11 +2,10 @@ package com.edbrix.enterprise.Activities;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -49,15 +48,12 @@ public class EditProfileActivity extends BaseActivity {
     TextInputEditText _edit_profile_about_you;
     CheckBox _edit_profile_check_1;
     CheckBox _edit_profile_check_2;
-
+    User user;
     private String firstName;
     private String lastName;
     private String aboutYou;
     private String dob;
-
     private int mYear, mMonth, mDay;
-
-    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +106,7 @@ public class EditProfileActivity extends BaseActivity {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
                                 if (view.isShown()) {
-                                    String mDate = (monthOfYear + 1) + "/" + dayOfMonth+ "/" + year;
+                                    String mDate = (monthOfYear + 1) + "/" + dayOfMonth + "/" + year;
                                     _edit_profile_dob.setText(mDate);
                                     _edit_profile_dob.setImeOptions(EditorInfo.IME_ACTION_NEXT);
                                 }

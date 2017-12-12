@@ -1,7 +1,5 @@
 package com.edbrix.enterprise.Models;
 
-import android.util.Log;
-
 import com.google.gson.annotations.SerializedName;
 
 import org.json.JSONException;
@@ -38,14 +36,14 @@ public class ChoicesInputData {
         try {
             obj.put("id", id);
         } catch (JSONException e) {
-           e.printStackTrace();
+            e.printStackTrace();
         }
         return obj;
     }
 
     @Override
     public String toString() {
-        return "ClassPojo [id = " + id  + "]";
+        return "ClassPojo [id = " + id + "]";
     }
 
 }

@@ -1,7 +1,6 @@
 package com.edbrix.enterprise.Activities;
 
 import android.Manifest;
-import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -9,13 +8,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,9 +23,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,19 +31,12 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.edbrix.enterprise.Application;
 import com.edbrix.enterprise.BuildConfig;
-import com.edbrix.enterprise.MainActivity;
-import com.edbrix.enterprise.Models.CourseContents;
 import com.edbrix.enterprise.Models.Courses;
-import com.edbrix.enterprise.Models.ResponseData;
-import com.edbrix.enterprise.Models.TypesC;
 import com.edbrix.enterprise.Models.User;
 import com.edbrix.enterprise.R;
 import com.edbrix.enterprise.Utils.Constants;
-import com.edbrix.enterprise.Utils.SessionManager;
 import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.JsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
@@ -73,6 +62,7 @@ import timber.log.Timber;
 
 public class CreateLiveCourseActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks {
 
+    static final int REQUEST_PERMISSION_EXTERNAL = 1006;
     RelativeLayout layout;
     Context context;
     TextInputLayout _create_text_input_price;
@@ -83,32 +73,26 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
     Button _live_course_button_submit;
     Button _live_course_button_browse;
     Button _live_course_button_next;
-
     TextView _create_text_category;
     TextView _create_live_title;
     Spinner _create_spinner_category;
     LinearLayout browseLayout;
-
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
+    boolean mTitle = false, mPrice = false, mImage = false;
     private String courseId;
     private String courseName;
     private String coursePrice;
     private String categoryId = "0";
-
     private Uri filePath;
     private String fileExtension;
     private String fileName;
-
     private FirebaseStorage storage;
     private StorageReference storageRef;
     private UploadTask uploadTask;
-
     private ArrayList<String> arrayListId;
     private ArrayList<String> arrayListTitle;
-
-    boolean mTitle = false, mPrice = false, mImage = false;
-
     private ArrayList<String> photoPaths = new ArrayList<>();
-    static final int REQUEST_PERMISSION_EXTERNAL = 1006;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +103,10 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         context = CreateLiveCourseActivity.this;
+
+        pref = context.getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+        editor = pref.edit();
+        editor.apply();
 
         Intent intent = getIntent();
         courseId = intent.getStringExtra("courseId");
@@ -144,7 +132,7 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
         _create_live_title = findViewById(R.id.create_live_title);
         browseLayout = findViewById(R.id.linear_browse_image);
 
-        if (courseId==null) {
+        if (courseId == null) {
             courseId = "0";
             _create_live_title.setText(R.string.create_live_course);
             visibleCode(false);
@@ -219,7 +207,7 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
                 }
             }
         });
-        if (courseName!=null) {
+        if (courseName != null) {
             _live_course_title.setText(courseName);
         }
 
@@ -238,12 +226,12 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
                                     checkValidationsWithCourseId();
                                 }
                             }).setNegativeButton("Don't Save", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    Intent intent = new Intent(CreateLiveCourseActivity.this, CreateVideoCourseActivity.class);
-                                    intent.putExtra("courseId", courseId);
-                                    startActivity(intent);
-                                }
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(CreateLiveCourseActivity.this, CreateVideoCourseActivity.class);
+                            intent.putExtra("courseId", courseId);
+                            startActivity(intent);
+                        }
                     }).show();
 
                 } else {
@@ -259,7 +247,6 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
                 checkValidationsWithCourseId();
             }
         });
-
 
 
         _live_course_button_browse.setOnClickListener(new View.OnClickListener() {
@@ -280,6 +267,19 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        String newID = pref.getString("newCourseId", null);
+        if (newID != null) {
+            editor.putString("newCourseId", null);
+            editor.apply();
+            finish();
+        }
+
     }
 
     private void browseClick() {
@@ -314,11 +314,10 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
+        switch (requestCode) {
 
             case FilePickerConst.REQUEST_CODE_PHOTO:
-                if(resultCode== Activity.RESULT_OK && data!=null)
-                {
+                if (resultCode == Activity.RESULT_OK && data != null) {
                     photoPaths = new ArrayList<>();
                     photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
                     // mOutputText.setText(photoPaths.toString());
@@ -328,7 +327,7 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
                     fileName = fileName.replace("/", "");
 
                     fileExtension = photoPaths.get(0).substring(photoPaths.get(0).lastIndexOf("."));
-                    Log.d("TAG", photoPaths.toString() +" _-_ "+fileName+" _-_ "+fileExtension);
+                    Log.d("TAG", photoPaths.toString() + " _-_ " + fileName + " _-_ " + fileExtension);
                     // uploadToEdbrix(uri);
                     _live_course_image.setText(fileName);
                 }
@@ -364,8 +363,8 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
     private void checkValidationsWithCourseId() {
         courseName = _live_course_title.getText().toString().trim();
         coursePrice = _live_course_price.getText().toString().trim();
-        categoryId =  arrayListId.get( _create_spinner_category.getSelectedItemPosition() );
-        Log.d("TAG", "categoryId - "+categoryId);
+        categoryId = arrayListId.get(_create_spinner_category.getSelectedItemPosition());
+        Log.d("TAG", "categoryId - " + categoryId);
 
         if (courseName.isEmpty()) {
             _live_course_title.setError(getString(R.string.error_edit_text));
@@ -380,7 +379,7 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
 
     }
 
-    private void visibleCode(boolean val){
+    private void visibleCode(boolean val) {
 
         if (val) {
             _create_text_category.setVisibility(View.VISIBLE);
@@ -402,7 +401,7 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
 
         // _dashboard_progress.setVisibility(View.VISIBLE);
         User activeUser = SettingsMy.getActiveUser();
-        if (activeUser!=null) {
+        if (activeUser != null) {
 
             JSONObject jo = new JSONObject();
             try {
@@ -424,11 +423,10 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
                         public void onResponse(@NonNull Courses response) {
                             Timber.d("response: %s", response.toString());
                             // _dashboard_progress.setVisibility(View.INVISIBLE);
-                            if (response.getErrorCode()==null) {
+                            if (response.getErrorCode() == null) {
 
                                 getData(response);
-                            }
-                            else {
+                            } else {
                                 try {
                                     Timber.d("Error: %s", response.getErrorMessage());
                                     Snackbar.make(layout, response.getErrorMessage(), Snackbar.LENGTH_LONG).show();
@@ -462,7 +460,7 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
     private void saveCourse() {
 
         User user = SettingsMy.getActiveUser();
-        if (user!=null) {
+        if (user != null) {
 
             JSONObject jo = new JSONObject();
             try {
@@ -535,7 +533,7 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
         _live_course_title.setText(courses.getTitle());
         _live_course_price.setText(courses.getPrice());
 
-        for (int i =0; i<courses.getCourseCategory().size(); i++) {
+        for (int i = 0; i < courses.getCourseCategory().size(); i++) {
             arrayListTitle.add(courses.getCourseCategory().get(i).getTitle());
             arrayListId.add(courses.getCourseCategory().get(i).getId());
         }
@@ -563,9 +561,10 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
     /**
      * Callback for when a permission is granted using the EasyPermissions
      * library.
+     *
      * @param requestCode The request code associated with the requested
-     *         permission
-     * @param list The requested permission list. Never null.
+     *                    permission
+     * @param list        The requested permission list. Never null.
      */
     @Override
     public void onPermissionsGranted(int requestCode, List<String> list) {
@@ -575,9 +574,10 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
     /**
      * Callback for when a permission is denied using the EasyPermissions
      * library.
+     *
      * @param requestCode The request code associated with the requested
-     *         permission
-     * @param list The requested permission list. Never null.
+     *                    permission
+     * @param list        The requested permission list. Never null.
      */
     @Override
     public void onPermissionsDenied(int requestCode, List<String> list) {

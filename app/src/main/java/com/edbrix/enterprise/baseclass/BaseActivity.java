@@ -20,14 +20,13 @@ import com.edbrix.enterprise.commons.ToastMessage;
  */
 public class BaseActivity extends AppCompatActivity {
 
-        DialogManager dialogManager;
-    GlobalMethods globalMethods;
     //    ConnectivityMonitor connectivityMonitor;
     protected Context mContext;
+    protected OnFragmentBackPressedListener onFragmentBackPressedListener;
+    DialogManager dialogManager;
+    GlobalMethods globalMethods;
     private ToastMessage toastMessage;
     private SessionManager sessionManager;
-
-    protected OnFragmentBackPressedListener onFragmentBackPressedListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,26 +85,24 @@ public class BaseActivity extends AppCompatActivity {
 
     }
 
-
-    public interface OnFragmentBackPressedListener {
-        public void doBack();
-    }
-
     public void setOnFragmentBackPressedListener(OnFragmentBackPressedListener onFragmentBackPressedListener) {
         this.onFragmentBackPressedListener = onFragmentBackPressedListener;
     }
 
-
     protected boolean isTablet() {
         boolean xlarge = ((this.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >=
-        Configuration.SCREENLAYOUT_SIZE_XLARGE);
+                Configuration.SCREENLAYOUT_SIZE_XLARGE);
         boolean large = ((this.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >=
-        Configuration.SCREENLAYOUT_SIZE_LARGE);
+                Configuration.SCREENLAYOUT_SIZE_LARGE);
         return (xlarge || large);
     }
 
     protected int getScreenOrientation() {
         Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         return display.getRotation();
+    }
+
+    public interface OnFragmentBackPressedListener {
+        public void doBack();
     }
 }

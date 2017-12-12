@@ -3,8 +3,6 @@ package com.edbrix.enterprise.Adapters;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -16,9 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.edbrix.enterprise.Interfaces.CourseContentButtonListener;
-import com.edbrix.enterprise.Interfaces.DashboardListInterface;
 import com.edbrix.enterprise.Models.CourseContents;
-import com.edbrix.enterprise.Models.Courses;
 import com.edbrix.enterprise.R;
 
 import java.util.ArrayList;
@@ -53,8 +49,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
             holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorActionBar));
         }
 
-        if (list.get(position).getType().equals("VC"))
-        {
+        if (list.get(position).getType().equals("VC")) {
             holder.icon.setImageResource(R.mipmap.video_icon);
         } else {
             holder.icon.setImageResource(R.mipmap.document_icon);
@@ -93,8 +88,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
 
     }
 
-    public void deleteItemFromList(int id)
-    {
+    public void deleteItemFromList(int id) {
         list.remove(id);
         notifyDataSetChanged();
     }

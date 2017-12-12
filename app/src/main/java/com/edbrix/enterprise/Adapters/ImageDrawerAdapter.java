@@ -9,10 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 
-import com.edbrix.enterprise.Interfaces.ImageChoiceActionListener;
-import com.edbrix.enterprise.Models.ChoicesData;
 import com.edbrix.enterprise.Models.ImageContentData;
 import com.edbrix.enterprise.R;
 import com.squareup.picasso.Picasso;
@@ -29,10 +26,6 @@ public class ImageDrawerAdapter extends RecyclerView.Adapter<ImageDrawerAdapter.
     private ImageSelectionListener imageChoiceActionListener;
     private int selectedIndex;
     private boolean isAlreadyLoaded;
-
-    public interface ImageSelectionListener {
-        public void onSelect(ImageContentData imageContentData, int position);
-    }
 
     public ImageDrawerAdapter(Context context, ArrayList<ImageContentData> list, ImageSelectionListener imageChoiceActionListener) {
         this.context = context;
@@ -61,7 +54,7 @@ public class ImageDrawerAdapter extends RecyclerView.Adapter<ImageDrawerAdapter.
                     .load(list.get(position).getImg_url())
                     .error(R.drawable.image_placeholder)
                     .into(holder.imgChoice);
-            if(position ==0){
+            if (position == 0) {
                 holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAppOrange));
             }
 
@@ -88,6 +81,10 @@ public class ImageDrawerAdapter extends RecyclerView.Adapter<ImageDrawerAdapter.
         this.list = list;
         notifyDataSetChanged();
 
+    }
+
+    public interface ImageSelectionListener {
+        public void onSelect(ImageContentData imageContentData, int position);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

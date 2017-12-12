@@ -2,14 +2,13 @@ package com.edbrix.enterprise.Activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -36,6 +35,7 @@ import com.edbrix.enterprise.baseclass.BaseActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.nio.file.LinkOption;
 import java.util.ArrayList;
 
 import timber.log.Timber;
@@ -73,7 +73,7 @@ public class OrganizationListActivity extends BaseActivity {
         context = this;
 
         Intent intent = getIntent();
-        key = intent.getBooleanExtra("Key",false);
+        key = intent.getBooleanExtra("Key", false);
         email = intent.getStringExtra("email");
         password = intent.getStringExtra("password");
 
@@ -92,8 +92,7 @@ public class OrganizationListActivity extends BaseActivity {
                 if (!key) {
                     if (Conditions.isNetworkConnected(OrganizationListActivity.this)) {
                         signIn();
-                    }
-                    else {
+                    } else {
                         try {
                             Snackbar.make(layout, getString(R.string.error_network), Snackbar.LENGTH_LONG).show();
                         } catch (Exception e) {
@@ -101,12 +100,10 @@ public class OrganizationListActivity extends BaseActivity {
                             Toast.makeText(OrganizationListActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show();
                         }
                     }
-                }
-                else {
+                } else {
                     if (Conditions.isNetworkConnected(OrganizationListActivity.this)) {
                         forgotPassword();
-                    }
-                    else {
+                    } else {
                         try {
                             Snackbar.make(layout, getString(R.string.error_network), Snackbar.LENGTH_LONG).show();
                         } catch (Exception e) {
@@ -120,8 +117,7 @@ public class OrganizationListActivity extends BaseActivity {
 
         if (Conditions.isNetworkConnected(OrganizationListActivity.this)) {
             getOrg();
-        }
-        else {
+        } else {
             try {
                 Snackbar.make(layout, getString(R.string.error_network), Snackbar.LENGTH_LONG).show();
             } catch (Exception e) {
@@ -170,11 +166,10 @@ public class OrganizationListActivity extends BaseActivity {
 
                         _organization_progress_bar.setVisibility(View.INVISIBLE);
                         Timber.d("response: %s", response.toString());
-                        if (response.getErrorCode()==null) {
+                        if (response.getErrorCode() == null) {
                             organizationListAdapter.refreshList(response.getOrganizations());
                             organizationListAdapter.notifyDataSetChanged();
-                        }
-                        else {
+                        } else {
                             try {
                                 Timber.d("Error: %s", response.getErrorMessage());
                                 Snackbar.make(layout, response.getErrorMessage(), Snackbar.LENGTH_LONG).show();
@@ -189,6 +184,7 @@ public class OrganizationListActivity extends BaseActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.d("TAG", error.getMessage());
                 _organization_progress_bar.setVisibility(View.INVISIBLE);
                 try {
                     Snackbar.make(layout, getString(R.string.error_something_wrong), Snackbar.LENGTH_LONG).show();
@@ -225,7 +221,7 @@ public class OrganizationListActivity extends BaseActivity {
                     public void onResponse(@NonNull ResponseData response) {
                         Timber.d("response: %s", response.toString());
                         _organization_progress_bar.setVisibility(View.INVISIBLE);
-                        if (response.getErrorCode()==null) {
+                        if (response.getErrorCode() == null) {
 
                             SettingsMy.setActiveUser(response.getUser());
 
@@ -237,8 +233,7 @@ public class OrganizationListActivity extends BaseActivity {
                             startActivity(intent);
                             finish();
 
-                        }
-                        else {
+                        } else {
 
                             Intent intent = new Intent(context, PasswordActivity.class);
                             intent.putExtra("email", email);
@@ -288,9 +283,9 @@ public class OrganizationListActivity extends BaseActivity {
                     public void onResponse(@NonNull ResponseData response) {
                         _organization_progress_bar.setVisibility(View.INVISIBLE);
                         Timber.d("response: %s", response.toString());
-                        if (response.getErrorCode()==null) {
+                        if (response.getErrorCode() == null) {
 
-                            if (response.getIsOrganizationListShow().equals("0")){
+                            if (response.getIsOrganizationListShow().equals("0")) {
                                 Toast.makeText(context, "Success, Please login with new password ", Toast.LENGTH_SHORT).show();
                                 SettingsMy.setActiveUser(null);
 
@@ -300,8 +295,7 @@ public class OrganizationListActivity extends BaseActivity {
                                 finish();
                             }
 
-                        }
-                        else {
+                        } else {
 
                             try {
                                 Timber.d("Error: %s", response.getErrorMessage());

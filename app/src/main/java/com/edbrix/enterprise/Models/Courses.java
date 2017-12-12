@@ -46,53 +46,43 @@ public class Courses implements Serializable {
     private String ErrorMessage;
 
 
-    public String getId ()
-    {
+    public String getId() {
         return id;
     }
 
-    public void setId (String id)
-    {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getAccess_code ()
-    {
+    public String getAccess_code() {
         return access_code;
     }
 
-    public void setAccess_code (String access_code)
-    {
+    public void setAccess_code(String access_code) {
         this.access_code = access_code;
     }
 
-    public String getTitle ()
-    {
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle (String title)
-    {
+    public void setTitle(String title) {
         this.title = title;
     }
 
-    public String getInstructor_email ()
-    {
+    public String getInstructor_email() {
         return instructor_email;
     }
 
-    public void setInstructor_email (String instructor_email)
-    {
+    public void setInstructor_email(String instructor_email) {
         this.instructor_email = instructor_email;
     }
 
-    public String getInstructor_name ()
-    {
+    public String getInstructor_name() {
         return instructor_name;
     }
 
-    public void setInstructor_name (String instructor_name)
-    {
+    public void setInstructor_name(String instructor_name) {
         this.instructor_name = instructor_name;
     }
 
@@ -104,22 +94,19 @@ public class Courses implements Serializable {
         this.course_image_url = course_image_url;
     }
 
-    public String getDescription ()
-    {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription (String description)
-    {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public String getInstructor_mobileno ()
-    {
+    public String getInstructor_mobileno() {
         return instructor_mobileno;
     }
 
-    public void setInstructor_mobileno (String instructor_mobileno) {
+    public void setInstructor_mobileno(String instructor_mobileno) {
         this.instructor_mobileno = instructor_mobileno;
     }
 
@@ -180,8 +167,7 @@ public class Courses implements Serializable {
     }
 
     @Override
-    public String toString()
-    {
-        return "Courses [id = "+id+", access_code = "+access_code+", title = "+title+", code = "+code+", price = "+price+", coursecategoryId = "+coursecategoryId+", courseCategory = "+courseCategory+", instructor_email = "+instructor_email+", instructor_name = "+instructor_name+", course_image_url = "+course_image_url+", description = "+description+", instructor_mobileno = "+instructor_mobileno+"]";
+    public String toString() {
+        return "Courses [id = " + id + ", access_code = " + access_code + ", title = " + title + ", code = " + code + ", price = " + price + ", coursecategoryId = " + coursecategoryId + ", courseCategory = " + courseCategory + ", instructor_email = " + instructor_email + ", instructor_name = " + instructor_name + ", course_image_url = " + course_image_url + ", description = " + description + ", instructor_mobileno = " + instructor_mobileno + "]";
     }
 }

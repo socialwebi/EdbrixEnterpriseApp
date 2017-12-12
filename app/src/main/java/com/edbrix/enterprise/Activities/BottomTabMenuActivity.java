@@ -1,13 +1,10 @@
 package com.edbrix.enterprise.Activities;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -18,28 +15,21 @@ import android.widget.TextView;
 
 import com.edbrix.enterprise.Fragments.CourseListFragment;
 import com.edbrix.enterprise.Fragments.MeetingListFragment;
-import com.edbrix.enterprise.MainActivity;
 import com.edbrix.enterprise.R;
-import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
 
 public class BottomTabMenuActivity extends BaseActivity {
 
+    public static final String tabIndexKey = "tabIndex";
     private TabLayout menuTab;
-
     private TextView titleText;
     private TextView tabSchdlText;
     private TextView tabCoursesText;
     private TextView tabSettingText;
-
     private ImageView tabSchdlIcon;
     private ImageView tabCoursesIcon;
     private ImageView tabSettingIcon;
-
     private Fragment menuFragment;
-
-    public static final String tabIndexKey = "tabIndex";
-
     private int tabIndex;
 
     @Override
