@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="@dimen/app_min_padding"
+    android:padding="@dimen/app_normal_padding"
     tools:context="com.edbrix.enterprise.Adapters.ParticipantListAdapter">
 
-    <com.edbrix.edbixconnect.UX.RoundedImageView
+    <com.edbrix.enterprise.Utils.RoundedImageView
         android:id="@+id/meetingUserImage"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_margin="4dp"
+        android:layout_margin="@dimen/app_min_margin"
         android:adjustViewBounds="true"
         android:cropToPadding="false"
         android:src="@mipmap/user_profile" />
@@ -19,6 +19,7 @@
         android:id="@+id/meetingUserName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/app_normal_margin"
         android:layout_gravity="top"
         android:layout_weight="1" />
 
@@ -27,7 +28,7 @@
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:layout_gravity="center"
-        android:layout_margin="3dp"
+        android:layout_margin="@dimen/app_min_margin"
         android:adjustViewBounds="true"
         android:background="@android:color/transparent"
         android:padding="@dimen/app_min_padding"
@@ -38,7 +39,7 @@
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:layout_gravity="center"
-        android:layout_margin="3dp"
+        android:layout_margin="@dimen/app_min_margin"
         android:adjustViewBounds="true"
         android:background="@android:color/transparent"
         android:padding="@dimen/app_min_padding"

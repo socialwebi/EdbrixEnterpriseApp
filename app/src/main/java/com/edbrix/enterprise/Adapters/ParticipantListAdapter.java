@@ -4,6 +4,7 @@ package com.edbrix.enterprise.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,9 +44,15 @@ public class ParticipantListAdapter extends RecyclerView.Adapter<ParticipantList
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
+        if (position % 2 == 1) {
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhiteSmoke));
+        } else {
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorDivider));
+        }
+
         holder.name.setText(meeting.get(position).getName());
 
-        if (meeting.get(position).getProfileImageURL() != null) {
+        if (meeting.get(position).getProfileImageURL() != null && !meeting.get(position).getProfileImageURL().isEmpty()) {
             Picasso.with(context)
                     .load(meeting.get(position).getProfileImageURL())
                     .fit()

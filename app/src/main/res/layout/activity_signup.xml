@@ -32,7 +32,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:paddingRight="@dimen/app_big_padding"
-                    android:text="@string/register"
+                    android:text="@string/signup"
                     android:textColor="@color/colorMainText"
                     android:textSize="20sp" />
 
@@ -162,10 +162,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/register_button_register"
-                android:layout_margin="@dimen/app_normal_margin"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="@dimen/app_big_margin"
                 android:gravity="center"
                 android:textSize="16sp"
-                android:textColor="@color/colorMainText"
+                android:textColor="@color/colorBlueLink"
                 android:text="@string/signin" />
 
         <ProgressBar

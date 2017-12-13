@@ -198,4 +198,10 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    public void updateList(ArrayList<Courses> filterList) {
+        if (courseList != null) {
+            courseList = filterList;
+            notifyDataSetChanged();
+        }
+    }
 }

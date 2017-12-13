@@ -46,27 +46,30 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/settings_AppBar">
+        android:layout_below="@+id/settings_AppBar"
+        android:paddingBottom="@dimen/app_big_padding"
+        android:paddingLeft="@dimen/app_big_padding"
+        android:paddingRight="@dimen/app_big_padding"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/app_min_margin"
-            android:orientation="vertical"
-            android:padding="@dimen/app_min_padding">
+            android:layout_margin="@dimen/app_big_margin"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/settings_linear_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="@dimen/app_normal_margin"
                 android:orientation="horizontal"
-                android:padding="3dp">
+                android:padding="@dimen/app_min_padding">
 
                 <com.edbrix.enterprise.Utils.RoundedImageView
                     android:id="@+id/settings_image_profile_pic"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:layout_width="102dp"
+                    android:layout_height="102dp"
                     android:layout_gravity="center"
                     android:background="@android:color/transparent"
                     android:src="@mipmap/user_profile" />
@@ -75,8 +78,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginStart="10dp"
+                    android:layout_margin="@dimen/app_normal_margin"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:orientation="vertical">
@@ -84,20 +86,20 @@
                     <TextView
                         android:id="@+id/settings_text_user_name"
                         android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/app_normal_margin"
                         android:text="@string/name"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:textSize="22sp" />
 
                     <TextView
                         android:id="@+id/settings_text_user_email"
                         android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_marginTop="@dimen/app_min_margin"
-                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/app_normal_margin"
                         android:text="@string/email"
-                        android:textColor="@color/colorAppOrange" />
+                        android:textColor="@color/colorAppOrange"
+                        android:textSize="18sp" />
 
                 </LinearLayout>
 
@@ -113,7 +115,7 @@
                 android:id="@+id/settings_linear_upload_pic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="@dimen/app_normal_margin"
                 android:orientation="horizontal"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp">
@@ -127,6 +129,7 @@
                     android:drawablePadding="10dp"
                     android:drawableStart="@android:drawable/ic_menu_upload"
                     android:gravity="center_vertical"
+                    android:textSize="18sp"
                     android:text="@string/change_profile" />
 
                 <ImageView
@@ -134,24 +137,24 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@android:color/transparent"
-                    android:src="@mipmap/right_arrow" />
+                    android:src="@mipmap/right_arrow_start_icon_orange" />
 
             </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginBottom="@dimen/app_min_margin"
+                android:layout_marginBottom="@dimen/app_normal_margin"
                 android:layout_marginLeft="@dimen/app_big_margin"
                 android:layout_marginRight="@dimen/app_big_margin"
-                android:layout_marginTop="@dimen/app_min_margin"
+                android:layout_marginTop="@dimen/app_normal_margin"
                 android:background="@color/colorDivider" />
 
             <LinearLayout
                 android:id="@+id/settings_linear_edit_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="@dimen/app_normal_margin"
                 android:orientation="horizontal"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp">
@@ -165,6 +168,7 @@
                     android:drawablePadding="10dp"
                     android:drawableStart="@android:drawable/ic_menu_edit"
                     android:gravity="center_vertical"
+                    android:textSize="18sp"
                     android:text="@string/edit_profile" />
 
                 <ImageView
@@ -172,24 +176,24 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@android:color/transparent"
-                    android:src="@mipmap/right_arrow" />
+                    android:src="@mipmap/right_arrow_start_icon_orange" />
 
             </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginBottom="@dimen/app_min_margin"
+                android:layout_marginBottom="@dimen/app_normal_margin"
                 android:layout_marginLeft="@dimen/app_big_margin"
                 android:layout_marginRight="@dimen/app_big_margin"
-                android:layout_marginTop="@dimen/app_min_margin"
+                android:layout_marginTop="@dimen/app_normal_margin"
                 android:background="@color/colorDivider" />
 
             <LinearLayout
                 android:id="@+id/settings_linear_change_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="@dimen/app_normal_margin"
                 android:orientation="horizontal"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp">
@@ -203,6 +207,7 @@
                     android:drawablePadding="10dp"
                     android:drawableStart="@mipmap/change_password"
                     android:gravity="center_vertical"
+                    android:textSize="18sp"
                     android:text="@string/change_password" />
 
                 <ImageView
@@ -210,7 +215,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@android:color/transparent"
-                    android:src="@mipmap/right_arrow" />
+                    android:src="@mipmap/right_arrow_start_icon_orange" />
 
             </LinearLayout>
 
@@ -220,14 +225,14 @@
                 android:layout_marginBottom="@dimen/app_min_margin"
                 android:layout_marginLeft="@dimen/app_big_margin"
                 android:layout_marginRight="@dimen/app_big_margin"
-                android:layout_marginTop="@dimen/app_min_margin"
+                android:layout_marginTop="@dimen/app_normal_margin"
                 android:background="@color/colorDivider" />
 
             <LinearLayout
                 android:id="@+id/settings_linear_app_tour"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="@dimen/app_normal_margin"
                 android:orientation="horizontal"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp">
@@ -241,6 +246,7 @@
                     android:drawablePadding="10dp"
                     android:drawableStart="@mipmap/tour"
                     android:gravity="center_vertical"
+                    android:textSize="18sp"
                     android:text="@string/app_tour" />
 
                 <ImageView
@@ -248,7 +254,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@android:color/transparent"
-                    android:src="@mipmap/right_arrow" />
+                    android:src="@mipmap/right_arrow_start_icon_orange" />
 
             </LinearLayout>
 
@@ -259,7 +265,7 @@
                 android:layout_marginBottom="@dimen/app_min_margin"
                 android:layout_marginLeft="@dimen/app_big_margin"
                 android:layout_marginRight="@dimen/app_big_margin"
-                android:layout_marginTop="@dimen/app_min_margin"
+                android:layout_marginTop="@dimen/app_normal_margin"
                 android:background="@color/colorDivider" />
 
 
@@ -267,7 +273,7 @@
                 android:id="@+id/settings_linear_share"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="@dimen/app_normal_margin"
                 android:orientation="horizontal"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp">
@@ -281,6 +287,7 @@
                     android:drawablePadding="10dp"
                     android:drawableStart="@mipmap/share"
                     android:gravity="center_vertical"
+                    android:textSize="18sp"
                     android:text="@string/share" />
 
                 <ImageView
@@ -288,7 +295,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@android:color/transparent"
-                    android:src="@mipmap/right_arrow" />
+                    android:src="@mipmap/right_arrow_start_icon_orange" />
 
             </LinearLayout>
 
@@ -298,14 +305,14 @@
                 android:layout_marginBottom="@dimen/app_min_margin"
                 android:layout_marginLeft="@dimen/app_big_margin"
                 android:layout_marginRight="@dimen/app_big_margin"
-                android:layout_marginTop="@dimen/app_min_margin"
+                android:layout_marginTop="@dimen/app_normal_margin"
                 android:background="@color/colorDivider" />
 
             <LinearLayout
                 android:id="@+id/settings_linear_logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="@dimen/app_normal_margin"
                 android:orientation="horizontal"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp">
@@ -319,6 +326,7 @@
                     android:drawablePadding="10dp"
                     android:drawableStart="@mipmap/logout"
                     android:gravity="center_vertical"
+                    android:textSize="18sp"
                     android:text="@string/logout" />
 
                 <ImageView
@@ -326,7 +334,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@android:color/transparent"
-                    android:src="@mipmap/right_arrow" />
+                    android:src="@mipmap/right_arrow_start_icon_orange" />
 
             </LinearLayout>
 
@@ -336,7 +344,7 @@
                 android:layout_marginBottom="@dimen/app_min_margin"
                 android:layout_marginLeft="@dimen/app_big_margin"
                 android:layout_marginRight="@dimen/app_big_margin"
-                android:layout_marginTop="@dimen/app_min_margin"
+                android:layout_marginTop="@dimen/app_normal_margin"
                 android:background="@color/colorDivider" />
 
         </LinearLayout>

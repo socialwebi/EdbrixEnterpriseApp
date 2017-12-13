@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -32,6 +33,8 @@ public class CourseDetailActivity extends BaseActivity {
     private ImageView btnCourseMsg;
     private ImageView btnCourseCall;
 
+    private FloatingActionButton fabEdit;
+
     private Context context;
 
     @Override
@@ -53,6 +56,7 @@ public class CourseDetailActivity extends BaseActivity {
         title = (TextView) toolbar.findViewById(R.id.title);
         txtCourseBy = (TextView) findViewById(R.id.txtCourseBy);
         courseDesc = (TextView) findViewById(R.id.txtCourseDesc);
+        fabEdit = (FloatingActionButton) findViewById(R.id.fabEdit);
 
         courseImage = (ImageView) findViewById(R.id.courseImage);
         btnCoursePlay = (ImageView) findViewById(R.id.btnCoursePlay);
@@ -86,6 +90,13 @@ public class CourseDetailActivity extends BaseActivity {
             }
         });
 
+        fabEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToEditCourse();
+            }
+        });
+
         courseDetailItem = (Courses) getIntent().getSerializableExtra(courseDetailBundleKey);
         if (courseDetailItem != null) {
             //set Course Details
@@ -95,7 +106,7 @@ public class CourseDetailActivity extends BaseActivity {
         }
     }
 
-    @Override
+  /*  @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.course_details_menu, menu);
         return super.onCreateOptionsMenu(menu);
@@ -108,12 +119,12 @@ public class CourseDetailActivity extends BaseActivity {
                 onBackPressed();
                 return true;
             case R.id.editOption:
-                goToEditCourse();
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
+    }*/
 
     private void goToEditCourse() {
         if (courseDetailItem != null) {

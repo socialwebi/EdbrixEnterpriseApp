@@ -160,6 +160,7 @@ public class BottomTabMenuActivity extends BaseActivity {
 
                 Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
                 startActivity(intent);
+                finish();
 //                menuFragment = new SettingsFragment();
 //                Bundle bundleLogs = new Bundle();
 //                bundleLogs.putSerializable(LogFragment.INFO, stringInfo);

@@ -46,5 +46,6 @@
     <dimen name="archiving_indicator_right_margin">4dp</dimen>
     <dimen name="archiving_indicator_end_margin">4dp</dimen>
     <dimen name="archiving_indicator_top_margin">4dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
 </resources>

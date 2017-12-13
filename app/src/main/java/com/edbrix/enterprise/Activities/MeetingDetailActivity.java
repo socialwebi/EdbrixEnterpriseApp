@@ -162,7 +162,7 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
         }
 
         if (Conditions.isNetworkConnected(context)) {
-            // _meeting_list_progress.setVisibility(View.VISIBLE);
+            showBusyProgress();
             getMeetingList();
         } else {
             try {
@@ -237,12 +237,13 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
                                 adapter.notifyDataSetChanged();
                             }
 
+                            hideBusyProgress();
 
                         }
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-
+                    hideBusyProgress();
                     Timber.d("Error: %s", error.getMessage());
                     try {
                         Snackbar.make(layout, getString(R.string.error_something_wrong), Snackbar.LENGTH_LONG).show();

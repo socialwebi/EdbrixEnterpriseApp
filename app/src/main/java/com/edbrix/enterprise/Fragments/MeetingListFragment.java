@@ -13,6 +13,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -42,6 +45,7 @@ import com.edbrix.enterprise.Utils.Constants;
 import com.edbrix.enterprise.Utils.SessionManager;
 import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
+import com.edbrix.enterprise.baseclass.BaseFragment;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -62,7 +66,7 @@ import us.zoom.sdk.ZoomSDKInitializeListener;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MeetingListFragment extends Fragment implements SearchView.OnQueryTextListener, ZoomSDKInitializeListener, MeetingServiceListener {
+public class MeetingListFragment extends BaseFragment implements SearchView.OnQueryTextListener, ZoomSDKInitializeListener, MeetingServiceListener, MenuItem.OnActionExpandListener {
 
     private static String DISPLAY_NAME = "User";
     Context context;
@@ -81,6 +85,7 @@ public class MeetingListFragment extends Fragment implements SearchView.OnQueryT
     private View positiveAction;
     private String meetingNo;
     private User user;
+    private RecyclerView _meeting_list_recycler;
 
     public MeetingListFragment() {
         // Required empty public constructor
@@ -94,6 +99,8 @@ public class MeetingListFragment extends Fragment implements SearchView.OnQueryT
         View view = inflater.inflate(R.layout.fragment_meeting_list, container, false);
 
         context = getActivity();
+        setHasOptionsMenu(true);
+
         list = new ArrayList<>();
 
         assert user != null;
@@ -102,7 +109,7 @@ public class MeetingListFragment extends Fragment implements SearchView.OnQueryT
         sessionManager = new SessionManager(context);
         deviceType = sessionManager.getSessionDeviceType();
 
-        RecyclerView _meeting_list_recycler = view.findViewById(R.id.meeting_list_recycler);
+        _meeting_list_recycler = view.findViewById(R.id.meeting_list_recycler);
         _meeting_list_progress = view.findViewById(R.id.meeting_list_progress);
         _meeting_list_No_Meetings = view.findViewById(R.id.meeting_list_No_Meetings);
 
@@ -302,7 +309,8 @@ public class MeetingListFragment extends Fragment implements SearchView.OnQueryT
 
                                 if (response.getMeetings() != null) {
                                     _meeting_list_No_Meetings.setVisibility(View.GONE);
-                                    adapter.refresh(response.getMeetings());
+//                                    adapter.refresh(response.getMeetings());
+                                    list.addAll(response.getMeetings());
                                     adapter.notifyDataSetChanged();
                                     pageNo = response.getPage();
                                 } else {
@@ -341,16 +349,6 @@ public class MeetingListFragment extends Fragment implements SearchView.OnQueryT
             getDashboardCourseSchedulesRequest.setShouldCache(false);
             Application.getInstance().addToRequestQueue(getDashboardCourseSchedulesRequest, "meeting_list_requests");
         }
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
     }
 
     private void registerMeetingServiceListener() {
@@ -444,4 +442,70 @@ public class MeetingListFragment extends Fragment implements SearchView.OnQueryT
 
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.search_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(this);
+        searchView.setQueryHint("Search");
+
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            resetSearch();
+            return false;
+        }
+        filter(query);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (newText == null || newText.trim().isEmpty()) {
+            resetSearch();
+            return false;
+        }
+        filter(newText);
+        return false;
+    }
+
+    public void resetSearch() {
+        if (_meeting_list_recycler.getAdapter() != null)
+            ((MeetingListAdapter) _meeting_list_recycler.getAdapter()).refresh(list);
+    }
+
+    @Override
+    public boolean onMenuItemActionExpand(MenuItem item) {
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemActionCollapse(MenuItem item) {
+        return true;
+    }
+
+    public interface OnItem1SelectedListener {
+        void OnItem1SelectedListener(String item);
+    }
+
+    void filter(String text) {
+        if (list != null && list.size() > 0) {
+            ArrayList<Meeting> temp = new ArrayList();
+            for (Meeting meeting : list) {
+                //or use .equal(text) with you want equal match
+                //use .toLowerCase() for better matches
+                if (meeting.getTitle().toLowerCase().contains(text)) {
+                    temp.add(meeting);
+                }
+            }
+            //update recyclerview
+            if (_meeting_list_recycler.getAdapter() != null && _meeting_list_recycler.getAdapter().getItemCount() > 0)
+                ((MeetingListAdapter) _meeting_list_recycler.getAdapter()).refresh(temp);
+        }
+    }
 }

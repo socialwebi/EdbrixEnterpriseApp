@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/colorWhite"
     tools:context="com.edbrix.enterprise.Activities.MeetingDetailActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -65,8 +66,7 @@
                     android:id="@+id/meeting_detail_day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="jdfjdfjd" />
+                    android:layout_gravity="center" />
 
                 <View
                     android:layout_width="match_parent"
@@ -80,8 +80,7 @@
                 <TextView
                     android:id="@+id/meeting_detail_date"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="dfdfdf" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <View
@@ -141,9 +140,9 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/meeting_detail_recycler"
-        android:layout_margin="@dimen/app_normal_margin"
         android:layout_width="match_parent"
-        tools:listitem="@layout/adapter_participant_list"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/app_normal_margin"
+        tools:listitem="@layout/adapter_participant_list" />
 
 </LinearLayout>

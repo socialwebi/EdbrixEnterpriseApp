@@ -76,7 +76,7 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/txtChooseOrg"
             android:layout_marginTop="@dimen/app_min_margin"
-            android:background="@color/colorActionBar"
+            android:background="@color/colorWhite"
             android:paddingTop="@dimen/app_normal_padding"
             android:scrollbars="none"
             tools:listitem="@layout/adapter_organization_list" />

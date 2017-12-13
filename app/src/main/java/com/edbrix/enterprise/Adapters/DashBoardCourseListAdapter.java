@@ -42,7 +42,7 @@ public class DashBoardCourseListAdapter extends RecyclerView.Adapter<DashBoardCo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        holder.id.setText(list.get(position).getId());
+        holder.id.setText(list.get(position).getAccess_code());
         holder.name.setText(list.get(position).getTitle());
 
         Picasso.with(context)

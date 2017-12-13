@@ -10,8 +10,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -38,13 +42,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import timber.log.Timber;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CourseListFragment extends BaseFragment {
+public class CourseListFragment extends BaseFragment implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener{
 
     private Context context;
     private RecyclerView courseListRecyclerView;
@@ -67,6 +72,7 @@ public class CourseListFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_course_list, container, false);
         context = getActivity();
+        setHasOptionsMenu(true);
         sessionManager = new SessionManager(context);
         pageNo = 1;
         dataType = "course";
@@ -248,5 +254,72 @@ public class CourseListFragment extends BaseFragment {
         });
         courseListRecyclerView.setAdapter(courseListAdapter);
         courseListRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.search_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(this);
+        searchView.setQueryHint("Search");
+
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            resetSearch();
+            return false;
+        }
+        filter(query);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (newText == null || newText.trim().isEmpty()) {
+            resetSearch();
+            return false;
+        }
+        filter(newText);
+        return false;
+    }
+
+    public void resetSearch() {
+        if (courseListRecyclerView.getAdapter() != null)
+            ((CourseListAdapter) courseListRecyclerView.getAdapter()).updateList(coursesArrayList);
+    }
+
+    @Override
+    public boolean onMenuItemActionExpand(MenuItem item) {
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemActionCollapse(MenuItem item) {
+        return true;
+    }
+
+    public interface OnItem1SelectedListener {
+        void OnItem1SelectedListener(String item);
+    }
+
+    void filter(String text) {
+        if (coursesArrayList != null && coursesArrayList.size() > 0) {
+            ArrayList<Courses> temp = new ArrayList();
+            for (Courses courseItem : coursesArrayList) {
+                //or use .equal(text) with you want equal match
+                //use .toLowerCase() for better matches
+                if (courseItem.getTitle().toLowerCase().contains(text)) {
+                    temp.add(courseItem);
+                }
+            }
+            //update recyclerview
+            if (courseListRecyclerView.getAdapter() != null && courseListRecyclerView.getAdapter().getItemCount() > 0)
+                ((CourseListAdapter) courseListRecyclerView.getAdapter()).updateList(temp);
+        }
     }
 }
