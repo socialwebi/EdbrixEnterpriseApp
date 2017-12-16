@@ -33,6 +33,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:orientation="horizontal" >
 
         <ImageView
@@ -67,18 +68,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@mipmap/message_orange"
+                    android:background="@android:color/transparent"
                     android:text=" Message"
                     android:textSize="10sp"
-                    />
+                    android:drawableStart="@mipmap/message_orange" />
 
                 <Button
                     android:id="@+id/custom_call_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@mipmap/call_orange"
+                    android:background="@android:color/transparent"
                     android:text=" Call"
                     android:textSize="10sp"
-                    />
+                    android:drawableStart="@mipmap/call_orange" />
 
             </LinearLayout>
 

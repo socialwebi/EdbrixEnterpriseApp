@@ -60,7 +60,7 @@ public class BottomTabMenuActivity extends BaseActivity {
     private void setMenuTabs() {
 
         menuTab.addTab(menuTab.newTab().setText(getResources().getString(R.string.schedules)));
-        menuTab.addTab(menuTab.newTab().setText(getResources().getString(R.string.courses)));
+        menuTab.addTab(menuTab.newTab().setText(getResources().getString(R.string.course_list)));
         menuTab.addTab(menuTab.newTab().setText(getResources().getString(R.string.settings)));
 
         LinearLayout tabSchdl = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);

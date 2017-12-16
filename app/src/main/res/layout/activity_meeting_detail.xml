@@ -66,6 +66,8 @@
                     android:id="@+id/meeting_detail_day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:padding="2dp"
                     android:layout_gravity="center" />
 
                 <View
@@ -80,7 +82,8 @@
                 <TextView
                     android:id="@+id/meeting_detail_date"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                     />
             </LinearLayout>
 
             <View
@@ -106,6 +109,7 @@
                 android:id="@+id/meeting_detail_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
                 android:layout_marginTop="@dimen/app_min_margin"
                 android:textStyle="bold" />
 
@@ -131,6 +135,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/app_normal_padding"
+                android:textColor="@color/colorWhite"
                 android:text="@string/connect" />
 
         </LinearLayout>
@@ -140,9 +145,9 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/meeting_detail_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_margin="@dimen/app_normal_margin"
-        tools:listitem="@layout/adapter_participant_list" />
+        android:layout_width="match_parent"
+        tools:listitem="@layout/adapter_participant_list"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

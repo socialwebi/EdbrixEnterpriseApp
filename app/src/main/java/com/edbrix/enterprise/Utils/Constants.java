@@ -46,28 +46,31 @@ public class Constants {
     // TODO Change it to your exist meeting ID to start meeting
     final static String MEETING_ID_JOIN = "329184643"; // 329184643
     final static String MEETING_ID_START = "329184643"; // 7073082323  mine - 775-879-3264
+
+
+
     private final static String BASE_URL = "http://enterpriseservices.edbrix.net/app/student/";
-    public final static String userLogin = BASE_URL.concat("authenticateuser");  // authenticatestudent
+    public final static String userLogin = BASE_URL.concat("authenticateuser.php");  // authenticatestudent
     public final static String userRegister = BASE_URL.concat("");
-    public final static String getSchoolList = BASE_URL.concat("getschoollist");
-    public final static String changePassword = BASE_URL.concat("changepassword");
-    public final static String getMeetings = BASE_URL.concat("getmeetings");
-    public final static String forgotPassword = BASE_URL.concat("forgotpassword");
-    public final static String getMeetingDetails = BASE_URL.concat("getmeetingdetails");
-    public final static String getDashboardCourseSchedules = BASE_URL.concat("getdashboardcourseandschedules");
-    public final static String playCourseContent = BASE_URL.concat("playcoursecontent");
+    public final static String getSchoolList = BASE_URL.concat("getschoollist.php");
+    public final static String changePassword = BASE_URL.concat("changepassword.php");
+    public final static String getMeetings = BASE_URL.concat("getmeetings.php");
+    public final static String forgotPassword = BASE_URL.concat("forgotpassword.php");
+    public final static String getMeetingDetails = BASE_URL.concat("getmeetingdetails.php");
+    public final static String getDashboardCourseSchedules = BASE_URL.concat("getdashboardcourseandschedules.php");
+    public final static String playCourseContent = BASE_URL.concat("playcoursecontent.php");
 
 //	truefalse, singlechoice, multichoice ,imagechoice ,longanswer ,fillinblanks
-    public final static String playCourseContentSubmit = BASE_URL.concat("playcoursecontentsubmit");
-    public final static String getInstructorResources = BASE_URL.concat("getinstructorresources");
-    public final static String getCourseSections = BASE_URL.concat("getcoursesections");
-    public final static String getConnectivityTypes = BASE_URL.concat("getconnectivitytypes");
-    public final static String setCreateCourse = BASE_URL.concat("createcourse");
-    public final static String setCreateCourseContent = BASE_URL.concat("createcoursecontent");
-    public final static String getCourseContent = BASE_URL.concat("getcoursecontents");
+    public final static String playCourseContentSubmit = BASE_URL.concat("playcoursecontentsubmit.php");
+    public final static String getInstructorResources = BASE_URL.concat("getinstructorresources.php");
+    public final static String getCourseSections = BASE_URL.concat("getcoursesections.php");
+    public final static String getConnectivityTypes = BASE_URL.concat("getconnectivitytypes.php");
+    public final static String setCreateCourse = BASE_URL.concat("createcourse.php");
+    public final static String setCreateCourseContent = BASE_URL.concat("createcoursecontent.php");
+    public final static String getCourseContent = BASE_URL.concat("getcoursecontents.php");
     //
-    public final static String setDeleteCourseContent = BASE_URL.concat("deletecoursecontent");
-    public final static String getCourseDetails = BASE_URL.concat("getcourseeditdetails");
+    public final static String setDeleteCourseContent = BASE_URL.concat("deletecoursecontent.php");
+    public final static String getCourseDetails = BASE_URL.concat("getcourseeditdetails.php");
     public static final String SESSION_INFO_ENDPOINT = BASE_URL + "/session";
     public static final String ARCHIVE_START_ENDPOINT = BASE_URL + "/archive/start";
     public static final String ARCHIVE_STOP_ENDPOINT = BASE_URL + "/archive/:archiveId/stop";

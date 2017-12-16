@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -154,6 +155,8 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
             }
         });
 
+        //if ()
+
         if (savedInstanceState == null) {
             ZoomSDK sdk = ZoomSDK.getInstance();
             sdk.initialize(context, Constants.APP_KEY, Constants.APP_SECRET, Constants.WEB_DOMAIN, this);
@@ -226,11 +229,12 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
                                 des.setText(response.getDescription());
                                 des.setMovementMethod(new ScrollingMovementMethod());
 
-                                /*if (meeting.getConnect().equals("1")) {
-                                    buttonColorChange(true);
+
+                                if (meeting.getConnect().equals("1")) {
+                                    _meeting_detail_button_connect.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
                                 } else {
-                                    buttonColorChange(false);
-                                } */
+                                    _meeting_detail_button_connect.setBackgroundColor(ContextCompat.getColor(context, R.color.gray));
+                                }
 
                                 list = response.getMeetingUsers();
                                 adapter.refreshList(list);

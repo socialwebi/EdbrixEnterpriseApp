@@ -140,6 +140,8 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        context = AddFilesActivity.this;
+
         pref = context.getSharedPreferences("MyPref", Context.MODE_PRIVATE);
         editor = pref.edit();
         editor.apply();
@@ -155,7 +157,6 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
         } else {
             fileTypeVal = "document";
         }
-        context = AddFilesActivity.this;
 
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReferenceFromUrl("gs://edbrixcbuilder.appspot.com");

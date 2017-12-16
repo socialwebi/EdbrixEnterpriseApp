@@ -121,6 +121,13 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
         _fab_course = findViewById(R.id.fab_course);
         _fab_meeting = findViewById(R.id.fab_meeting);
 
+        if (savedInstanceState == null) {
+            ZoomSDK sdk = ZoomSDK.getInstance();
+            sdk.initialize(this, Constants.APP_KEY, Constants.APP_SECRET, Constants.WEB_DOMAIN, this);
+        } else {
+            registerMeetingServiceListener();
+        }
+
         courseAdapter = new DashBoardCourseListAdapter(context, courses, new DashBoardCourseListAdapter.DashboardListInterface() {
             @Override
             public void onListSelected(Courses course) {
@@ -153,7 +160,7 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
                 } else {
 
                     String title = meeting.getTitle();
-                    String message = " Time: " + meeting.getStartDateTime() + " - "
+                    String message = "Time: " + meeting.getStartDateTime() + " - "
                             + meeting.getEndDateTime() + "\n";
 
                     if (meeting.getIsFree().equals("1")) {
@@ -233,7 +240,8 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
                         textViewTime.setText(message);
 
                         TextView textViewDes = (TextView) dialog.getCustomView().findViewById(R.id.custom_des);
-                        textViewDes.setText(" " + meeting.getDescription());
+                        if (meeting.getDescription()!=null)
+                            textViewDes.setText(meeting.getDescription());
 
                         ImageButton imageButton = (ImageButton) dialog.getCustomView().findViewById(R.id.custom_cancle);
                         imageButton.setOnClickListener(new View.OnClickListener() {
@@ -340,13 +348,6 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
                 e.printStackTrace();
                 Toast.makeText(DashboardActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show();
             }
-        }
-
-        if (savedInstanceState == null) {
-            ZoomSDK sdk = ZoomSDK.getInstance();
-            sdk.initialize(context, Constants.APP_KEY, Constants.APP_SECRET, Constants.WEB_DOMAIN, this);
-        } else {
-            registerMeetingServiceListener();
         }
 
     }

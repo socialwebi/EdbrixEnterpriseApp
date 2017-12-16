@@ -145,7 +145,7 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
         _live_course_title.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                mTitle = false;
             }
 
             @Override
@@ -163,7 +163,7 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
         _live_course_price.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                mPrice = false;
             }
 
             @Override
@@ -182,7 +182,7 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
         _live_course_image.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                mImage = false;
             }
 
             @Override
@@ -214,7 +214,7 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
         _live_course_button_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mTitle | mPrice | mImage) {
+                /*if (mTitle | mPrice | mImage) {
 
                     new AlertDialog.Builder(context)
                             .setTitle("Are you sure ")
@@ -236,7 +236,8 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
 
                 } else {
                     checkValidations();
-                }
+                }*/
+                checkValidations();
 
             }
         });

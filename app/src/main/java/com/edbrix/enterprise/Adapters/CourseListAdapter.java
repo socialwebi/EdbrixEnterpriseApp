@@ -84,7 +84,7 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             if (course.getInstructor_image_url() != null && !course.getInstructor_image_url().isEmpty()) {
                 Picasso.with(context)
-                        .load(course.getInstructor_image_url())
+                        .load(course.getCourse_image_url())
                         .error(R.drawable.edbrix_logo)
                         .into(courseViewHolder.imgCourseBy);
             }
