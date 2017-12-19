@@ -145,7 +145,6 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="@dimen/app_min_margin"
             android:layout_marginTop="@dimen/app_min_margin"
-            android:padding="@dimen/app_min_padding"
             android:src="@mipmap/right_arrow_start_icon_orange" />
 
     </LinearLayout>

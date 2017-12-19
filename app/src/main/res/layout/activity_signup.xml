@@ -24,6 +24,7 @@
                 android:id="@+id/relativeLayoutLogo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/app_big_margin"
                 android:visibility="visible">
 
                 <TextView
@@ -75,10 +76,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/first_name"
-                    android:textColor="@color/colorMainText"
-                    android:textColorHint="@color/colorHintText"
                     android:imeOptions="actionNext"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:textColor="@color/colorMainText"
+                    android:textColorHint="@color/colorHintText" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -95,10 +96,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/last_name"
-                    android:textColor="@color/colorMainText"
-                    android:textColorHint="@color/colorHintText"
                     android:imeOptions="actionNext"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:textColor="@color/colorMainText"
+                    android:textColorHint="@color/colorHintText" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -114,10 +115,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/email"
-                    android:textColor="@color/colorMainText"
-                    android:textColorHint="@color/colorHintText"
                     android:imeOptions="actionNext"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/colorMainText"
+                    android:textColorHint="@color/colorHintText" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -134,10 +135,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/phone_number"
-                    android:textColor="@color/colorMainText"
-                    android:textColorHint="@color/colorHintText"
                     android:imeOptions="actionNext"
-                    android:inputType="number" />
+                    android:inputType="number"
+                    android:textColor="@color/colorMainText"
+                    android:textColorHint="@color/colorHintText" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -158,20 +159,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/register_button_register"
-                android:layout_marginTop="20dp"
                 android:layout_marginBottom="@dimen/app_big_margin"
+                android:layout_marginTop="20dp"
                 android:gravity="center"
-                android:textSize="16sp"
+                android:text="@string/signin"
                 android:textColor="@color/colorBlueLink"
-                android:text="@string/signin" />
+                android:textSize="16sp" />
 
-        <ProgressBar
-            android:id="@+id/register_progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="invisible"
-            android:indeterminate="true" />
+            <ProgressBar
+                android:id="@+id/register_progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:indeterminate="true"
+                android:visibility="invisible" />
 
         </RelativeLayout>
     </ScrollView>

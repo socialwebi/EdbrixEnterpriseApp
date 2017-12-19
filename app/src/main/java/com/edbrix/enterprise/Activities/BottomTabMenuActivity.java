@@ -80,7 +80,7 @@ public class BottomTabMenuActivity extends BaseActivity {
         LinearLayout tabSetting = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabSettingText = (TextView) tabSetting.findViewById(R.id.tabText);
         tabSettingIcon = (ImageView) tabSetting.findViewById(R.id.tabIcon);
-        tabSettingIcon.setImageResource(R.mipmap.footer_schedule_menu);
+        tabSettingIcon.setImageResource(R.mipmap.footer_setting_menu);
         tabSettingText.setText(getResources().getString(R.string.settings));
         menuTab.getTabAt(2).setCustomView(tabSetting);
 
@@ -105,7 +105,7 @@ public class BottomTabMenuActivity extends BaseActivity {
                         tabCoursesText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorFooterMenuText));
                         break;
                     case 2:
-                        tabSettingIcon.setImageResource(R.mipmap.footer_schedule_menu);
+                        tabSettingIcon.setImageResource(R.mipmap.footer_setting_menu);
                         tabSettingText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorFooterMenuText));
                         break;
 

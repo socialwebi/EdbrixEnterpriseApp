@@ -347,24 +347,28 @@
 
         <ImageView
             android:id="@+id/imgContentPrevBtn"
-            android:layout_width="42dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:padding="@dimen/app_normal_padding"
-            android:visibility="invisible"
+            android:visibility="visible"
             android:src="@mipmap/course_prev_icon" />
 
         <TextView
             android:id="@+id/txtSubmitBtn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="@color/colorAppOrange"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:paddingLeft="@dimen/app_normal_padding"
-            android:paddingRight="@dimen/app_normal_padding"
+            android:paddingLeft="@dimen/app_big_padding"
+            android:paddingRight="@dimen/app_big_padding"
             android:text="@string/submit"
-            android:textColor="@color/colorAppOrange"
-            android:textSize="18sp"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
             android:visibility="visible" />
 
         <LinearLayout
@@ -398,11 +402,12 @@
 
         <ImageView
             android:id="@+id/imgContentNextBtn"
-            android:layout_width="42dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:padding="@dimen/app_normal_padding"
-            android:visibility="invisible"
+            android:visibility="visible"
             android:src="@mipmap/course_next_icon" />
 
 

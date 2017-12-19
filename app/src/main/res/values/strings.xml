@@ -166,7 +166,7 @@
     <string name="error_password_not_match">Password not match </string>
     <string name="error_network"> Check network connection </string>
     <string name="error_files"> Please select a file </string>
-    <string name="error_something_wrong">Something went wrong, Pleae try again</string>
+    <string name="error_something_wrong">Something went wrong, Please try again</string>
     <string name="error_no_files">No files found</string>
 
     <!--WalkThrough-->

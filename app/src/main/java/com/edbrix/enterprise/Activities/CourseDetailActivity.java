@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.edbrix.enterprise.Models.Courses;
 import com.edbrix.enterprise.R;
+import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
 import com.squareup.picasso.Picasso;
 
@@ -151,6 +152,12 @@ public class CourseDetailActivity extends BaseActivity {
                     .load(courseDetailItem.getCourse_image_url())
                     .error(R.drawable.edbrix_logo)
                     .into(courseImage);
+        }
+
+        if (SettingsMy.getActiveUser().getUserType().equals("L")) {
+            fabEdit.setVisibility(View.GONE);
+        } else {
+            fabEdit.setVisibility(View.VISIBLE);
         }
     }
 

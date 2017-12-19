@@ -18,7 +18,6 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:layout_marginRight="15dp"
             android:background="@color/colorActionBar"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
@@ -26,6 +25,8 @@
                 android:id="@+id/relativeLayoutLogo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/app_big_margin"
+                android:layout_marginEnd="@dimen/app_big_margin"
                 android:visibility="visible">
 
                 <TextView
@@ -34,6 +35,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:gravity="center"
+                    android:paddingRight="@dimen/app_big_padding"
                     android:text="@string/create_video_course"
                     android:textColor="@color/colorMainText"
                     android:textSize="20sp" />
@@ -53,43 +55,43 @@
         app:cardCornerRadius="4dp"
         app:cardElevation="7dp"
         app:cardMaxElevation="4dp"
-        app:cardUseCompatPadding="true" >
+        app:cardUseCompatPadding="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:padding="5dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="5dp">
 
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/app_min_padding"
                 android:adjustViewBounds="true"
                 android:cropToPadding="false"
-                android:src="@mipmap/video_icon"/>
+                android:padding="@dimen/app_min_padding"
+                android:src="@mipmap/video_icon" />
 
             <TextView
                 android:id="@+id/create_video"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginLeft="12dp"
                 android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
                 android:text="Add video "
-                android:textSize="18sp"
-                android:gravity="center_vertical" />
+                android:textSize="18sp" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/right_arrow"
-                android:background="@android:color/transparent"
-                android:layout_marginRight="2dp"
                 android:layout_marginEnd="2dp"
-                android:padding="2dp" />
+                android:layout_marginRight="2dp"
+                android:background="@android:color/transparent"
+                android:padding="2dp"
+                android:src="@mipmap/right_arrow" />
 
         </LinearLayout>
 
@@ -103,43 +105,43 @@
         app:cardCornerRadius="4dp"
         app:cardElevation="7dp"
         app:cardMaxElevation="4dp"
-        app:cardUseCompatPadding="true" >
+        app:cardUseCompatPadding="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:padding="5dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="5dp">
 
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="36dp"
-                android:padding="@dimen/app_min_padding"
                 android:adjustViewBounds="true"
                 android:cropToPadding="false"
+                android:padding="@dimen/app_min_padding"
                 android:src="@mipmap/document_icon" />
 
             <TextView
                 android:id="@+id/create_document"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginLeft="12dp"
                 android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
                 android:text="Add document "
-                android:textSize="18sp"
-                android:gravity="center_vertical" />
+                android:textSize="18sp" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/right_arrow"
-                android:background="@android:color/transparent"
-                android:layout_marginRight="2dp"
                 android:layout_marginEnd="2dp"
-                android:padding="2dp" />
+                android:layout_marginRight="2dp"
+                android:background="@android:color/transparent"
+                android:padding="2dp"
+                android:src="@mipmap/right_arrow" />
 
         </LinearLayout>
 
@@ -150,27 +152,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/create_card_document"
-        android:textStyle="bold"
-        android:layout_marginTop="4dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="Content: "/>
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:text="Content: "
+        android:textStyle="bold" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/create_recycler"
-        android:layout_below="@+id/create_text_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/create_text_content"
         android:layout_margin="8dp"
-        android:padding="4dp"/>
+        android:padding="4dp" />
 
     <ProgressBar
         android:id="@+id/create_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
 </RelativeLayout>
