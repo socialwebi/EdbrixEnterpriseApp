@@ -240,7 +240,7 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
                         textViewTime.setText(message);
 
                         TextView textViewDes = (TextView) dialog.getCustomView().findViewById(R.id.custom_des);
-                        if (meeting.getDescription()!=null)
+                        if (meeting.getDescription() != null)
                             textViewDes.setText(meeting.getDescription());
 
                         ImageButton imageButton = (ImageButton) dialog.getCustomView().findViewById(R.id.custom_cancle);
@@ -314,7 +314,7 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
             public void onClick(View view) {
                 _floatingActionMenu.collapse();
                 Intent intent = new Intent(DashboardActivity.this, CreateScheduleActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 205);
             }
         });
 
@@ -532,6 +532,24 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
         DISPLAY_NAME = user != null ? user.getFirstName() : "User";
         int ret = meetingService.joinMeeting(context, meetingNo, DISPLAY_NAME, meetingPassword, opts);
         Log.i("TAG", "onClickBtnJoinMeeting, ret=" + ret);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 205 && resultCode == RESULT_OK) {
+            if (Conditions.isNetworkConnected(DashboardActivity.this)) {
+                getDashBoardList();
+            } else {
+                try {
+                    Snackbar.make(layout, getString(R.string.error_network), Snackbar.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(DashboardActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
 
     }
 }

@@ -20,6 +20,9 @@ public class ResponseData {
     @SerializedName("courses")
     private ArrayList<Courses> coursesList;
 
+    @SerializedName("learnersList")
+    private ArrayList<LearnersData> learnersList;
+
     @SerializedName("courseContents")
     private ArrayList<CourseContents> courseContents;
 
@@ -168,6 +171,13 @@ public class ResponseData {
         this.offset = offset;
     }
 
+    public ArrayList<LearnersData> getLearnersList() {
+        return learnersList;
+    }
+
+    public void setLearnersList(ArrayList<LearnersData> learnersList) {
+        this.learnersList = learnersList;
+    }
 
     @Override
     public String toString() {

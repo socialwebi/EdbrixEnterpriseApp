@@ -203,7 +203,7 @@
             app:fab_colorPressed="@color/white_pressed"
             app:fab_icon="@mipmap/footer_course_menu_active"
             app:fab_size="mini"
-            app:fab_title=" Add Course   " />
+            app:fab_title="@string/create_course" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_meeting"
@@ -213,7 +213,7 @@
             app:fab_colorPressed="@color/white_pressed"
             app:fab_icon="@mipmap/footer_calendar_menu_active"
             app:fab_size="mini"
-            app:fab_title="Add Schedule" />
+            app:fab_title="@string/set_availability" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 

@@ -22,6 +22,8 @@ public class Constants {
     public final static String submitDataType_MultiChoice = "multichoice";
     public final static String submitDataType_ImageChoice = "imagechoice";
     public final static String submitDataType_LongAnswer = "longanswer";
+    public final static String availabilityType_TrainingSession = "TS";
+    public final static String availabilityType_ZOOM = "ZOOM";
 
 
     // TOKBOX
@@ -65,6 +67,9 @@ public class Constants {
     public final static String getInstructorResources = BASE_URL.concat("getinstructorresources.php");
     public final static String getCourseSections = BASE_URL.concat("getcoursesections.php");
     public final static String getConnectivityTypes = BASE_URL.concat("getconnectivitytypes.php");
+    public final static String createAvailability = BASE_URL.concat("createavailibility.php");
+    public final static String assignAvailabilityLearnersList = BASE_URL.concat("assignavailabilitylearnerslist.php");
+    public final static String assignLearnerToAvailability = BASE_URL.concat("assignlearnertoavailability.php");
     public final static String setCreateCourse = BASE_URL.concat("createcourse.php");
     public final static String setCreateCourseContent = BASE_URL.concat("createcoursecontent.php");
     public final static String getCourseContent = BASE_URL.concat("getcoursecontents.php");

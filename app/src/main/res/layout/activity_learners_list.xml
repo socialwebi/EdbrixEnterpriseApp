@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.edbrix.enterprise.Activities.LearnersListActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:visibility="visible">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorActionBar"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutLogo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/app_big_margin"
+                android:layout_marginLeft="@dimen/app_big_margin"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:paddingRight="@dimen/app_big_padding"
+                    android:paddingLeft="@dimen/app_big_padding"
+                    android:text="@string/invite_learner"
+                    android:textColor="@color/colorMainText"
+                    android:textSize="20sp" />
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:id="@+id/upperLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/appBarLayout"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/app_normal_padding">
+
+        <TextView
+            android:id="@+id/limitText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/app_normal_margin"
+            android:text="Max Limit : 2"
+            android:textColor="@color/colorMainText"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/learnerListRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonsLayout"
+        android:layout_below="@+id/upperLayout"
+        tools:listitem="@layout/learner_list_item" />
+
+    <LinearLayout
+        android:id="@+id/buttonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/btnSkip"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/app_min_margin"
+            android:layout_weight="1"
+            android:background="@color/colorAppOrange"
+            android:text="@string/skip"
+            android:textColor="@color/colorWhite" />
+
+        <Button
+            android:id="@+id/btnInvite"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/app_min_margin"
+            android:layout_weight="1"
+            android:background="@color/colorAppOrange"
+            android:text="@string/invite"
+            android:textColor="@color/colorWhite" />
+    </LinearLayout>
+
+</RelativeLayout>
