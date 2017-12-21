@@ -333,6 +333,17 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
                     _live_course_image.setText(fileName);
                 }
                 break;
+            case 1:
+                if (resultCode == RESULT_OK && data != null &&
+                        data.getExtras() != null) {
+                    courseId = data.getStringExtra("newCourseId");
+                    if (courseId != null && courseId.length() > 0) {
+                        _create_live_title.setText(R.string.edit_live_course);
+                        visibleCode(true);
+                        getCourse();
+                    }
+                    break;
+                }
 
         }
     }
@@ -350,14 +361,14 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
             intent.putExtra("title", courseName);
             intent.putExtra("price", coursePrice);
             intent.putExtra("courseId", courseId);
-            startActivity(intent);
+            startActivityForResult(intent, 1);
         } else {
             _live_course_title.setError(null);
             Intent intent = new Intent(CreateLiveCourseActivity.this, CreateVideoCourseActivity.class);
             intent.putExtra("title", courseName);
             intent.putExtra("price", coursePrice);
             intent.putExtra("courseId", courseId);
-            startActivity(intent);
+            startActivityForResult(intent, 1);
         }
     }
 
@@ -493,8 +504,7 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
 
                             Intent intent = new Intent(CreateLiveCourseActivity.this, CreateVideoCourseActivity.class);
                             intent.putExtra("courseId", courseId);
-                            startActivity(intent);
-                            finish();
+                            startActivityForResult(intent, 1);
 
                         } else {
                             try {

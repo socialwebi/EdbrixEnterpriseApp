@@ -267,7 +267,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
             _add_file_button_submit.setClickable(false);
         } else {
             _add_file_progress_layout.setVisibility(View.GONE);
-            _add_file_button_submit.setText("Submit");
+            _add_file_button_submit.setText(getResources().getString(R.string.upload));
             _add_file_button_submit.setClickable(true);
         }
     }
@@ -277,7 +277,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
 
         if (fileName.isEmpty()) {
             _add_file_file_title.setError(getString(R.string.error_edit_text));
-        } else if (filePath.toString().isEmpty()) {
+        } else if (filePath == null || filePath.toString().isEmpty()) {
             _add_file_file_title.setError(null);
             try {
                 Snackbar.make(layout, getString(R.string.error_files), Snackbar.LENGTH_LONG).show();
@@ -547,7 +547,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
 
                                                 Intent intent = new Intent();
                                                 intent.putExtra("newCourseId", courseId);
-                                                setResult(1, intent);
+                                                setResult(RESULT_OK, intent);
                                                 finish();
 
                                             }

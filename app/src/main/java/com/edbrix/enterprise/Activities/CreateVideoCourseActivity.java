@@ -98,7 +98,7 @@ public class CreateVideoCourseActivity extends BaseActivity {
                 intent.putExtra("price", price);
                 intent.putExtra("type", "2");
                 intent.putExtra("courseId", courseId);
-                startActivityForResult(intent, 2);
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -133,6 +133,15 @@ public class CreateVideoCourseActivity extends BaseActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent();
+        intent.putExtra("newCourseId", courseId);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     @Override

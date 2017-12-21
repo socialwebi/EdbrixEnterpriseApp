@@ -47,7 +47,7 @@ public class ParticipantListAdapter extends RecyclerView.Adapter<ParticipantList
         if (position % 2 == 1) {
             holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWhiteSmoke));
         } else {
-            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorDivider));
+            holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorActionBar));
         }
 
         holder.name.setText(meeting.get(position).getName());

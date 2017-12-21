@@ -89,6 +89,7 @@
             android:layout_weight="1"
             android:background="@color/colorAppOrange"
             android:text="@string/skip"
+            android:visibility="gone"
             android:textColor="@color/colorWhite" />
 
         <Button

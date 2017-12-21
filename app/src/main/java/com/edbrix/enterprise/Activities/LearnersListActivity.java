@@ -29,6 +29,7 @@ import com.edbrix.enterprise.Utils.Constants;
 import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
+import com.edbrix.enterprise.commons.AlertDialogManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -103,6 +104,24 @@ public class LearnersListActivity extends BaseActivity implements SearchView.OnQ
                 finish();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        getAlertDialogManager().Dialog(R.string.app_name, "Are you sure want to discontinue?", true, new AlertDialogManager.onTwoButtonClickListner() {
+            @Override
+            public void onNegativeClick() {
+
+            }
+
+            @Override
+            public void onPositiveClick() {
+                setResult(RESULT_OK);
+                finish();
+            }
+        }).show();
     }
 
     /**

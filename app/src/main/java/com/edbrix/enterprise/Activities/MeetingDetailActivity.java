@@ -146,9 +146,13 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
                             }
                         }
                     } else {
-                        Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(meeting.getConnectURL()));
-                        context.startActivity(i);
+                        if(meeting.getConnectURL()!=null && meeting.getConnectURL().length()>0) {
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(meeting.getConnectURL()));
+                            context.startActivity(i);
+                        }else{
+                            showToast("Connection URL not found. Please try again later.");
+                        }
                     }
                 }
 
