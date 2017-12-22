@@ -61,6 +61,7 @@ public class Constants {
     public final static String getMeetingDetails = BASE_URL.concat("getmeetingdetails.php");
     public final static String getDashboardCourseSchedules = BASE_URL.concat("getdashboardcourseandschedules.php");
     public final static String playCourseContent = BASE_URL.concat("playcoursecontent.php");
+    public final static String getCourseContentList = BASE_URL.concat("getcoursecontentslist.php");
 
 //	truefalse, singlechoice, multichoice ,imagechoice ,longanswer ,fillinblanks
     public final static String playCourseContentSubmit = BASE_URL.concat("playcoursecontentsubmit.php");

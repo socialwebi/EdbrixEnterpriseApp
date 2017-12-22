@@ -47,5 +47,7 @@
     <dimen name="archiving_indicator_end_margin">4dp</dimen>
     <dimen name="archiving_indicator_top_margin">4dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">176dp</dimen>
 
 </resources>

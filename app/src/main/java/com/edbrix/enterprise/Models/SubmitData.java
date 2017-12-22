@@ -27,6 +27,11 @@ public class SubmitData {
 
     private String question_id;
 
+    @SerializedName("isanswerrequired")
+    private int isAnswerRequired;
+
+    private boolean answerRequired;
+
     private String next_question_id;
 
     private String prev_question_id;
@@ -104,6 +109,18 @@ public class SubmitData {
 
     public void setPrev_question_id(String prev_question_id) {
         this.prev_question_id = prev_question_id;
+    }
+
+    public int getIsAnswerRequired() {
+        return isAnswerRequired;
+    }
+
+    public void setIsAnswerRequired(int isAnswerRequired) {
+        this.isAnswerRequired = isAnswerRequired;
+    }
+
+    public boolean isAnswerRequired() {
+        return answerRequired = (isAnswerRequired == 1) ? true : false;
     }
 
     @Override

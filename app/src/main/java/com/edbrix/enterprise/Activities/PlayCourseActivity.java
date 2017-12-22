@@ -36,6 +36,7 @@ import com.edbrix.enterprise.Interfaces.ImageChoiceActionListener;
 import com.edbrix.enterprise.Models.ChoicesData;
 import com.edbrix.enterprise.Models.ChoicesInputData;
 import com.edbrix.enterprise.Models.Courses;
+import com.edbrix.enterprise.Models.GetCourseContentListResponseData;
 import com.edbrix.enterprise.Models.ImageContentData;
 import com.edbrix.enterprise.Models.PlayCourseContentResponseData;
 import com.edbrix.enterprise.Models.User;
@@ -56,10 +57,6 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import timber.log.Timber;
-
-//import com.nostra13.universalimageloader.core.ImageLoader;
-//import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
-
 
 public class PlayCourseActivity extends BaseActivity {
 
@@ -120,6 +117,8 @@ public class PlayCourseActivity extends BaseActivity {
     private int questionIndex = 0;
 
     private JSONArray mJSONArray;
+
+    private boolean isAnswerRequired;
 
 //    private ImageLoader imageLoader; // Get singleton instance
 
@@ -202,7 +201,12 @@ public class PlayCourseActivity extends BaseActivity {
             //set Course Details
 //            setCourseDetails();
             showBusyProgress();
-            getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), "0", "0");
+            if (SettingsMy.getActiveUser().getUserType().equals("L")) {
+                imgContentNextBtn.setVisibility(View.INVISIBLE);
+            } else {
+                imgContentNextBtn.setVisibility(View.VISIBLE);
+            }
+            getCourseContentList(SettingsMy.getActiveUser(), courseItem.getId());
         } else {
             //show message and finish activity
         }
@@ -219,6 +223,57 @@ public class PlayCourseActivity extends BaseActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Get course content list from server and load data
+     *
+     * @param activeUser Object of User class ie. logged active user.
+     * @param courseId   CourseId i.e. Id of selected Course
+     */
+    private void getCourseContentList(final User activeUser, String courseId) {
+        try {
+
+            JSONObject jo = new JSONObject();
+
+            jo.put("UserId", activeUser.getId());
+            jo.put("AccessToken", activeUser.getAccessToken());
+            jo.put("CourseId", courseId);
+
+
+//        if (BuildConfig.DEBUG) Timber.d("getCourseList Request Param: %s", jo.toString());
+
+            GsonRequest<GetCourseContentListResponseData> getCourseContentListRequest = new GsonRequest<>(Request.Method.POST, Constants.getCourseContentList, jo.toString(), GetCourseContentListResponseData.class,
+                    new Response.Listener<GetCourseContentListResponseData>() {
+                        @Override
+                        public void onResponse(@NonNull GetCourseContentListResponseData response) {
+//                        Timber.d("response: %s", response.toString());
+                            Log.v("ResponseData", response.toString());
+
+                            if (response.getErrorMessage() != null && response.getErrorMessage().length() > 0) {
+//                            Timber.d("Error: %s", response.getErrorCode());
+                                hideBusyProgress();
+                                showToast(response.getErrorMessage());
+                            } else {
+                                getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), response.getJumpContentId(), "0");
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    hideBusyProgress();
+                    Timber.d("Error: %s", error.getMessage());
+                    showToast(SettingsMy.getErrorMessage(error));
+                }
+            });
+            getCourseContentListRequest.setRetryPolicy(Application.getDefaultRetryPolice());
+            getCourseContentListRequest.setShouldCache(false);
+            Application.getInstance().addToRequestQueue(getCourseContentListRequest, "getcoursecontentlist");
+        } catch (JSONException e) {
+            hideBusyProgress();
+            Timber.e(e, "Parse getCourseContentList exception");
+            showToast("Something went wrong. Please try again later.");
         }
     }
 
@@ -395,6 +450,7 @@ public class PlayCourseActivity extends BaseActivity {
 
         timerLayout.setVisibility(View.GONE);
         txtSubmitBtn.setVisibility(View.VISIBLE);
+        txtSubmitBtn.setEnabled(true);
     }
 
     private void setContentData(PlayCourseContentResponseData response) {
@@ -485,13 +541,19 @@ public class PlayCourseActivity extends BaseActivity {
 //        loadWebContent(response.getCourse_content().getWebContent());
 
         if (response.getCourse_content().getSubmit_type().equalsIgnoreCase(Constants.submitType_Check)) {
-            checkSubmit.setVisibility(View.VISIBLE);
+//            checkSubmit.setVisibility(View.VISIBLE);
         } else if (response.getCourse_content().getSubmit_type().equalsIgnoreCase(Constants.submitType_Timer)) {
             checkSubmit.setVisibility(View.GONE);
             startTimer(Integer.parseInt(response.getCourse_content().getSubmit_data().getTime()));
         } else if (response.getCourse_content().getSubmit_type().equalsIgnoreCase(Constants.submitType_Question)) {
             checkSubmit.setVisibility(View.GONE);
 //            txtQuestion.setVisibility(View.VISIBLE);
+            isAnswerRequired = response.getCourse_content().getSubmit_data().isAnswerRequired();
+            if (isAnswerRequired) {
+                txtSubmitBtn.setEnabled(false);
+            } else {
+                txtSubmitBtn.setEnabled(true);
+            }
             txtQuestion.setText("Q. " + response.getCourse_content().getSubmit_data().getTitle());
             loadQuestionTextInWebView("<b>Q. " + response.getCourse_content().getSubmit_data().getTitle() + "</b>");
             if (response.getCourse_content().getSubmit_data().getChoices() != null && response.getCourse_content().getSubmit_data().getChoices().size() > 0) {
@@ -544,6 +606,7 @@ public class PlayCourseActivity extends BaseActivity {
             public void onImageChoiceSelected(ChoicesData choicesData) {
                 choiceInput.clear();
                 choiceInput.add(ChoicesInputData.addChoiceData(choicesData.getId()));
+                txtSubmitBtn.setEnabled(true);
             }
 
             @Override
@@ -577,7 +640,8 @@ public class PlayCourseActivity extends BaseActivity {
                 public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                     int choiceSize = choiceInput.size();
                     if (isChecked) {
-                        showToast("Added Id :" + compoundButton.getId());
+//                        showToast("Added Id :" + compoundButton.getId());
+                        txtSubmitBtn.setEnabled(true);
                         if (choiceSize > 0) {
                             boolean isDuplicateChoice = false;
                             for (int i = 0; i < choiceSize; i++) {
@@ -593,11 +657,18 @@ public class PlayCourseActivity extends BaseActivity {
                             choiceInput.add(ChoicesInputData.addChoiceData("" + compoundButton.getId()));
                         }
                     } else {
-                        showToast("Removed Id :" + compoundButton.getId());
+//                        showToast("Removed Id :" + compoundButton.getId());
                         for (int j = 0; j < choiceSize; j++) {
                             if (choiceInput.get(j).getId().equalsIgnoreCase("" + compoundButton.getId())) {
                                 choiceInput.remove(j);
                                 break;
+                            }
+                        }
+                        if (choiceList.size() == 0) {
+                            if (isAnswerRequired) {
+                                txtSubmitBtn.setEnabled(false);
+                            } else {
+                                txtSubmitBtn.setEnabled(true);
                             }
                         }
                     }
@@ -781,9 +852,13 @@ public class PlayCourseActivity extends BaseActivity {
 
                     }
 
+                    String questionId = "0";
+                    if (playCourseContentResponseData.getCourse_content().getSubmit_data().getQuestion_id() != null && playCourseContentResponseData.getCourse_content().getSubmit_data().getQuestion_id().length() > 0) {
+                        questionId = playCourseContentResponseData.getCourse_content().getSubmit_data().getQuestion_id();
+                    }
                     submitPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(),
                             playCourseContentResponseData.getContent_id(),
-                            playCourseContentResponseData.getCourse_content().getSubmit_data().getQuestion_id(),
+                            questionId,
                             playCourseContentResponseData.getContent_type(),
                             playCourseContentResponseData.getContentcomplete_type_id(),
                             editTxtLongAns.getText().toString(),
@@ -850,6 +925,7 @@ public class PlayCourseActivity extends BaseActivity {
             public void onCheckedChanged(RadioGroup radioGroup, int id) {
                 choiceInput.clear();
                 choiceInput.add(ChoicesInputData.addChoiceData("" + id));
+                txtSubmitBtn.setEnabled(true);
             }
         });
 

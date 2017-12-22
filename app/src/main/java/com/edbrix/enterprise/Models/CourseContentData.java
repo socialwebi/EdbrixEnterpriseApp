@@ -10,11 +10,15 @@ import java.util.ArrayList;
 
 public class CourseContentData {
 
+    private String id;
+
     @SerializedName("title")
     private String title;
 
     @SerializedName("description")
     private String description;
+
+    private String status;
 
     @SerializedName("submit_type")
     private String submit_type;
@@ -39,6 +43,21 @@ public class CourseContentData {
 
     private String assignment_content;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getDescription() {
         return description;

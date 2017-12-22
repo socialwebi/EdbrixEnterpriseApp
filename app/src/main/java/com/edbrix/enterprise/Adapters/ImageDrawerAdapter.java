@@ -50,10 +50,12 @@ public class ImageDrawerAdapter extends RecyclerView.Adapter<ImageDrawerAdapter.
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         if (!isAlreadyLoaded) {
-            Picasso.with(context)
-                    .load(list.get(position).getImg_url())
-                    .error(R.drawable.image_placeholder)
-                    .into(holder.imgChoice);
+            if (list.get(position).getImg_url() != null && !list.get(position).getImg_url().isEmpty()) {
+                Picasso.with(context)
+                        .load(list.get(position).getImg_url())
+                        .error(R.drawable.image_placeholder)
+                        .into(holder.imgChoice);
+            }
             if (position == 0) {
                 holder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorAppOrange));
             }

@@ -524,7 +524,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
                             Timber.d("response: %s", response.toString());
                             setProgressBar(false, "Updating course..");
                             if (response.getErrorCode() == null) {
-
+                                showToast(response.getMessage());
 
                                 new AlertDialog.Builder(context)
                                         .setTitle("Confirmation")
