@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,7 +34,7 @@ public class CourseDetailActivity extends BaseActivity {
     private ImageView btnCoursePlay;
     private ImageView btnCourseMsg;
     private ImageView btnCourseCall;
-
+private Button btnCourseStart;
     private FloatingActionButton fabEdit;
 
     private Context context;
@@ -63,6 +64,20 @@ public class CourseDetailActivity extends BaseActivity {
         btnCoursePlay = (ImageView) findViewById(R.id.btnCoursePlay);
         btnCourseMsg = (ImageView) findViewById(R.id.btnCourseMsg);
         btnCourseCall = (ImageView) findViewById(R.id.btnCourseCall);
+        btnCourseStart = (Button) findViewById(R.id.btnCourseStart);
+
+        btnCourseStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (courseDetailItem != null) {
+                    Intent playCourse = new Intent(context, PlayCourseActivity.class);
+                    playCourse.putExtra(PlayCourseActivity.courseItemBundleKey, courseDetailItem);
+                    startActivity(playCourse);
+                } else {
+
+                }
+            }
+        });
 
         btnCoursePlay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,8 +171,16 @@ public class CourseDetailActivity extends BaseActivity {
 
         if (SettingsMy.getActiveUser().getUserType().equals("L")) {
             fabEdit.setVisibility(View.GONE);
+            btnCourseStart.setVisibility(View.VISIBLE);
+            btnCourseMsg.setVisibility(View.GONE);
+            btnCourseCall.setVisibility(View.GONE);
+            btnCoursePlay.setVisibility(View.GONE);
         } else {
             fabEdit.setVisibility(View.VISIBLE);
+            btnCourseStart.setVisibility(View.GONE);
+            btnCourseMsg.setVisibility(View.VISIBLE);
+            btnCourseCall.setVisibility(View.VISIBLE);
+            btnCoursePlay.setVisibility(View.VISIBLE);
         }
     }
 

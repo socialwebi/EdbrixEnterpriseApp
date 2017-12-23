@@ -1,11 +1,18 @@
 package com.edbrix.enterprise.Activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -29,12 +36,14 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.edbrix.enterprise.Adapters.CoursePlayImagePagerAdapter;
+import com.edbrix.enterprise.Adapters.DrawerContentListAdapter;
 import com.edbrix.enterprise.Adapters.ImageChoiceListAdapter;
 import com.edbrix.enterprise.Adapters.ImageDrawerAdapter;
 import com.edbrix.enterprise.Application;
 import com.edbrix.enterprise.Interfaces.ImageChoiceActionListener;
 import com.edbrix.enterprise.Models.ChoicesData;
 import com.edbrix.enterprise.Models.ChoicesInputData;
+import com.edbrix.enterprise.Models.CourseContentData;
 import com.edbrix.enterprise.Models.Courses;
 import com.edbrix.enterprise.Models.GetCourseContentListResponseData;
 import com.edbrix.enterprise.Models.ImageContentData;
@@ -54,6 +63,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import timber.log.Timber;
@@ -73,6 +83,8 @@ public class PlayCourseActivity extends BaseActivity {
     private RadioGroup radioGroupLayout;
 
     private TextView title;
+    private TextView drawerCourseTitle;
+    private TextView achivmntText;
     private TextView txtContentType;
     private TextView txtContentDesc;
     private TextView txtQuestion;
@@ -120,17 +132,23 @@ public class PlayCourseActivity extends BaseActivity {
 
     private boolean isAnswerRequired;
 
+    private DrawerLayout drawer;
+
+    private RecyclerView menuListDrawerRecylerView;
+
 //    private ImageLoader imageLoader; // Get singleton instance
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_play_course);
+        setContentView(R.layout.layout_drawer);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         title = (TextView) toolbar.findViewById(R.id.title);
+        drawerCourseTitle = (TextView) findViewById(R.id.drawerCourseTitle);
+        achivmntText = (TextView) findViewById(R.id.achivmntText);
         txtContentType = (TextView) findViewById(R.id.txtContentType);
         txtContentDesc = (TextView) findViewById(R.id.txtContentDesc);
         txtQuestion = (TextView) findViewById(R.id.txtQuestion);
@@ -193,19 +211,23 @@ public class PlayCourseActivity extends BaseActivity {
         radioGroupLayout = (RadioGroup) findViewById(R.id.radioGroupLayout);
         imageChoiceListView = (RecyclerView) findViewById(R.id.imageChoiceListView);
         imgDrawerRecyclerView = (RecyclerView) findViewById(R.id.imgDrawerRecyclerView);
+        menuListDrawerRecylerView = (RecyclerView) findViewById(R.id.menuListDrawerRecylerView);
+
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
 
         courseItem = (Courses) getIntent().getSerializableExtra(courseItemBundleKey);
 
         if (courseItem != null) {
             title.setText(courseItem.getTitle());
+            drawerCourseTitle.setText(courseItem.getTitle());
             //set Course Details
 //            setCourseDetails();
             showBusyProgress();
-            if (SettingsMy.getActiveUser().getUserType().equals("L")) {
-                imgContentNextBtn.setVisibility(View.INVISIBLE);
-            } else {
-                imgContentNextBtn.setVisibility(View.VISIBLE);
-            }
             getCourseContentList(SettingsMy.getActiveUser(), courseItem.getId());
         } else {
             //show message and finish activity
@@ -224,6 +246,21 @@ public class PlayCourseActivity extends BaseActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+
+    private void showDrawerContentList(final ArrayList<CourseContentData> contentDataArrayList) {
+        DrawerContentListAdapter drawerContentListAdapter = new DrawerContentListAdapter(PlayCourseActivity.this, contentDataArrayList, new DrawerContentListAdapter.ContentListActionListener() {
+            @Override
+            public void onListItemSelected(int position, CourseContentData contentData) {
+                achivmntText.setText("" + (position + 1) + "/" + contentDataArrayList.size());
+                drawer.closeDrawer(GravityCompat.START);
+                showBusyProgress();
+                getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), contentData.getId(), "0");
+            }
+        });
+        menuListDrawerRecylerView.setLayoutManager(new LinearLayoutManager(PlayCourseActivity.this));
+        menuListDrawerRecylerView.setAdapter(drawerContentListAdapter);
     }
 
     /**
@@ -247,7 +284,7 @@ public class PlayCourseActivity extends BaseActivity {
             GsonRequest<GetCourseContentListResponseData> getCourseContentListRequest = new GsonRequest<>(Request.Method.POST, Constants.getCourseContentList, jo.toString(), GetCourseContentListResponseData.class,
                     new Response.Listener<GetCourseContentListResponseData>() {
                         @Override
-                        public void onResponse(@NonNull GetCourseContentListResponseData response) {
+                        public void onResponse(@NonNull final GetCourseContentListResponseData response) {
 //                        Timber.d("response: %s", response.toString());
                             Log.v("ResponseData", response.toString());
 
@@ -256,7 +293,59 @@ public class PlayCourseActivity extends BaseActivity {
                                 hideBusyProgress();
                                 showToast(response.getErrorMessage());
                             } else {
-                                getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), response.getJumpContentId(), "0");
+                                if (response.isShowDrawerContents()) {
+
+                                    if (response.getCourseContentList() != null)
+                                        showDrawerContentList(response.getCourseContentList());
+
+                                    drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                                } else {
+                                    drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                                }
+
+                                if (SettingsMy.getActiveUser().getUserType().equals("L")) {
+                                    if (response.getJumpContentId().equals("0")) {
+                                        if (response.getCourseContentList() != null)
+                                            setQuestionAchievementIndex("0", response.getCourseContentList());
+
+                                        getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), response.getJumpContentId(), "0");
+                                    } else {
+                                        new AlertDialog.Builder(PlayCourseActivity.this)
+                                                .setTitle(courseItem.getTitle())
+                                                .setMessage("Resume or start over course?")
+                                                .setCancelable(false)
+                                                .setPositiveButton("Resume", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                        if (response.getCourseContentList() != null)
+                                                            setQuestionAchievementIndex(response.getJumpContentId(), response.getCourseContentList());
+
+                                                        getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), response.getJumpContentId(), "0");
+                                                    }
+                                                })
+                                                .setNegativeButton("Start Over", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int i) {
+                                                        dialog.dismiss();
+
+                                                        if (response.getCourseContentList() != null)
+                                                            setQuestionAchievementIndex("0", response.getCourseContentList());
+
+                                                        getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), "0", "0");
+
+                                                    }
+                                                })
+                                                .show();
+                                    }
+                                } else {
+
+                                    if (response.getCourseContentList() != null)
+                                        setQuestionAchievementIndex("0", response.getCourseContentList());
+
+                                    getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), response.getJumpContentId(), "0");
+                                }
                             }
                         }
                     }, new Response.ErrorListener() {
@@ -274,6 +363,31 @@ public class PlayCourseActivity extends BaseActivity {
             hideBusyProgress();
             Timber.e(e, "Parse getCourseContentList exception");
             showToast("Something went wrong. Please try again later.");
+        }
+    }
+
+    private void setQuestionAchievementIndex(String contentId, ArrayList<CourseContentData> contentDataArrayList) {
+        int index = 0;
+
+        if (contentId.equals("0")) {
+            achivmntText.setText("1/" + contentDataArrayList.size());
+            setSelectedCheckedItem(0);
+        } else {
+            for (int i = 0; i < contentDataArrayList.size(); i++) {
+                if (contentDataArrayList.get(i).getId().equalsIgnoreCase(contentId)) {
+                    achivmntText.setText("" + (i + 1) + "/" + contentDataArrayList.size());
+                   setSelectedCheckedItem(i);
+                    break;
+                }
+            }
+        }
+
+    }
+
+    private void setSelectedCheckedItem(int position) {
+        if (((DrawerContentListAdapter) menuListDrawerRecylerView.getAdapter()) != null) {
+            ((DrawerContentListAdapter) menuListDrawerRecylerView.getAdapter()).setChecked(position);
+            ((DrawerContentListAdapter) menuListDrawerRecylerView.getAdapter()).setSelected(position);
         }
     }
 
@@ -477,6 +591,11 @@ public class PlayCourseActivity extends BaseActivity {
         } else {
             imgContentNextBtn.setVisibility(View.VISIBLE);
         }
+        if (SettingsMy.getActiveUser().getUserType().equals("L")) {
+            imgContentNextBtn.setVisibility(View.INVISIBLE);
+        } else {
+            imgContentNextBtn.setVisibility(View.VISIBLE);
+        }
 
         choiceInput = new ArrayList<>();
 //        txtContentDesc.setText(Html.fromHtml(response.getCourse_content().getDescription()));
@@ -664,7 +783,7 @@ public class PlayCourseActivity extends BaseActivity {
                                 break;
                             }
                         }
-                        if (choiceList.size() == 0) {
+                        if (choiceInput.size() == 0) {
                             if (isAnswerRequired) {
                                 txtSubmitBtn.setEnabled(false);
                             } else {

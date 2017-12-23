@@ -12,6 +12,7 @@ public class Constants {
     public final static String contentType_Iframe = "IC";
     public final static String contentType_Survey = "SV";
     public final static String contentType_Test = "TEST";
+    public final static String contentType_Section = "sec";
     public final static String docContentType_File = "file";
     public final static String docContentType_Img = "img";
     public final static String submitType_Check = "check";

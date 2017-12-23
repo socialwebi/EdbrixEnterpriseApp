@@ -360,7 +360,7 @@
             android:id="@+id/txtSubmitBtn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@color/colorAppOrange"
+            android:background="@drawable/background_enable_disable"
             android:layout_centerInParent="true"
             android:gravity="center"
             android:paddingLeft="@dimen/app_big_padding"

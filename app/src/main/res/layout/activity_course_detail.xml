@@ -108,6 +108,18 @@
                         android:layout_centerVertical="true"
                         android:orientation="horizontal">
 
+                        <Button
+                            android:id="@+id/btnCourseStart"
+                            android:layout_width="wrap_content"
+                            android:background="@color/colorAppOrange"
+                            android:text="@string/start_course"
+                            android:layout_marginRight="@dimen/app_normal_margin"
+                            android:layout_marginTop="@dimen/app_min_margin"
+                            android:padding="@dimen/app_normal_padding"
+                            android:textColor="@color/colorWhite"
+                            android:visibility="gone"
+                            android:layout_height="wrap_content" />
+
                         <ImageView
                             android:id="@+id/btnCoursePlay"
                             android:layout_width="48dp"

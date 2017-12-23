@@ -26,7 +26,18 @@
             android:layout_marginBottom="@dimen/app_min_margin"
             android:layout_marginTop="@dimen/app_min_margin"
             android:padding="@dimen/app_min_padding"
+            android:visibility="visible"
             android:src="@mipmap/play_course_icon" />
+
+        <ImageView
+            android:id="@+id/btnCourseMsgL"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginBottom="@dimen/app_min_margin"
+            android:layout_marginTop="@dimen/app_min_margin"
+            android:padding="@dimen/app_min_padding"
+            android:visibility="gone"
+            android:src="@mipmap/message_course_icon" />
 
     </LinearLayout>
 
@@ -94,6 +105,18 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnCourseStart"
+                        android:layout_width="wrap_content"
+                        android:background="@color/colorAppOrange"
+                        android:text="@string/start_"
+                        android:layout_marginRight="@dimen/app_min_margin"
+                        android:layout_marginBottom="@dimen/app_min_margin"
+                        android:padding="2dp"
+                        android:visibility="gone"
+                        android:textColor="@color/colorWhite"
+                        android:layout_height="36dp" />
 
                     <ImageView
                         android:id="@+id/btnCourseMsg"

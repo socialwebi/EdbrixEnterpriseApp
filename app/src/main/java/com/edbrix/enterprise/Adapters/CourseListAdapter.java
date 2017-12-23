@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
@@ -18,6 +19,7 @@ import com.edbrix.enterprise.Interfaces.OnLoadMoreListener;
 import com.edbrix.enterprise.Models.Courses;
 import com.edbrix.enterprise.R;
 import com.edbrix.enterprise.Utils.RoundedImageView;
+import com.edbrix.enterprise.Volley.SettingsMy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -116,6 +118,20 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             });
 
+            courseViewHolder.btnCourseMsgL.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    courseListActionListener.onCourseMessageClick(course.getInstructor_mobileno());
+                }
+            });
+
+            courseViewHolder.btnCourseStart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    courseListActionListener.onCoursePlayClick(course);
+                }
+            });
+
             courseViewHolder.btnCoursePlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -164,8 +180,10 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private TextView txtCourseDesc;
         private ImageView btnCoursePlay;
         private ImageView btnCourseMsg;
+        private ImageView btnCourseMsgL;
         private ImageView btnCourseCall;
         private ImageView btnGoDetail;
+        private Button btnCourseStart;
         private RoundedImageView imgCourseBy;
         private RatingBar setRating;
 
@@ -179,12 +197,35 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             btnCoursePlay = itemView.findViewById(R.id.btnCoursePlay);
             btnCourseMsg = itemView.findViewById(R.id.btnCourseMsg);
+            btnCourseMsgL = itemView.findViewById(R.id.btnCourseMsgL);
             btnCourseCall = itemView.findViewById(R.id.btnCourseCall);
             btnGoDetail = itemView.findViewById(R.id.btnGoDetail);
+            btnCourseStart = itemView.findViewById(R.id.btnCourseStart);
 
             imgCourseBy = itemView.findViewById(R.id.imgCourseBy);
 
             setRating = itemView.findViewById(R.id.setRating);
+
+            if(SettingsMy.getActiveUser().getUserType().equalsIgnoreCase("L")){
+                btnCoursePlay.setVisibility(View.GONE);
+                btnCourseMsg.setVisibility(View.GONE);
+                btnCourseCall.setVisibility(View.GONE);
+
+                btnCourseMsgL.setVisibility(View.VISIBLE);
+                btnCourseStart.setVisibility(View.VISIBLE);
+
+                txtCourseName.setTextColor(ContextCompat.getColor(context,R.color.colorMainText));
+
+            }else{
+                btnCoursePlay.setVisibility(View.VISIBLE);
+                btnCourseMsg.setVisibility(View.VISIBLE);
+                btnCourseCall.setVisibility(View.VISIBLE);
+
+                btnCourseMsgL.setVisibility(View.GONE);
+                btnCourseStart.setVisibility(View.GONE);
+
+                txtCourseName.setTextColor(ContextCompat.getColor(context,R.color.colorAppOrange));
+            }
         }
     }
 

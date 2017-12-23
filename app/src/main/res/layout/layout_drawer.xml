@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
+
+    <include
+        layout="@layout/activity_play_course"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:layout_width="260dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/colorWhite"
+        android:backgroundTint="@color/colorWhite"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorSubText"
+            android:gravity="bottom"
+            android:orientation="vertical"
+            android:padding="@dimen/app_normal_padding"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+            <!--<ImageView-->
+            <!--android:id="@+id/imageView"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:paddingTop="@dimen/nav_header_vertical_spacing"-->
+            <!--app:srcCompat="@mipmap/ic_launcher" />-->
+
+            <TextView
+                android:id="@+id/drawerCourseTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/nav_header_vertical_spacing"
+                android:text="Android Studio"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/app_min_margin"
+                    android:layout_marginRight="@dimen/app_min_margin"
+                    android:layout_weight="1"
+                    android:textColor="@color/colorWhite"
+                    android:text="@string/achievement_progress" />
+
+                <TextView
+                    android:id="@+id/achivmntText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/colorMainText"
+                    android:padding="@dimen/app_min_padding"
+                    android:text="0/0"
+                    android:textColor="@color/colorWhite"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/menuListDrawerRecylerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            tools:listitem="@layout/drawer_content_list_item" />
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/colorWhite"
+            android:text=""
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <!--  <android.support.design.widget.NavigationView
+          android:id="@+id/nav_view"
+          android:layout_width="260dp"
+          android:layout_height="wrap_content"
+          android:layout_gravity="start"
+          android:background="@color/colorWhite"
+          android:backgroundTint="@color/colorWhite"
+          android:fitsSystemWindows="true"
+          app:headerLayout="@null"
+          app:menu="@null"/>-->
+
+
+    <!-- app:headerLayout="@menu/navigation_header"-->
+    <!-- app:menu="@menu/activity_main_drawer"-->
+
+</android.support.v4.widget.DrawerLayout>

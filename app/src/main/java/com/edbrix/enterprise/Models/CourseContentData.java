@@ -20,6 +20,8 @@ public class CourseContentData {
 
     private String status;
 
+    private String type;
+
     @SerializedName("submit_type")
     private String submit_type;
 
@@ -42,6 +44,10 @@ public class CourseContentData {
     private String iframe_content;
 
     private String assignment_content;
+
+    private boolean isSelected;
+
+    private boolean isChecked;
 
     public String getId() {
         return id;
@@ -153,6 +159,30 @@ public class CourseContentData {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
     }
 
     @Override
