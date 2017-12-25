@@ -89,10 +89,11 @@
         <Button
             android:id="@+id/btnBack"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@color/colorWhite"
-            android:text=""
-            android:visibility="gone"/>
+            android:layout_height="56dp"
+            android:background="@color/colorActionBar"
+            android:text="@string/back"
+            android:textColor="@color/colorMainText"
+            android:visibility="visible"/>
 
     </LinearLayout>
 

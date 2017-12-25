@@ -305,7 +305,7 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
             public void onClick(View view) {
                 _floatingActionMenu.collapse();
                 Intent intent = new Intent(DashboardActivity.this, CreateLiveCourseActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,205);
             }
         });
 

@@ -65,10 +65,10 @@ public class DrawerContentListAdapter extends RecyclerView.Adapter<DrawerContent
         if (contentList.get(position).isSelected()) {
             holder.statusImg.setVisibility(View.VISIBLE);
             holder.statusImg.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.edit_pencil_orange));
-        } else if(contentList.get(position).isChecked()) {
+        } else if (contentList.get(position).isChecked() && !contentList.get(position).getType().equalsIgnoreCase(Constants.contentType_Section)) {
             holder.statusImg.setVisibility(View.VISIBLE);
-            holder.statusImg.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.checked_orange));
-        }else{
+            holder.statusImg.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.checked_orange));
+        } else {
             holder.statusImg.setVisibility(View.GONE);
         }
 

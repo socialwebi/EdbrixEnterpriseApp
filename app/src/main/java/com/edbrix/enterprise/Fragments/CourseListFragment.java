@@ -49,7 +49,7 @@ import timber.log.Timber;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CourseListFragment extends BaseFragment implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener{
+public class CourseListFragment extends BaseFragment implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
 
     private Context context;
     private RecyclerView courseListRecyclerView;
@@ -313,7 +313,7 @@ public class CourseListFragment extends BaseFragment implements SearchView.OnQue
             for (Courses courseItem : coursesArrayList) {
                 //or use .equal(text) with you want equal match
                 //use .toLowerCase() for better matches
-                if (courseItem.getTitle().toLowerCase().contains(text)) {
+                if (courseItem.getTitle() != null && courseItem.getTitle().toLowerCase().contains(text)) {
                     temp.add(courseItem);
                 }
             }

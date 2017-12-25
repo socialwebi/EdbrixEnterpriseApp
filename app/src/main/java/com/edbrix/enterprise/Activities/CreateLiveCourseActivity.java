@@ -278,6 +278,7 @@ public class CreateLiveCourseActivity extends BaseActivity implements EasyPermis
         if (newID != null) {
             editor.putString("newCourseId", null);
             editor.apply();
+            setResult(RESULT_OK);
             finish();
         }
 

@@ -16,11 +16,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -56,6 +59,7 @@ import com.edbrix.enterprise.Utils.CustomWebView;
 import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
+import com.edbrix.enterprise.commons.AlertDialogManager;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -90,6 +94,7 @@ public class PlayCourseActivity extends BaseActivity {
     private TextView txtQuestion;
     private TextView txtTimer;
     private TextView txtSubmitBtn;
+    private TextView txtSkipBtn;
     private TextView txtSurveyProgress;
 
     private EditText editTxtLongAns;
@@ -136,6 +141,10 @@ public class PlayCourseActivity extends BaseActivity {
 
     private RecyclerView menuListDrawerRecylerView;
 
+    private Button btnBack;
+
+    private ArrayList<CourseContentData> courseContentDataList;
+
 //    private ImageLoader imageLoader; // Get singleton instance
 
     @Override
@@ -153,12 +162,15 @@ public class PlayCourseActivity extends BaseActivity {
         txtContentDesc = (TextView) findViewById(R.id.txtContentDesc);
         txtQuestion = (TextView) findViewById(R.id.txtQuestion);
         txtSubmitBtn = (TextView) findViewById(R.id.txtSubmitBtn);
+        txtSkipBtn = (TextView) findViewById(R.id.txtSkipBtn);
         editTxtLongAns = (EditText) findViewById(R.id.editTxtLongAns);
         txtTimer = (TextView) findViewById(R.id.txtTimer);
         txtSurveyProgress = (TextView) findViewById(R.id.txtSurveyProgress);
 
         imgPrevBtn = (ImageView) findViewById(R.id.imgPrevBtn);
         imgNextBtn = (ImageView) findViewById(R.id.imgNextBtn);
+
+        btnBack = (Button) findViewById(R.id.btnBack);
 
         imgContentPrevBtn = (ImageView) findViewById(R.id.imgContentPrevBtn);
         imgContentNextBtn = (ImageView) findViewById(R.id.imgContentNextBtn);
@@ -250,13 +262,14 @@ public class PlayCourseActivity extends BaseActivity {
 
 
     private void showDrawerContentList(final ArrayList<CourseContentData> contentDataArrayList) {
+        courseContentDataList = contentDataArrayList;
         DrawerContentListAdapter drawerContentListAdapter = new DrawerContentListAdapter(PlayCourseActivity.this, contentDataArrayList, new DrawerContentListAdapter.ContentListActionListener() {
             @Override
             public void onListItemSelected(int position, CourseContentData contentData) {
                 achivmntText.setText("" + (position + 1) + "/" + contentDataArrayList.size());
                 drawer.closeDrawer(GravityCompat.START);
                 showBusyProgress();
-                getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), contentData.getId(), "0");
+                getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), contentData.getId(), "0", "0");
             }
         });
         menuListDrawerRecylerView.setLayoutManager(new LinearLayoutManager(PlayCourseActivity.this));
@@ -309,7 +322,7 @@ public class PlayCourseActivity extends BaseActivity {
                                         if (response.getCourseContentList() != null)
                                             setQuestionAchievementIndex("0", response.getCourseContentList());
 
-                                        getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), response.getJumpContentId(), "0");
+                                        getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), response.getJumpContentId(), "0", "0");
                                     } else {
                                         new AlertDialog.Builder(PlayCourseActivity.this)
                                                 .setTitle(courseItem.getTitle())
@@ -322,7 +335,7 @@ public class PlayCourseActivity extends BaseActivity {
                                                         if (response.getCourseContentList() != null)
                                                             setQuestionAchievementIndex(response.getJumpContentId(), response.getCourseContentList());
 
-                                                        getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), response.getJumpContentId(), "0");
+                                                        getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), response.getJumpContentId(), "0", "0");
                                                     }
                                                 })
                                                 .setNegativeButton("Start Over", new DialogInterface.OnClickListener() {
@@ -333,7 +346,8 @@ public class PlayCourseActivity extends BaseActivity {
                                                         if (response.getCourseContentList() != null)
                                                             setQuestionAchievementIndex("0", response.getCourseContentList());
 
-                                                        getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), "0", "0");
+                                                        // set start over as 1 for starting course from start
+                                                        getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), "0", "0", "1");
 
                                                     }
                                                 })
@@ -344,7 +358,7 @@ public class PlayCourseActivity extends BaseActivity {
                                     if (response.getCourseContentList() != null)
                                         setQuestionAchievementIndex("0", response.getCourseContentList());
 
-                                    getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), response.getJumpContentId(), "0");
+                                    getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), response.getJumpContentId(), "0", "0");
                                 }
                             }
                         }
@@ -376,7 +390,7 @@ public class PlayCourseActivity extends BaseActivity {
             for (int i = 0; i < contentDataArrayList.size(); i++) {
                 if (contentDataArrayList.get(i).getId().equalsIgnoreCase(contentId)) {
                     achivmntText.setText("" + (i + 1) + "/" + contentDataArrayList.size());
-                   setSelectedCheckedItem(i);
+                    setSelectedCheckedItem(i);
                     break;
                 }
             }
@@ -399,7 +413,7 @@ public class PlayCourseActivity extends BaseActivity {
      * @param contentId  ContentId i.e. Id of content from Course
      * @param questionId QuestionId i.e. default question id of Course
      */
-    private void getPlayCourseContent(final User activeUser, String courseId, String contentId, String questionId) {
+    private void getPlayCourseContent(final User activeUser, String courseId, String contentId, String questionId, String startOver) {
         try {
 
             JSONObject jo = new JSONObject();
@@ -409,6 +423,7 @@ public class PlayCourseActivity extends BaseActivity {
             jo.put("courseId", courseId);
             jo.put("contentId", contentId);
             jo.put("questionId", questionId);
+            jo.put("startOver", startOver);
 
 
 //            jo.put("UserId", "1");
@@ -499,7 +514,9 @@ public class PlayCourseActivity extends BaseActivity {
                                 hideBusyProgress();
                                 showToast(response.getErrorMessage());
                             } else {
-                                getPlayCourseContent(SettingsMy.getActiveUser(), courseId, response.getNext_content_id(), response.getQuestion_id());
+                                setQuestionAchievementIndex(response.getNext_content_id(), courseContentDataList);
+
+                                getPlayCourseContent(SettingsMy.getActiveUser(), courseId, response.getNext_content_id(), response.getQuestion_id(), "0");
                             }
                         }
                     }, new Response.ErrorListener() {
@@ -565,6 +582,8 @@ public class PlayCourseActivity extends BaseActivity {
         timerLayout.setVisibility(View.GONE);
         txtSubmitBtn.setVisibility(View.VISIBLE);
         txtSubmitBtn.setEnabled(true);
+
+        txtSkipBtn.setVisibility(View.GONE);
     }
 
     private void setContentData(PlayCourseContentResponseData response) {
@@ -672,6 +691,10 @@ public class PlayCourseActivity extends BaseActivity {
                 txtSubmitBtn.setEnabled(false);
             } else {
                 txtSubmitBtn.setEnabled(true);
+
+                if(SettingsMy.getActiveUser().getUserType().equals("L")) {
+                    txtSkipBtn.setVisibility(View.VISIBLE);
+                }
             }
             txtQuestion.setText("Q. " + response.getCourse_content().getSubmit_data().getTitle());
             loadQuestionTextInWebView("<b>Q. " + response.getCourse_content().getSubmit_data().getTitle() + "</b>");
@@ -1015,14 +1038,27 @@ public class PlayCourseActivity extends BaseActivity {
                             playCourseContentResponseData.getContent_type().equalsIgnoreCase(Constants.contentType_Survey)) &&
                             !playCourseContentResponseData.getCourse_content().getSubmit_data().getNext_question_id().equalsIgnoreCase("0")) {
                         showBusyProgress();
-                        getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), playCourseContentResponseData.getContent_id(), playCourseContentResponseData.getCourse_content().getSubmit_data().getNext_question_id());
+
+                        setQuestionAchievementIndex(playCourseContentResponseData.getContent_id(), courseContentDataList);
+
+                        getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), playCourseContentResponseData.getContent_id(), playCourseContentResponseData.getCourse_content().getSubmit_data().getNext_question_id(), "0");
                         questionIndex++;
                     } else {
                         showBusyProgress();
-                        getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), playCourseContentResponseData.getNext_content_id(), "0");
+
+                        setQuestionAchievementIndex(playCourseContentResponseData.getNext_content_id(), courseContentDataList);
+
+                        getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), playCourseContentResponseData.getNext_content_id(), "0", "0");
                         questionIndex = 0;
                     }
                 }
+            }
+        });
+
+        txtSkipBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               imgContentNextBtn.callOnClick();
             }
         });
 
@@ -1034,7 +1070,10 @@ public class PlayCourseActivity extends BaseActivity {
                     showToast(playCourseContentResponseData.getErrorMessage());
                 } else {
                     showBusyProgress();
-                    getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), playCourseContentResponseData.getPrev_content_id(), "0");
+
+                    setQuestionAchievementIndex(playCourseContentResponseData.getPrev_content_id(), courseContentDataList);
+
+                    getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), playCourseContentResponseData.getPrev_content_id(), "0", "0");
                 }
             }
         });
@@ -1077,6 +1116,45 @@ public class PlayCourseActivity extends BaseActivity {
             @Override
             public void onPageScrollStateChanged(int state) {
                 Log.v("AudioRecorder", "onPageScrollStateChanged : state : " + state);
+            }
+        });
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getAlertDialogManager().Dialog(courseItem.getTitle(), "Confirm to discontinue..?", "YES", "CANCEL", new AlertDialogManager.onTwoButtonClickListner() {
+                    @Override
+                    public void onNegativeClick() {
+
+                    }
+
+                    @Override
+                    public void onPositiveClick() {
+                        finish();
+                    }
+                }).show();
+            }
+        });
+
+        editTxtLongAns.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!charSequence.toString().isEmpty() && charSequence.toString().trim().length() > 0) {
+                    txtSubmitBtn.setEnabled(true);
+                } else {
+                    txtSubmitBtn.setEnabled(false);
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
 
