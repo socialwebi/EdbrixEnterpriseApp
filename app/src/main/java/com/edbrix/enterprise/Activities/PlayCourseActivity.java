@@ -514,9 +514,18 @@ public class PlayCourseActivity extends BaseActivity {
                                 hideBusyProgress();
                                 showToast(response.getErrorMessage());
                             } else {
-                                setQuestionAchievementIndex(response.getNext_content_id(), courseContentDataList);
 
-                                getPlayCourseContent(SettingsMy.getActiveUser(), courseId, response.getNext_content_id(), response.getQuestion_id(), "0");
+                                if (response.getStatus() != null && response.getStatus().equalsIgnoreCase("2")) {
+                                    // course end
+                                    showToast("Course completed successfully...");
+                                    finish();
+                                } else {
+
+                                    setQuestionAchievementIndex(response.getNext_content_id(), courseContentDataList);
+
+                                    getPlayCourseContent(SettingsMy.getActiveUser(), courseId, response.getNext_content_id(), response.getQuestion_id(), "0");
+                                }
+
                             }
                         }
                     }, new Response.ErrorListener() {
@@ -692,7 +701,7 @@ public class PlayCourseActivity extends BaseActivity {
             } else {
                 txtSubmitBtn.setEnabled(true);
 
-                if(SettingsMy.getActiveUser().getUserType().equals("L")) {
+                if (SettingsMy.getActiveUser().getUserType().equals("L")) {
                     txtSkipBtn.setVisibility(View.VISIBLE);
                 }
             }
@@ -995,8 +1004,10 @@ public class PlayCourseActivity extends BaseActivity {
                     }
 
                     String questionId = "0";
-                    if (playCourseContentResponseData.getCourse_content().getSubmit_data().getQuestion_id() != null && playCourseContentResponseData.getCourse_content().getSubmit_data().getQuestion_id().length() > 0) {
-                        questionId = playCourseContentResponseData.getCourse_content().getSubmit_data().getQuestion_id();
+                    if (playCourseContentResponseData.getCourse_content().getSubmit_data() != null) {
+                        if (playCourseContentResponseData.getCourse_content().getSubmit_data().getQuestion_id() != null && playCourseContentResponseData.getCourse_content().getSubmit_data().getQuestion_id().length() > 0) {
+                            questionId = playCourseContentResponseData.getCourse_content().getSubmit_data().getQuestion_id();
+                        }
                     }
                     submitPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(),
                             playCourseContentResponseData.getContent_id(),
@@ -1058,7 +1069,7 @@ public class PlayCourseActivity extends BaseActivity {
         txtSkipBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               imgContentNextBtn.callOnClick();
+                imgContentNextBtn.callOnClick();
             }
         });
 
