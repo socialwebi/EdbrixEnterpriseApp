@@ -59,6 +59,7 @@
 
 
     <ScrollView
+        android:id="@+id/playScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottomBtnLayout"
@@ -269,7 +270,7 @@
                         android:layout_weight="0.1"
                         android:contentDescription="@string/app_name"
                         android:padding="@dimen/app_min_padding"
-                        android:src="@mipmap/left_arrow_start_icon_orange" />
+                        android:src="@mipmap/prev_arrow_icon_orange" />
 
                     <!--    <android.support.v4.view.ViewPager
                             android:id="@+id/view_pager"
@@ -293,7 +294,7 @@
                         android:layout_weight="0.1"
                         android:contentDescription="@string/app_name"
                         android:padding="@dimen/app_min_padding"
-                        android:src="@mipmap/right_arrow_start_icon_orange" />
+                        android:src="@mipmap/next_arrow_icon_orange" />
                 </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView

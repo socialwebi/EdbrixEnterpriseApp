@@ -111,7 +111,7 @@
                         <Button
                             android:id="@+id/btnCourseStart"
                             android:layout_width="wrap_content"
-                            android:background="@color/colorAppOrange"
+                            android:background="@drawable/background_enable_disable"
                             android:text="@string/start_course"
                             android:layout_marginRight="@dimen/app_normal_margin"
                             android:layout_marginTop="@dimen/app_min_margin"

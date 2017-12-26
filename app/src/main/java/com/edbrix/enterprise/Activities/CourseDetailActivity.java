@@ -34,7 +34,7 @@ public class CourseDetailActivity extends BaseActivity {
     private ImageView btnCoursePlay;
     private ImageView btnCourseMsg;
     private ImageView btnCourseCall;
-private Button btnCourseStart;
+    private Button btnCourseStart;
     private FloatingActionButton fabEdit;
 
     private Context context;
@@ -175,6 +175,8 @@ private Button btnCourseStart;
             btnCourseMsg.setVisibility(View.GONE);
             btnCourseCall.setVisibility(View.GONE);
             btnCoursePlay.setVisibility(View.GONE);
+            btnCourseStart.setEnabled(courseDetailItem.isContentAvailable());
+
         } else {
             fabEdit.setVisibility(View.VISIBLE);
             btnCourseStart.setVisibility(View.GONE);

@@ -33,6 +33,7 @@ import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -143,6 +144,8 @@ public class PlayCourseActivity extends BaseActivity {
 
     private Button btnBack;
 
+    private ScrollView playScrollView;
+
     private ArrayList<CourseContentData> courseContentDataList;
 
 //    private ImageLoader imageLoader; // Get singleton instance
@@ -245,6 +248,8 @@ public class PlayCourseActivity extends BaseActivity {
             //show message and finish activity
         }
 
+        playScrollView = (ScrollView) findViewById(R.id.playScrollView);
+        playScrollView.smoothScrollTo(0, 0);
         setListeners();
 
     }
@@ -399,7 +404,7 @@ public class PlayCourseActivity extends BaseActivity {
     }
 
     private void setSelectedCheckedItem(int position) {
-        if (((DrawerContentListAdapter) menuListDrawerRecylerView.getAdapter()) != null) {
+        if (menuListDrawerRecylerView.getAdapter() != null) {
             ((DrawerContentListAdapter) menuListDrawerRecylerView.getAdapter()).setChecked(position);
             ((DrawerContentListAdapter) menuListDrawerRecylerView.getAdapter()).setSelected(position);
         }
@@ -694,15 +699,18 @@ public class PlayCourseActivity extends BaseActivity {
             startTimer(Integer.parseInt(response.getCourse_content().getSubmit_data().getTime()));
         } else if (response.getCourse_content().getSubmit_type().equalsIgnoreCase(Constants.submitType_Question)) {
             checkSubmit.setVisibility(View.GONE);
+            txtSubmitBtn.setEnabled(false);
 //            txtQuestion.setVisibility(View.VISIBLE);
+
             isAnswerRequired = response.getCourse_content().getSubmit_data().isAnswerRequired();
+
             if (isAnswerRequired) {
-                txtSubmitBtn.setEnabled(false);
+//                txtSubmitBtn.setEnabled(false);
             } else {
-                txtSubmitBtn.setEnabled(true);
+//                txtSubmitBtn.setEnabled(true);
 
                 if (SettingsMy.getActiveUser().getUserType().equals("L")) {
-                    txtSkipBtn.setVisibility(View.VISIBLE);
+//                    txtSkipBtn.setVisibility(View.VISIBLE);
                 }
             }
             txtQuestion.setText("Q. " + response.getCourse_content().getSubmit_data().getTitle());
@@ -900,6 +908,13 @@ public class PlayCourseActivity extends BaseActivity {
 
     private void loadImageContent(Context context, ArrayList<ImageContentData> imageContentList, boolean showThumbnailList) {
         if (imageContentList != null && imageContentList.size() > 0) {
+            if (imageContentList.size() == 1) {
+                imgPrevBtn.setVisibility(View.INVISIBLE);
+                imgNextBtn.setVisibility(View.INVISIBLE);
+            } else {
+                imgPrevBtn.setVisibility(View.INVISIBLE);
+                imgNextBtn.setVisibility(View.VISIBLE);
+            }
             //load image slider at upper side
             imagePagerAdapter = new CoursePlayImagePagerAdapter(getSupportFragmentManager(), imageContentList);
             if (imageContentList.get(0).getImg_url() != null && !imageContentList.get(0).getImg_url().isEmpty()) {
@@ -1170,4 +1185,11 @@ public class PlayCourseActivity extends BaseActivity {
         });
 
     }
+
+    @Override
+    public void onBackPressed() {
+        btnBack.callOnClick();
+    }
 }
+
+

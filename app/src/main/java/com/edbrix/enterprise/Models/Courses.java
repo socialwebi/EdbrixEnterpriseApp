@@ -37,8 +37,16 @@ public class Courses implements Serializable {
 
     @SerializedName("accesscode")
     private String code;
+
     private String price;
+
     private String coursecategoryId;
+
+    @SerializedName("iscontentavailable")
+    private int iscontentavailable;
+
+    private boolean contentAvailable;
+
     @SerializedName("courseCategoryList")
     private ArrayList<CourseContents> courseCategory;
 
@@ -148,6 +156,18 @@ public class Courses implements Serializable {
 
     public void setCourseCategory(ArrayList<CourseContents> courseCategory) {
         this.courseCategory = courseCategory;
+    }
+
+    public int getIscontentavailable() {
+        return iscontentavailable;
+    }
+
+    public void setIscontentavailable(int iscontentavailable) {
+        this.iscontentavailable = iscontentavailable;
+    }
+
+    public boolean isContentAvailable() {
+        return contentAvailable = (iscontentavailable == 1) ? true : false;
     }
 
     public String getErrorCode() {

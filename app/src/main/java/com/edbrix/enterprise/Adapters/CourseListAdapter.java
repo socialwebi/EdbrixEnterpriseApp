@@ -82,6 +82,7 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             courseViewHolder.txtCourseName.setText(course.getTitle());
             courseViewHolder.txtCourseBy.setText("By " + course.getInstructor_name());
             courseViewHolder.txtCourseDesc.setText(course.getDescription());
+            courseViewHolder.btnCourseStart.setEnabled(course.isContentAvailable());
 //        courseViewHolder.setRating.setRating(Float.valueOf("2.5"));
 
             if (course.getInstructor_image_url() != null && !course.getInstructor_image_url().isEmpty()) {
