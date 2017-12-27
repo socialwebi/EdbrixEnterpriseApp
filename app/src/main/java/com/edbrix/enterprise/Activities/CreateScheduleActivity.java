@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.edbrix.enterprise.Adapters.RegularSpinnerAdapter;
 import com.edbrix.enterprise.Application;
 import com.edbrix.enterprise.BuildConfig;
 import com.edbrix.enterprise.Models.User;
@@ -36,6 +38,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -100,15 +103,33 @@ public class CreateScheduleActivity extends BaseActivity {
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         );
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this, R.array.minutes, R.layout.custom_text_layout);
-        adapter.setDropDownViewResource(R.layout.custom_text_layout);
-        _create_schedule_minutes.setAdapter(adapter);
+        RegularSpinnerAdapter timespanSpinnerAdapter = new RegularSpinnerAdapter(context);
+        ArrayList<String> timeSpanList = new ArrayList<>();
+        for(int i=0;i<getResources().getStringArray(R.array.minutes).length;i++){
+            timeSpanList.add(getResources().getStringArray(R.array.minutes)[i]);
+        }
+        timespanSpinnerAdapter.addItems(timeSpanList);
+        _create_schedule_minutes.setAdapter(timespanSpinnerAdapter);
+        _create_schedule_minutes.setSelection(2);
 
-        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(
-                this, R.array.availability, R.layout.custom_text_layout);
-        adapter2.setDropDownViewResource(R.layout.custom_text_layout);
-        _create_schedule_availability.setAdapter(adapter2);
+//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+//                this, R.array.minutes, R.layout.custom_text_layout);
+//        adapter.setDropDownViewResource(R.layout.custom_text_layout);
+//        _create_schedule_minutes.setAdapter(adapter);
+//        _create_schedule_minutes.setSelection(2);
+
+//        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(
+//                this, R.array.availability, R.layout.custom_text_layout);
+//        adapter2.setDropDownViewResource(R.layout.custom_text_layout);
+
+        RegularSpinnerAdapter availabilitySpinnerAdapter = new RegularSpinnerAdapter(context);
+        ArrayList<String> availabilityList = new ArrayList<>();
+
+        for(int i=0;i<getResources().getStringArray(R.array.availability).length;i++){
+            availabilityList.add(getResources().getStringArray(R.array.availability)[i]);
+        }
+        availabilitySpinnerAdapter.addItems(availabilityList);
+        _create_schedule_availability.setAdapter(availabilitySpinnerAdapter);
 
         /********* display current time on screen Start ********/
 
