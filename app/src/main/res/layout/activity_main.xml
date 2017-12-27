@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:visibility="invisible"
-        android:src="@drawable/black_overlay_background" />
+        android:src="@drawable/black_overlay_background"
+        android:visibility="invisible" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,67 +19,70 @@
         android:background="#90ffffff"
         android:padding="@dimen/app_min_padding">
 
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/main_image_logo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/app_normal_margin"
-        android:contentDescription="@string/image_logo"
-        android:padding="@dimen/app_big_padding"
-        android:src="@drawable/edbrix_logo" />
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/main_image_logo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/app_normal_margin"
+            android:contentDescription="@string/image_logo"
+            android:padding="@dimen/app_big_padding"
+            android:src="@drawable/edbrix_logo" />
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/main_text_view_welcome_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/main_image_logo"
-        android:layout_margin="@dimen/app_normal_margin"
-        android:gravity="center"
-        android:text="@string/welcome_title"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/main_text_view_welcome_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/main_image_logo"
+            android:layout_margin="@dimen/app_normal_margin"
+            android:gravity="center"
+            android:text="@string/welcome_title"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:typeface="normal" />
 
         <!-- @color/colorWhite -->
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/main_text_view_welcome_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_margin="@dimen/app_normal_margin"
-        android:layout_below="@+id/main_text_view_welcome_title"
-        android:text="@string/welcome_description"
-        android:textSize="14sp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="8dp"
-        android:orientation="horizontal">
-
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/main_button_login"
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/main_text_view_welcome_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_color"
-            android:layout_weight="1"
-            android:padding="@dimen/app_normal_padding"
-            android:layout_margin="@dimen/app_min_margin"
-            android:text="@string/signin"
-            android:textColor="@color/colorMainText" />
+            android:layout_below="@+id/main_text_view_welcome_title"
+            android:layout_margin="@dimen/app_normal_margin"
+            android:gravity="center"
+            android:text="@string/welcome_description"
+            android:textSize="14sp" />
 
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/main_button_register"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/app_min_margin"
-            android:background="@color/colorAppOrange"
-            android:layout_weight="1"
-            android:padding="@dimen/app_normal_padding"
-            android:text="@string/signup"
-            android:textColor="@android:color/white" />
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal">
 
-    </LinearLayout>
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/main_button_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/app_min_margin"
+                android:layout_weight="1"
+                android:background="@drawable/border_color"
+                android:padding="@dimen/app_normal_padding"
+                android:text="@string/signin"
+                android:textColor="@color/colorMainText"
+                android:typeface="monospace" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/main_button_register"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/app_min_margin"
+                android:layout_weight="1"
+                android:background="@color/colorAppOrange"
+                android:padding="@dimen/app_normal_padding"
+                android:text="@string/signup"
+                android:textColor="@android:color/white"
+                android:typeface="monospace" />
+
+        </LinearLayout>
     </RelativeLayout>
 </FrameLayout>

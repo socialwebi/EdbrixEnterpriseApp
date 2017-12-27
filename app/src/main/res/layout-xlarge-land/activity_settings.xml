@@ -32,11 +32,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:paddingRight="@dimen/app_big_margin"
                     android:gravity="center"
+                    android:paddingRight="@dimen/app_big_margin"
                     android:text="@string/settings"
                     android:textColor="@color/colorMainText"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:typeface="monospace" />
 
             </RelativeLayout>
 
@@ -90,8 +91,9 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/app_normal_margin"
                         android:text="@string/name"
+                        android:textSize="22sp"
                         android:textStyle="bold"
-                        android:textSize="22sp" />
+                        android:typeface="monospace" />
 
                     <TextView
                         android:id="@+id/settings_text_user_email"
@@ -100,7 +102,8 @@
                         android:layout_margin="@dimen/app_normal_margin"
                         android:text="@string/email"
                         android:textColor="@color/colorAppOrange"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        android:typeface="monospace" />
 
                 </LinearLayout>
 
@@ -130,8 +133,9 @@
                     android:drawablePadding="10dp"
                     android:drawableStart="@android:drawable/ic_menu_upload"
                     android:gravity="center_vertical"
+                    android:text="@string/change_profile"
                     android:textSize="18sp"
-                    android:text="@string/change_profile" />
+                    android:typeface="monospace" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -169,8 +173,9 @@
                     android:drawablePadding="10dp"
                     android:drawableStart="@android:drawable/ic_menu_edit"
                     android:gravity="center_vertical"
+                    android:text="@string/edit_profile"
                     android:textSize="18sp"
-                    android:text="@string/edit_profile" />
+                    android:typeface="monospace" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -208,8 +213,9 @@
                     android:drawablePadding="10dp"
                     android:drawableStart="@mipmap/change_password"
                     android:gravity="center_vertical"
+                    android:text="@string/change_password"
                     android:textSize="18sp"
-                    android:text="@string/change_password" />
+                    android:typeface="monospace" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -247,8 +253,9 @@
                     android:drawablePadding="10dp"
                     android:drawableStart="@mipmap/tour"
                     android:gravity="center_vertical"
+                    android:text="@string/app_tour"
                     android:textSize="18sp"
-                    android:text="@string/app_tour" />
+                    android:typeface="monospace" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -288,8 +295,9 @@
                     android:drawablePadding="10dp"
                     android:drawableStart="@mipmap/share"
                     android:gravity="center_vertical"
+                    android:text="@string/share"
                     android:textSize="18sp"
-                    android:text="@string/share" />
+                    android:typeface="monospace" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -327,8 +335,9 @@
                     android:drawablePadding="10dp"
                     android:drawableStart="@mipmap/logout"
                     android:gravity="center_vertical"
+                    android:text="@string/logout"
                     android:textSize="18sp"
-                    android:text="@string/logout" />
+                    android:typeface="monospace" />
 
                 <ImageView
                     android:layout_width="wrap_content"

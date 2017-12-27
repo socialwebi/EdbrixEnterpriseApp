@@ -14,6 +14,7 @@ public class LearnersData {
     @SerializedName("fullName")
     private String fullName;
 
+    @SerializedName("email")
     private String email;
 
     private boolean checked;

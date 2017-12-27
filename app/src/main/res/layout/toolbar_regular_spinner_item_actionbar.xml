@@ -12,13 +12,13 @@
         android:layout_height="@dimen/abc_action_button_min_height_material"
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
+        android:drawableEnd="@drawable/zm_listview_dropdown"
+        android:drawablePadding="@dimen/app_min_padding"
+        android:drawableRight="@drawable/zm_btn_dropdown"
         android:gravity="center_vertical"
         android:padding="@dimen/app_normal_padding"
         android:textColor="@color/colorMainText"
-        android:drawablePadding="@dimen/app_min_padding"
-        android:drawableEnd="@drawable/zm_listview_dropdown"
-        android:drawableRight="@drawable/zm_btn_dropdown"
-        android:textSize="18sp" />
+        android:typeface="monospace" />
 
 
 </LinearLayout>

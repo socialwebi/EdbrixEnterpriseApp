@@ -33,7 +33,8 @@
             android:inputType="textEmailAddress"
             android:textColor="@color/colorMainText"
             android:textColorHint="@color/colorHintText"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:typeface="monospace" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -56,7 +57,8 @@
             android:inputType="textPassword"
             android:textColor="@color/colorMainText"
             android:textColorHint="@color/colorHintText"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:typeface="monospace" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -70,7 +72,8 @@
         android:background="@color/colorDisableBtn"
         android:padding="@dimen/app_normal_padding"
         android:text="@string/login"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:typeface="monospace" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/login_text_view_forgot_password"
@@ -81,7 +84,8 @@
         android:gravity="center"
         android:text="@string/forgot_password_"
         android:textColor="@color/colorBlueLink"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:typeface="monospace" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/login_text_view_register"
@@ -94,7 +98,8 @@
         android:padding="@dimen/app_normal_padding"
         android:text="@string/new_account"
         android:textAllCaps="true"
-        android:textColor="@color/colorBlack" />
+        android:textColor="@color/colorBlack"
+        android:typeface="monospace" />
 
     <ProgressBar
         android:id="@+id/login_progress_bar"

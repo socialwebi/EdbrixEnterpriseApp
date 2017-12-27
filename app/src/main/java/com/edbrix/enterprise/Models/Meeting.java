@@ -20,6 +20,7 @@ public class Meeting implements Serializable {
     private String endDateTime;
     private String connectType;
     private String meetingId;
+    private String meetingToken;
     private String connectURL;
     private String type;
     private String connect;
@@ -167,6 +168,7 @@ public class Meeting implements Serializable {
         this.meetingUsers = meetingUsers;
     }
 
+
     public String getIsPaid() {
         return isPaid;
     }
@@ -175,6 +177,13 @@ public class Meeting implements Serializable {
         this.isPaid = isPaid;
     }
 
+    public String getMeetingToken() {
+        return meetingToken;
+    }
+
+    public void setMeetingToken(String meetingToken) {
+        this.meetingToken = meetingToken;
+    }
 
     @Override
     public String toString() {

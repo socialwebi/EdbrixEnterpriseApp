@@ -157,7 +157,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
-        android:text="Content: "
+        android:text="Course Content: "
         android:textStyle="bold" />
 
     <android.support.v7.widget.RecyclerView

@@ -61,6 +61,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="Mathematic"
+                android:typeface="monospace"
                 android:textColor="@color/colorAppOrange"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -97,6 +98,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:text="By John Doe"
+                    android:typeface="monospace"
                     android:textColor="@color/colorMainText"
                     android:textSize="13sp" />
 
@@ -148,6 +150,7 @@
                 android:maxLines="3"
                 android:paddingLeft="@dimen/app_normal_padding"
                 android:paddingRight="@dimen/app_min_margin"
+                android:typeface="monospace"
                 android:text="dfjdkjfdjfkldjfkldjfkldjfkldjfkldjkfdsfdffdfdfdfdfdfdffdfdfdfdfdfdfdfdfdfdsfdfdserewrererefdfdfdfdfdffdfdsfdfdfdfdfdfdfdfdfdfdfdfdlfjdklfjdkljfkldjfkldjfkldjfkldjfkldfdfdfddfdffdfdfdfjfjdlkjfldjkfkljdkljfldkjfkl"
                 android:textColor="@color/colorSubText"
                 android:textSize="12sp" />

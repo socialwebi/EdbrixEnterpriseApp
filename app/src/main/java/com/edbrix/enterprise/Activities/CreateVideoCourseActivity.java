@@ -40,11 +40,11 @@ import timber.log.Timber;
 
 public class CreateVideoCourseActivity extends BaseActivity {
 
-    Context context;
-    RelativeLayout layout;
+    private Context context;
+    private RelativeLayout layout;
 
-    CardView _create_card_video;
-    CardView _create_card_document;
+    private CardView _create_card_video;
+    private CardView _create_card_document;
     RecyclerView _create_recycler;
     ProgressBar _create_progress;
 

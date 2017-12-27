@@ -36,7 +36,8 @@
                     android:paddingRight="@dimen/app_big_padding"
                     android:text="@string/organization_list"
                     android:textColor="@color/colorMainText"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:typeface="monospace" />
 
             </RelativeLayout>
 
@@ -68,14 +69,15 @@
             android:padding="@dimen/app_min_padding"
             android:text="@string/choose_organisation"
             android:textColor="@color/colorAppOrange"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:typeface="monospace" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/organization_recycler"
             android:layout_width="575dp"
             android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
             android:layout_below="@+id/txtChooseOrg"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/app_min_margin"
             android:paddingTop="@dimen/app_normal_padding"
             android:scrollbars="none"

@@ -17,6 +17,6 @@
         android:paddingRight="16dp"
         android:text="Local"
         android:textColor="@color/colorMainText"
-        android:textSize="18sp" />
+        android:typeface="monospace" />
 
 </LinearLayout>

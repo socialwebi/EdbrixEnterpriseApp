@@ -71,7 +71,8 @@
                 android:text="@string/new_account"
                 android:textAllCaps="true"
                 android:textColor="@color/colorWhite"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:typeface="monospace" />
         </RelativeLayout>
 
 
@@ -119,7 +120,8 @@
                     android:text="@string/signin"
                     android:textAllCaps="true"
                     android:textColor="@color/colorMainText"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    android:typeface="monospace" />
 
                 <!--<TextView-->
                 <!--android:layout_width="1dp"-->
@@ -158,7 +160,8 @@
                     android:inputType="textEmailAddress"
                     android:textColor="@color/colorMainText"
                     android:textColorHint="@color/colorHintText"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:typeface="monospace" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -182,7 +185,8 @@
                     android:inputType="textPassword"
                     android:textColor="@color/colorMainText"
                     android:textColorHint="@color/colorHintText"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:typeface="monospace" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -196,9 +200,9 @@
                 android:background="@color/colorDisableBtn"
                 android:padding="@dimen/app_normal_padding"
                 android:text="@string/login"
-                android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                android:typeface="monospace" />
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/login_text_view_forgot_password"
@@ -209,7 +213,8 @@
                 android:gravity="center"
                 android:text="@string/forgot_password_"
                 android:textColor="@color/colorBlueLink"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:typeface="monospace" />
 
             <android.support.v7.widget.AppCompatButton
                 android:layout_width="match_parent"

@@ -146,6 +146,8 @@ public class PlayCourseActivity extends BaseActivity {
 
     private ScrollView playScrollView;
 
+    private Toolbar toolbar;
+
     private ArrayList<CourseContentData> courseContentDataList;
 
 //    private ImageLoader imageLoader; // Get singleton instance
@@ -155,7 +157,7 @@ public class PlayCourseActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_drawer);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         title = (TextView) toolbar.findViewById(R.id.title);
@@ -320,6 +322,12 @@ public class PlayCourseActivity extends BaseActivity {
                                 } else {
                                     drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                                    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            onBackPressed();
+                                        }
+                                    });
                                 }
 
                                 if (SettingsMy.getActiveUser().getUserType().equals("L")) {

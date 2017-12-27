@@ -43,7 +43,8 @@
                         android:paddingRight="@dimen/app_big_padding"
                         android:text="@string/set_availability"
                         android:textColor="@color/colorMainText"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:typeface="monospace" />
 
                 </RelativeLayout>
 
@@ -62,7 +63,8 @@
             android:hint="Enter title"
             android:imeOptions="actionNext"
             android:inputType="textCapSentences|text"
-            android:padding="@dimen/app_normal_padding"/>
+            android:padding="@dimen/app_normal_padding"
+            android:typeface="monospace" />
 
         <EditText
             android:id="@+id/create_schedule_date"
@@ -70,16 +72,17 @@
             android:layout_height="56dp"
             android:layout_margin="@dimen/app_normal_margin"
             android:background="@drawable/border"
+            android:clickable="true"
+            android:drawableEnd="@drawable/dashboard_schedule_icon"
+            android:drawablePadding="@dimen/app_normal_padding"
+            android:drawableRight="@drawable/dashboard_schedule_icon"
+            android:focusable="false"
             android:gravity="center_vertical"
             android:hint="Select Date"
             android:imeOptions="actionNext"
-            android:clickable="true"
-            android:focusable="false"
-            android:drawableEnd="@drawable/dashboard_schedule_icon"
-            android:drawableRight="@drawable/dashboard_schedule_icon"
-            android:drawablePadding="@dimen/app_normal_padding"
             android:inputType="date"
-            android:padding="@dimen/app_normal_padding" />
+            android:padding="@dimen/app_normal_padding"
+            android:typeface="monospace" />
 
 
         <LinearLayout
@@ -93,13 +96,14 @@
                 android:layout_height="56dp"
                 android:layout_margin="@dimen/app_normal_margin"
                 android:layout_weight="1"
-                android:focusable="false"
-                android:clickable="true"
                 android:background="@drawable/border"
+                android:clickable="true"
+                android:focusable="false"
                 android:hint="@string/start_time"
                 android:imeOptions="actionNext"
                 android:inputType="text|time"
-                android:padding="@dimen/app_normal_padding" />
+                android:padding="@dimen/app_normal_padding"
+                android:typeface="monospace" />
 
 
             <Spinner
@@ -131,7 +135,8 @@
             android:hint="Price [Leave blank to free]"
             android:imeOptions="actionNext"
             android:inputType="number"
-            android:padding="@dimen/app_normal_padding" />
+            android:padding="@dimen/app_normal_padding"
+            android:typeface="monospace" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -144,12 +149,13 @@
                 android:layout_height="56dp"
                 android:layout_margin="@dimen/app_normal_margin"
                 android:layout_weight="1"
-                android:text="#d16262"
                 android:background="@drawable/border"
                 android:hint="@string/color_code"
                 android:imeOptions="actionNext"
                 android:inputType="text"
-                android:padding="@dimen/app_normal_padding" />
+                android:padding="@dimen/app_normal_padding"
+                android:text="#d16262"
+                android:typeface="monospace" />
 
             <EditText
                 android:id="@+id/create_schedule_capacity"
@@ -157,29 +163,31 @@
                 android:layout_height="56dp"
                 android:layout_margin="@dimen/app_normal_margin"
                 android:layout_weight="1"
-                android:text="1"
-                android:focusable="false"
                 android:background="@drawable/border"
+                android:focusable="false"
                 android:hint="@string/capacity"
                 android:imeOptions="actionNext"
                 android:inputType="number"
-                android:padding="@dimen/app_normal_padding" />
+                android:padding="@dimen/app_normal_padding"
+                android:text="1"
+                android:typeface="monospace" />
 
         </LinearLayout>
 
         <EditText
             android:id="@+id/create_schedule_description"
             android:layout_width="match_parent"
-            android:background="@drawable/border"
-            android:padding="@dimen/app_normal_padding"
-            android:layout_margin="@dimen/app_normal_margin"
-            android:gravity="start|center_horizontal"
             android:layout_height="150dp"
+            android:layout_margin="@dimen/app_normal_margin"
+            android:background="@drawable/border"
+            android:gravity="start|center_horizontal"
             android:hint="@string/description"
             android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLines="5"
-            android:minLines="3" />
+            android:minLines="3"
+            android:padding="@dimen/app_normal_padding"
+            android:typeface="monospace" />
 
         <Button
             android:id="@+id/btnCreateAvailability"
@@ -188,9 +196,9 @@
             android:layout_margin="@dimen/app_normal_margin"
             android:layout_weight="1"
             android:background="@color/colorAppOrange"
-            android:textSize="18sp"
             android:text="@string/create"
-            android:textColor="@color/colorWhite" />
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp" />
 
 
     </LinearLayout>
