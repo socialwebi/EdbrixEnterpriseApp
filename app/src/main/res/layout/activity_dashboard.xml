@@ -17,7 +17,6 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:layout_marginRight="15dp"
             android:background="@color/colorActionBar"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
@@ -33,9 +32,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
+                    android:paddingLeft="@dimen/app_big_padding"
                     android:text="@string/dashboard"
                     android:textColor="@color/colorMainText"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:typeface="monospace" />
 
             </RelativeLayout>
 
@@ -68,8 +69,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/schedules"
-                    android:textColor="@color/colorSubText"
-                    android:textSize="22sp" />
+                    android:textColor="@color/colorMainText"
+                    android:textSize="22sp"
+                    android:typeface="monospace" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -99,8 +101,10 @@
                 android:gravity="center_vertical"
                 android:padding="15dp"
                 android:text="@string/all_meetings"
+                android:textColor="@color/colorMainText"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:typeface="monospace" />
 
             <LinearLayout
                 android:id="@+id/dashboard_text_courses"
@@ -118,8 +122,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/courses"
-                    android:textColor="@color/colorSubText"
-                    android:textSize="22sp" />
+                    android:textColor="@color/colorMainText"
+                    android:textSize="22sp"
+                    android:typeface="monospace" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -150,8 +155,10 @@
                 android:gravity="center_vertical"
                 android:padding="15dp"
                 android:text="@string/all_courses"
+                android:textColor="@color/colorMainText"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:typeface="monospace" />
 
         </RelativeLayout>
 

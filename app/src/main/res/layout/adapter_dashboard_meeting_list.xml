@@ -18,7 +18,8 @@
         android:text="Meeting 1"
         android:textColor="@color/colorMainText"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:typeface="monospace" />
 
     <TextView
         android:id="@+id/meeting_schedule_time"
@@ -32,6 +33,7 @@
         android:padding="@dimen/app_min_padding"
         android:text="12:30 AM"
         android:textColor="@color/colorSubText"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:typeface="monospace" />
 
 </LinearLayout>
