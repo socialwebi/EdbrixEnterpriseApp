@@ -31,7 +31,9 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.edbrix.enterprise.Activities.DashboardActivity;
 import com.edbrix.enterprise.Activities.MeetingDetailActivity;
+import com.edbrix.enterprise.Activities.TokBoxActivity;
 import com.edbrix.enterprise.Adapters.MeetingListAdapter;
 import com.edbrix.enterprise.Application;
 import com.edbrix.enterprise.BuildConfig;
@@ -155,10 +157,19 @@ public class MeetingListFragment extends BaseFragment implements SearchView.OnQu
                                                 Log.d("TAG", "----JOIN----");
                                                 onClickBtnJoinMeeting();
                                             }
+                                        } else if (meeting.getConnectType().equals(Constants.availabilityType_TrainingSession)) {
+                                            Intent tokboxIntent = new Intent(context, TokBoxActivity.class);
+                                            tokboxIntent.putExtra(Constants.TolkBox_SessionId, meeting.getMeetingId());
+                                            tokboxIntent.putExtra(Constants.TolkBox_Token, meeting.getMeetingToken());
+                                            context.startActivity(tokboxIntent);
                                         } else {
-                                            Intent i = new Intent(Intent.ACTION_VIEW);
-                                            i.setData(Uri.parse(meeting.getConnectURL()));
-                                            context.startActivity(i);
+                                            if (meeting.getConnectURL() != null && meeting.getConnectURL().length() > 0) {
+                                                Intent i = new Intent(Intent.ACTION_VIEW);
+                                                i.setData(Uri.parse(meeting.getConnectURL()));
+                                                context.startActivity(i);
+                                            } else {
+                                                showToast("Connection URL not found. Please try again later.");
+                                            }
                                         }
                                     }
                                 })

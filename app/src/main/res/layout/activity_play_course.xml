@@ -334,6 +334,13 @@
 
             </LinearLayout>
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/sessionEventRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                tools:listitem="@layout/adapter_training_session" />
+
         </LinearLayout>
 
     </ScrollView>

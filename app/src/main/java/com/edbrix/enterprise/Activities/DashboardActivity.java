@@ -180,10 +180,19 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
                                                 Log.d("TAG", "----JOIN----");
                                                 onClickBtnJoinMeeting();
                                             }
+                                        } else if (meeting.getConnectType().equals(Constants.availabilityType_TrainingSession)) {
+                                            Intent tokboxIntent = new Intent(DashboardActivity.this, TokBoxActivity.class);
+                                            tokboxIntent.putExtra(Constants.TolkBox_SessionId, meeting.getMeetingId());
+                                            tokboxIntent.putExtra(Constants.TolkBox_Token, meeting.getMeetingToken());
+                                            context.startActivity(tokboxIntent);
                                         } else {
-                                            Intent i = new Intent(Intent.ACTION_VIEW);
-                                            i.setData(Uri.parse(meeting.getConnectURL()));
-                                            context.startActivity(i);
+                                            if (meeting.getConnectURL() != null && meeting.getConnectURL().length() > 0) {
+                                                Intent i = new Intent(Intent.ACTION_VIEW);
+                                                i.setData(Uri.parse(meeting.getConnectURL()));
+                                                context.startActivity(i);
+                                            } else {
+                                                showToast("Connection URL not found. Please try again later.");
+                                            }
                                         }
                                     }
                                 })
@@ -305,7 +314,7 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
             public void onClick(View view) {
                 _floatingActionMenu.collapse();
                 Intent intent = new Intent(DashboardActivity.this, CreateLiveCourseActivity.class);
-                startActivityForResult(intent,205);
+                startActivityForResult(intent, 205);
             }
         });
 
@@ -384,6 +393,8 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
                                 if (response.getCoursesList() != null) {
                                     courseAdapter.refresh(response.getCoursesList());
                                     courseAdapter.notifyDataSetChanged();
+                                } else {
+                                    _dashboard_text_all_course.setText("No courses available ");
                                 }
                                 if (response.getMeetings() != null) {
                                     meetingAdapter.refresh(response.getMeetings());

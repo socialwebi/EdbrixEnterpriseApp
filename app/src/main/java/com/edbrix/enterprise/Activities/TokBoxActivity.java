@@ -46,7 +46,7 @@ public class TokBoxActivity extends AppCompatActivity implements Session.Session
     private static final String LOG_TAG = TokBoxActivity.class.getSimpleName();
     private static final int RC_SETTINGS_SCREEN_PERM = 123;
     private static final int RC_VIDEO_APP_PERM = 124;
-    private static String API_KEY = "";
+    private static String API_KEY = "45467242";
     private static String SESSION_ID = "";
     private static String TOKEN = "";
     private static RequestQueue reqQueue;
@@ -71,6 +71,9 @@ public class TokBoxActivity extends AppCompatActivity implements Session.Session
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tok_box);
 
+        API_KEY = Constants.TolkBox_APIKey;
+        SESSION_ID = getIntent().getStringExtra(Constants.TolkBox_SessionId);
+        TOKEN = getIntent().getStringExtra(Constants.TolkBox_Token);
 
         mSession = new Session.Builder(this, API_KEY, SESSION_ID).build();
         mSession.setSessionListener(this);

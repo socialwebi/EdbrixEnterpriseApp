@@ -145,12 +145,17 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
                                 startActivity(intent);
                             }
                         }
+                    } else if (meeting.getConnectType().equals(Constants.availabilityType_TrainingSession)) {
+                        Intent tokboxIntent = new Intent(MeetingDetailActivity.this, TokBoxActivity.class);
+                        tokboxIntent.putExtra(Constants.TolkBox_SessionId, meeting.getMeetingId());
+                        tokboxIntent.putExtra(Constants.TolkBox_Token, meeting.getMeetingToken());
+                        startActivity(tokboxIntent);
                     } else {
-                        if(meeting.getConnectURL()!=null && meeting.getConnectURL().length()>0) {
+                        if (meeting.getConnectURL() != null && meeting.getConnectURL().length() > 0) {
                             Intent i = new Intent(Intent.ACTION_VIEW);
                             i.setData(Uri.parse(meeting.getConnectURL()));
                             context.startActivity(i);
-                        }else{
+                        } else {
                             showToast("Connection URL not found. Please try again later.");
                         }
                     }

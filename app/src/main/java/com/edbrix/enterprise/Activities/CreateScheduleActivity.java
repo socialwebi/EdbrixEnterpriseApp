@@ -226,9 +226,7 @@ public class CreateScheduleActivity extends BaseActivity {
             _create_schedule_time.setError(getString(R.string.error_edit_text));
         } else if (colorCode.isEmpty()) {
             _create_schedule_color.setError(getString(R.string.error_edit_text));
-        } else if (description.isEmpty()) {
-            _create_schedule_description.setError(getString(R.string.error_edit_text));
-        } else if (_create_schedule_minutes.getSelectedItemPosition() == 0) {
+        }  else if (_create_schedule_minutes.getSelectedItemPosition() == 0) {
             showToast("Please select Timespan.");
         } else if (_create_schedule_availability.getSelectedItemPosition() == 0) {
             showToast("Please select Availability type.");
@@ -241,6 +239,9 @@ public class CreateScheduleActivity extends BaseActivity {
             showBusyProgress();
             createAvailability("0", "0", title, description, colorCode, capacity, price, connectType, "", date, time, "" + _create_schedule_minutes.getSelectedItem());
         }
+//        else if (description.isEmpty()) {
+//            _create_schedule_description.setError(getString(R.string.error_edit_text));
+//        }
     }
 
     private void createAvailability(String courseId, String Id, String title, String description,

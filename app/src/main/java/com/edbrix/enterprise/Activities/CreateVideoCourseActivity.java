@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -45,8 +46,10 @@ public class CreateVideoCourseActivity extends BaseActivity {
 
     private CardView _create_card_video;
     private CardView _create_card_document;
-    RecyclerView _create_recycler;
-    ProgressBar _create_progress;
+    private RecyclerView _create_recycler;
+    private ProgressBar _create_progress;
+
+    private TextView create_text_content;
 
     private FileListAdapter adapter;
 
@@ -73,6 +76,7 @@ public class CreateVideoCourseActivity extends BaseActivity {
         _create_card_document = findViewById(R.id.create_card_document);
         _create_recycler = findViewById(R.id.create_recycler);
         _create_progress = findViewById(R.id.create_progress);
+        create_text_content = findViewById(R.id.create_text_content);
 
         if (!courseId.equals("0")) {
             getCourseContent();
@@ -193,6 +197,11 @@ public class CreateVideoCourseActivity extends BaseActivity {
                             Timber.d("response: %s", response.toString());
                             if (response.getErrorCode() == null) {
 
+                                if (response.getCourseContents() != null && response.getCourseContents().size() > 0) {
+                                    create_text_content.setVisibility(View.VISIBLE);
+                                } else {
+                                    create_text_content.setVisibility(View.INVISIBLE);
+                                }
                                 adapter.refresh(response.getCourseContents());
                                 adapter.notifyDataSetChanged();
 

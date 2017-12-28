@@ -43,6 +43,7 @@ import com.edbrix.enterprise.Adapters.CoursePlayImagePagerAdapter;
 import com.edbrix.enterprise.Adapters.DrawerContentListAdapter;
 import com.edbrix.enterprise.Adapters.ImageChoiceListAdapter;
 import com.edbrix.enterprise.Adapters.ImageDrawerAdapter;
+import com.edbrix.enterprise.Adapters.SessionEventListAdapter;
 import com.edbrix.enterprise.Application;
 import com.edbrix.enterprise.Interfaces.ImageChoiceActionListener;
 import com.edbrix.enterprise.Models.ChoicesData;
@@ -52,6 +53,7 @@ import com.edbrix.enterprise.Models.Courses;
 import com.edbrix.enterprise.Models.GetCourseContentListResponseData;
 import com.edbrix.enterprise.Models.ImageContentData;
 import com.edbrix.enterprise.Models.PlayCourseContentResponseData;
+import com.edbrix.enterprise.Models.TrainingSessionEventContentData;
 import com.edbrix.enterprise.Models.User;
 import com.edbrix.enterprise.R;
 import com.edbrix.enterprise.Utils.Constants;
@@ -142,6 +144,8 @@ public class PlayCourseActivity extends BaseActivity {
 
     private RecyclerView menuListDrawerRecylerView;
 
+    private RecyclerView sessionEventRecyclerView;
+
     private Button btnBack;
 
     private ScrollView playScrollView;
@@ -229,6 +233,7 @@ public class PlayCourseActivity extends BaseActivity {
         imageChoiceListView = (RecyclerView) findViewById(R.id.imageChoiceListView);
         imgDrawerRecyclerView = (RecyclerView) findViewById(R.id.imgDrawerRecyclerView);
         menuListDrawerRecylerView = (RecyclerView) findViewById(R.id.menuListDrawerRecylerView);
+        sessionEventRecyclerView = (RecyclerView) findViewById(R.id.sessionEventRecyclerView);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -606,6 +611,8 @@ public class PlayCourseActivity extends BaseActivity {
         txtSubmitBtn.setEnabled(true);
 
         txtSkipBtn.setVisibility(View.GONE);
+
+        sessionEventRecyclerView.setVisibility(View.GONE);
     }
 
     private void setContentData(PlayCourseContentResponseData response) {
@@ -695,6 +702,12 @@ public class PlayCourseActivity extends BaseActivity {
             case Constants.contentType_Test:
 //                txtContentType.setText(getString(R.string.test));
                 showSurveyProgress(questionIndex, playCourseContentResponseData.getCourse_content().getSubmit_data().getTotal_question_count());
+                break;
+            case Constants.contentType_TrainingSession:
+//                txtContentType.setText(getString(R.string.test));
+                if (playCourseContentResponseData.getCourse_content().getTrainingSessionEventContentDataList() != null && playCourseContentResponseData.getCourse_content().getTrainingSessionEventContentDataList().size() > 0) {
+                    showSessionEventList(playCourseContentResponseData.getCourse_content().getTrainingSessionEventContentDataList());
+                }
                 break;
         }
 
@@ -1192,6 +1205,19 @@ public class PlayCourseActivity extends BaseActivity {
             }
         });
 
+    }
+
+    private void showSessionEventList(ArrayList<TrainingSessionEventContentData> trainingSessionEventContentDataList) {
+//        courseContentDataList = contentDataArrayList;
+        SessionEventListAdapter sessionEventListAdapter = new SessionEventListAdapter(PlayCourseActivity.this, trainingSessionEventContentDataList, new SessionEventListAdapter.SessionEventItemListener() {
+            @Override
+            public void onSessionEventSelected(TrainingSessionEventContentData sessionEventContentData) {
+
+            }
+        });
+        sessionEventRecyclerView.setVisibility(View.VISIBLE);
+        sessionEventRecyclerView.setLayoutManager(new LinearLayoutManager(PlayCourseActivity.this));
+        sessionEventRecyclerView.setAdapter(sessionEventListAdapter);
     }
 
     @Override

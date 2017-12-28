@@ -13,6 +13,8 @@ public class Constants {
     public final static String contentType_Survey = "SV";
     public final static String contentType_Test = "TEST";
     public final static String contentType_Section = "sec";
+    public final static String contentType_TrainingSession = "TS";
+    public final static String contentType_Event = "Event";
     public final static String docContentType_File = "file";
     public final static String docContentType_Img = "img";
     public final static String submitType_Check = "check";
@@ -25,9 +27,15 @@ public class Constants {
     public final static String submitDataType_LongAnswer = "longanswer";
     public final static String availabilityType_TrainingSession = "TS";
     public final static String availabilityType_ZOOM = "ZOOM";
+    public final static String TolkBox_APIKey= "45467242";
+    public final static String TolkBox_Token= "Token";
+    public final static String TolkBox_SessionId= "SessionId";
 
 
     // TOKBOX
+//    'TOKBOX_API_KEY' => '45467242',
+//            'TOKBOX_SECRETE_KEY' => 'e3d961f33cf0747d87b449d39c1c5c6d543b61df',
+
     public final static String submitDataType_FillInBlanks = "fillinblanks";
     // TODO Change it to your web domain
     public final static String WEB_DOMAIN = "zoom.us";

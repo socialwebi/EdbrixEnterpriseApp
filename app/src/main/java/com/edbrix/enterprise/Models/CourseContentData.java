@@ -34,10 +34,14 @@ public class CourseContentData {
     private ArrayList<ImageContentData> img_content;
 
     private String audio_content;
+
     private String video_content;
 
     @SerializedName("document_content")
     private String[] doc_content;
+
+    @SerializedName("session_event_content")
+    private ArrayList<TrainingSessionEventContentData> trainingSessionEventContentDataList;
 
     private String document_content_type;
 
@@ -183,6 +187,14 @@ public class CourseContentData {
 
     public void setChecked(boolean checked) {
         isChecked = checked;
+    }
+
+    public ArrayList<TrainingSessionEventContentData> getTrainingSessionEventContentDataList() {
+        return trainingSessionEventContentDataList;
+    }
+
+    public void setTrainingSessionEventContentDataList(ArrayList<TrainingSessionEventContentData> trainingSessionEventContentDataList) {
+        this.trainingSessionEventContentDataList = trainingSessionEventContentDataList;
     }
 
     @Override
