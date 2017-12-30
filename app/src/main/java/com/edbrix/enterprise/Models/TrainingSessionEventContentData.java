@@ -1,5 +1,7 @@
 package com.edbrix.enterprise.Models;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by rajk on 28/12/17.
  */
@@ -16,6 +18,10 @@ public class TrainingSessionEventContentData {
 
     private String connectURL;
 
+    private String sessionId;
+
+    private String sessionToken;
+
     private String sessionEvtDay;
 
     private String sessionEvtMonth;
@@ -27,6 +33,14 @@ public class TrainingSessionEventContentData {
     private String startDateTime;
 
     private String endDateTime;
+
+    @SerializedName("instructor_name")
+    private String instructorName;
+
+    @SerializedName("profileImageURL")
+    private String instructorPicUrl;
+
+
 
     public String getTitle() {
         return title;
@@ -114,6 +128,38 @@ public class TrainingSessionEventContentData {
 
     public void setSessionEvtDate(String sessionEvtDate) {
         this.sessionEvtDate = sessionEvtDate;
+    }
+
+    public String getInstructorName() {
+        return instructorName;
+    }
+
+    public void setInstructorName(String instructorName) {
+        this.instructorName = instructorName;
+    }
+
+    public String getInstructorPicUrl() {
+        return instructorPicUrl;
+    }
+
+    public void setInstructorPicUrl(String instructorPicUrl) {
+        this.instructorPicUrl = instructorPicUrl;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    public String getSessionToken() {
+        return sessionToken;
+    }
+
+    public void setSessionToken(String sessionToken) {
+        this.sessionToken = sessionToken;
     }
 
     @Override

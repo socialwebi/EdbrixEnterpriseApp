@@ -15,11 +15,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/app_min_margin"
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="Title"
             android:textAllCaps="true"
-            android:layout_margin="@dimen/app_min_margin"
+            android:textColor="@color/actionbarText"
             android:textStyle="bold"
             android:typeface="monospace" />
 
@@ -28,8 +29,8 @@
             android:layout_width="21dp"
             android:layout_height="21dp"
             android:layout_margin="@dimen/app_min_margin"
-            android:padding="@dimen/app_min_padding"
             android:background="@android:color/transparent"
+            android:padding="@dimen/app_min_padding"
             android:src="@mipmap/close" />
 
     </LinearLayout>
@@ -60,7 +61,9 @@
                 android:id="@+id/custom_user_name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="" />
+                android:text=""
+                android:textColor="@color/colorMainText"
+                android:typeface="monospace" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -74,6 +77,7 @@
                     android:layout_margin="@dimen/app_min_margin"
                     android:background="@android:color/transparent"
                     android:drawableLeft="@mipmap/message_orange"
+                    android:drawablePadding="@dimen/app_min_padding"
                     android:drawableStart="@mipmap/message_orange"
                     android:padding="@dimen/app_min_padding"
                     android:text=" Message"
@@ -87,6 +91,7 @@
                     android:layout_margin="@dimen/app_min_margin"
                     android:background="@android:color/transparent"
                     android:drawableLeft="@mipmap/call_orange"
+                    android:drawablePadding="@dimen/app_min_padding"
                     android:drawableStart="@mipmap/call_orange"
                     android:padding="@dimen/app_min_padding"
                     android:text=" Call"
@@ -103,8 +108,9 @@
         android:id="@+id/custom_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="date"
         android:layout_margin="@dimen/app_min_margin"
+        android:text="date"
+        android:textColor="@color/colorMainText"
         android:typeface="monospace" />
 
     <TextView
@@ -113,6 +119,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/app_min_margin"
         android:text="time"
+        android:textColor="@color/colorMainText"
         android:typeface="monospace" />
 
     <TextView
@@ -121,6 +128,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/app_min_margin"
         android:text="Description"
+        android:textColor="@color/colorMainText"
         android:typeface="monospace" />
 
 </LinearLayout>

@@ -207,7 +207,7 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             setRating = itemView.findViewById(R.id.setRating);
 
-            if(SettingsMy.getActiveUser().getUserType().equalsIgnoreCase("L")){
+            /*if(SettingsMy.getActiveUser().getUserType().equalsIgnoreCase("L")){
                 btnCoursePlay.setVisibility(View.GONE);
                 btnCourseMsg.setVisibility(View.GONE);
                 btnCourseCall.setVisibility(View.GONE);
@@ -226,7 +226,7 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 btnCourseStart.setVisibility(View.GONE);
 
                 txtCourseName.setTextColor(ContextCompat.getColor(context,R.color.colorAppOrange));
-            }
+            }*/
         }
     }
 

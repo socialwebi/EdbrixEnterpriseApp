@@ -27,6 +27,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -35,7 +36,10 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -59,6 +63,7 @@ import com.edbrix.enterprise.R;
 import com.edbrix.enterprise.Utils.Constants;
 import com.edbrix.enterprise.Utils.CustomViewPager;
 import com.edbrix.enterprise.Utils.CustomWebView;
+import com.edbrix.enterprise.Utils.RoundedImageView;
 import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
@@ -74,8 +79,18 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import timber.log.Timber;
+import us.zoom.sdk.JoinMeetingOptions;
+import us.zoom.sdk.MeetingError;
+import us.zoom.sdk.MeetingEvent;
+import us.zoom.sdk.MeetingService;
+import us.zoom.sdk.MeetingServiceListener;
+import us.zoom.sdk.MeetingStatus;
+import us.zoom.sdk.StartMeetingOptions;
+import us.zoom.sdk.ZoomError;
+import us.zoom.sdk.ZoomSDK;
+import us.zoom.sdk.ZoomSDKInitializeListener;
 
-public class PlayCourseActivity extends BaseActivity {
+public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializeListener, MeetingServiceListener {
 
     public static final String courseItemBundleKey = "courseItem";
 
@@ -153,6 +168,11 @@ public class PlayCourseActivity extends BaseActivity {
     private Toolbar toolbar;
 
     private ArrayList<CourseContentData> courseContentDataList;
+
+    private boolean mbPendingStartMeeting = false;
+
+    private String sessionID;
+    private String sessionTOKEN;
 
 //    private ImageLoader imageLoader; // Get singleton instance
 
@@ -243,6 +263,9 @@ public class PlayCourseActivity extends BaseActivity {
 
 
         courseItem = (Courses) getIntent().getSerializableExtra(courseItemBundleKey);
+
+        sessionID ="";
+        sessionTOKEN="";
 
         if (courseItem != null) {
             title.setText(courseItem.getTitle());
@@ -570,6 +593,9 @@ public class PlayCourseActivity extends BaseActivity {
     }
 
     private void clearData() {
+
+        sessionID ="";
+        sessionTOKEN="";
 
         // questionIndex = 0;
         contentDescWebView.setVisibility(View.GONE);
@@ -1247,8 +1273,82 @@ public class PlayCourseActivity extends BaseActivity {
 //        courseContentDataList = contentDataArrayList;
         SessionEventListAdapter sessionEventListAdapter = new SessionEventListAdapter(PlayCourseActivity.this, trainingSessionEventContentDataList, new SessionEventListAdapter.SessionEventItemListener() {
             @Override
-            public void onSessionEventSelected(TrainingSessionEventContentData sessionEventContentData) {
+            public void onSessionEventSelected(final TrainingSessionEventContentData sessionEventContentData) {
+                final MaterialDialog dialog = new MaterialDialog.Builder(PlayCourseActivity.this)
+                        .customView(R.layout.custom_dialog_view_training_session, true)
+                        .positiveText(R.string.connect)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
+                                if(sessionEventContentData.getSessionId()!=null)
+                                    sessionID = sessionEventContentData.getSessionId();
+
+                                if(sessionEventContentData.getSessionToken()!=null)
+                                    sessionTOKEN = sessionEventContentData.getSessionToken();
+
+                                if (sessionEventContentData.getConnectType().equals("ZOOM")) {
+                                    if (SettingsMy.getActiveUser() != null && SettingsMy.getActiveUser().getUserType().equals("L")) {
+                                        joinZoomMeeting(PlayCourseActivity.this, sessionID);
+                                    } else {
+                                        startZoomMeeting(PlayCourseActivity.this, sessionID);
+                                    }
+                                } else if (sessionEventContentData.getConnectType().equals(Constants.availabilityType_TrainingSession)) {
+                                    Intent tokboxIntent = new Intent(PlayCourseActivity.this, TokBoxActivity.class);
+                                    tokboxIntent.putExtra(Constants.TolkBox_SessionId, sessionID);
+                                    tokboxIntent.putExtra(Constants.TolkBox_Token, sessionTOKEN);
+                                    startActivity(tokboxIntent);
+                                } else {
+                                    if (sessionEventContentData.getConnectURL() != null && sessionEventContentData.getConnectURL().length() > 0) {
+                                        Intent i = new Intent(Intent.ACTION_VIEW);
+                                        i.setData(Uri.parse(sessionEventContentData.getConnectURL()));
+                                        startActivity(i);
+                                    } else {
+                                        showToast("Connection URL not found. Please try again later.");
+                                    }
+                                }
+                            }
+                        })
+                        .build();
+
+                TextView title = (TextView) dialog.getCustomView().findViewById(R.id.session_name);
+                title.setText(sessionEventContentData.getTitle());
+
+                TextView day = (TextView) dialog.getCustomView().findViewById(R.id.session_day);
+                day.setText(sessionEventContentData.getSessionEvtDay());
+
+                TextView date = (TextView) dialog.getCustomView().findViewById(R.id.session_date);
+                date.setText(sessionEventContentData.getSessionEvtMonth()+", "+sessionEventContentData.getSessionEvtYear());
+
+                TextView time = (TextView) dialog.getCustomView().findViewById(R.id.session_time);
+                time.setText(sessionEventContentData.getStartDateTime()+" - "+sessionEventContentData.getEndDateTime());
+
+                TextView place = (TextView) dialog.getCustomView().findViewById(R.id.session_place);
+                place.setText(sessionEventContentData.getLocation());
+
+                TextView instructorName = (TextView) dialog.getCustomView().findViewById(R.id.instructor_name);
+                instructorName.setText("By "+sessionEventContentData.getInstructorName());
+
+                RoundedImageView instructorImg = (RoundedImageView) dialog.getCustomView().findViewById(R.id.instructor_pic);
+
+                if (sessionEventContentData.getInstructorPicUrl() != null && !sessionEventContentData.getInstructorPicUrl().isEmpty()) {
+                    Picasso.with(PlayCourseActivity.this)
+                            .load(sessionEventContentData.getInstructorPicUrl())
+                            .fit()
+                            .error(R.mipmap.user_profile)
+                            .into(instructorImg);
+                }
+
+
+                ImageButton imageButton = (ImageButton) dialog.getCustomView().findViewById(R.id.custom_cancle);
+                imageButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.cancel();
+                    }
+                });
+
+                dialog.show();
             }
         });
         sessionEventRecyclerView.setVisibility(View.VISIBLE);
@@ -1265,6 +1365,183 @@ public class PlayCourseActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         btnBack.callOnClick();
+    }
+
+    @Override
+    public void onDestroy() {
+        ZoomSDK zoomSDK = ZoomSDK.getInstance();
+
+        if (zoomSDK.isInitialized()) {
+            MeetingService meetingService = zoomSDK.getMeetingService();
+            meetingService.removeListener(this);
+        }
+
+        super.onDestroy();
+    }
+
+
+    @Override
+    public void onMeetingEvent(int meetingEvent, int errorCode,
+                               int internalErrorCode) {
+
+        Log.i("TAG", "onMeetingEvent, meetingEvent=" + meetingEvent + ", errorCode=" + errorCode
+                + ", internalErrorCode=" + internalErrorCode);
+
+        if (meetingEvent == MeetingEvent.MEETING_CONNECT_FAILED && errorCode == MeetingError.MEETING_ERROR_CLIENT_INCOMPATIBLE) {
+            showToast("Version of ZoomSDK is too low!");
+        }
+
+        if (mbPendingStartMeeting && meetingEvent == MeetingEvent.MEETING_DISCONNECTED) {
+            mbPendingStartMeeting = false;
+
+            if (SettingsMy.getActiveUser() != null && !SettingsMy.getActiveUser().getUserType().equals("L")) {
+                startZoomMeeting(PlayCourseActivity.this, sessionID);
+            }
+        }
+    }
+
+    @Override
+    public void onZoomSDKInitializeResult(int errorCode, int internalErrorCode) {
+        Log.i("TAG", "onZoomSDKInitializeResult, errorCode=" + errorCode + ", internalErrorCode=" + internalErrorCode);
+
+        if (errorCode != ZoomError.ZOOM_ERROR_SUCCESS) {
+            showToast("Failed to initialize Zoom SDK. Error: " + errorCode + ", internalErrorCode=" + internalErrorCode);
+        } else {
+            // Toast.makeText(context, "Initialize Zoom SDK successfully.", Toast.LENGTH_LONG).show();
+            registerMeetingServiceListener();
+        }
+    }
+
+    private void registerMeetingServiceListener() {
+        ZoomSDK zoomSDK = ZoomSDK.getInstance();
+        MeetingService meetingService = zoomSDK.getMeetingService();
+        if (meetingService != null) {
+            meetingService.addListener(this);
+        }
+    }
+
+
+    public void joinZoomMeeting(Context context, String meetingID) {
+
+        String meetingPassword = "";
+        String DISPLAY_NAME = "User";
+
+        if (meetingID.length() == 0) {
+            showToast("Zoom meeting ID not found. Unable to connect meeting.");
+            return;
+        }
+
+        ZoomSDK zoomSDK = ZoomSDK.getInstance();
+
+        if (!zoomSDK.isInitialized()) {
+            showToast("ZoomSDK has not been initialized successfully. Please try again later.");
+            return;
+        }
+
+
+        MeetingService meetingService = zoomSDK.getMeetingService();
+
+        JoinMeetingOptions opts = new JoinMeetingOptions();
+//        opts.no_meeting_end_message = true;
+//		opts.no_driving_mode = true;
+//		opts.no_invite = true;
+//		opts.no_meeting_end_message = true;
+//		opts.no_titlebar = true;
+//		opts.no_bottom_toolbar = true;
+//		opts.no_dial_in_via_phone = true;
+//		opts.no_dial_out_to_phone = true;
+//		opts.no_disconnect_audio = true;
+//		opts.no_share = true;
+//		opts.invite_options = InviteOptions.INVITE_VIA_EMAIL + InviteOptions.INVITE_VIA_SMS;
+//		opts.meeting_views_options = MeetingViewsOptions.NO_BUTTON_SHARE;
+//		opts.no_audio = true;
+//		opts.no_video = true;
+//		opts.no_meeting_error_message = true;
+//		opts.participant_id = "participant id";
+
+
+        DISPLAY_NAME = SettingsMy.getActiveUser() != null ? SettingsMy.getActiveUser().getFirstName() : "User";
+        int ret = meetingService.joinMeeting(context, meetingID, DISPLAY_NAME, meetingPassword, opts);
+        Log.i("TAG", "onClickBtnJoinMeeting, ret=" + ret);
+
+    }
+
+    public void startZoomMeeting(Context context, String meetingID) {
+
+        User user = SettingsMy.getActiveUser();
+
+        if (meetingID.length() == 0) {
+            showToast("Zoom meeting number not found. Unable to connect meeting.");
+            return;
+        }
+
+        ZoomSDK zoomSDK = ZoomSDK.getInstance();
+
+        if (!zoomSDK.isInitialized()) {
+            showToast("ZoomSDK has not been initialized successfully. Please try again later.");
+            return;
+        }
+
+        final MeetingService meetingService = zoomSDK.getMeetingService();
+
+        if (meetingService.getMeetingStatus() != MeetingStatus.MEETING_STATUS_IDLE) {
+            long lMeetingNo = 0;
+            try {
+                lMeetingNo = Long.parseLong(meetingID);
+            } catch (NumberFormatException e) {
+                Toast.makeText(context, "Invalid meeting number: " + meetingID, Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            if (meetingService.getCurrentMeetingID() == lMeetingNo) {
+                meetingService.returnToMeeting(context);
+                return;
+            }
+
+            new android.app.AlertDialog.Builder(context)
+                    .setMessage("Do you want to leave current meeting and start another?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mbPendingStartMeeting = true;
+                            meetingService.leaveCurrentMeeting(false);
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .show();
+            return;
+        }
+
+        StartMeetingOptions opts = new StartMeetingOptions();
+//		opts.no_driving_mode = true;
+//		opts.no_invite = true;
+//		opts.no_meeting_end_message = true;
+//		opts.no_titlebar = true;
+//		opts.no_bottom_toolbar = true;
+//		opts.no_dial_in_via_phone = true;
+//		opts.no_dial_out_to_phone = true;
+//		opts.no_disconnect_audio = true;
+//		opts.no_share = true;
+//		opts.invite_options = InviteOptions.INVITE_ENABLE_ALL;
+//		opts.meeting_views_options = MeetingViewsOptions.NO_BUTTON_SHARE + MeetingViewsOptions.NO_BUTTON_VIDEO;
+//		opts.no_audio = true;
+//		opts.no_video = true;
+//		opts.no_meeting_error_message = true;
+
+        assert user != null;
+        int ret = meetingService.startMeeting(context, user.getZoomUserId(), user.getZoomUserToken(), MeetingService.USER_TYPE_API_USER, meetingID, user.getFirstName(), opts);
+        /*int ret = meetingService.startMeeting(context, "xch6jAJ-Tiqcf7ct-LDxEw",
+                        "eRr1c1RQuIlqAIyqiactTFf1_oghkN8-cgTXTyy2rq0.BgMYaUE4UzJtK2VUREZsVGJ1WXdPMzQrZz09AAAMM0NCQXVvaVlTM3M9",
+                        STYPE, "469520738", "USER NAME", opts);*/
+
+        Log.i("TAG", "onClickBtnStartMeeting, ret=" + ret);
     }
 }
 

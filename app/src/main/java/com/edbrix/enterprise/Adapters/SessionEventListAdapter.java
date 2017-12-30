@@ -12,10 +12,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.edbrix.enterprise.Activities.PlayCourseActivity;
 import com.edbrix.enterprise.Interfaces.MeetingListInterface;
 import com.edbrix.enterprise.Models.Meeting;
 import com.edbrix.enterprise.Models.TrainingSessionEventContentData;
 import com.edbrix.enterprise.R;
+import com.edbrix.enterprise.Utils.RoundedImageView;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -62,11 +65,20 @@ public class SessionEventListAdapter extends RecyclerView.Adapter<SessionEventLi
         holder.title.setText(list.get(position).getTitle());
         holder.place.setText(list.get(position).getLocation());
         holder.time.setText(list.get(position).getStartDateTime() + " - " + list.get(position).getEndDateTime());
+        holder.instructor.setText("By "+list.get(position).getInstructorName());
         if (list.get(position).getDescription() != null && !list.get(position).getDescription().isEmpty()) {
             holder.info.setText(list.get(position).getDescription());
             holder.infoBtn.setVisibility(View.VISIBLE);
         } else {
             holder.infoBtn.setVisibility(View.GONE);
+        }
+
+        if (list.get(position).getInstructorPicUrl() != null && !list.get(position).getInstructorPicUrl().isEmpty()) {
+            Picasso.with(context)
+                    .load(list.get(position).getInstructorPicUrl())
+                    .fit()
+                    .error(R.mipmap.user_profile)
+                    .into(holder.instructorImg);
         }
 
     }
@@ -91,6 +103,8 @@ public class SessionEventListAdapter extends RecyclerView.Adapter<SessionEventLi
         private TextView time;
         private TextView place;
         private TextView info;
+        private TextView instructor;
+        private RoundedImageView instructorImg;
         private ImageButton infoBtn;
         private boolean infoShowing;
 
@@ -104,6 +118,8 @@ public class SessionEventListAdapter extends RecyclerView.Adapter<SessionEventLi
             time = itemView.findViewById(R.id.training_session_time);
             place = itemView.findViewById(R.id.training_session_place);
             info = itemView.findViewById(R.id.training_session_text_info);
+            instructor = itemView.findViewById(R.id.training_session_instructor_name);
+            instructorImg = itemView.findViewById(R.id.training_session_instructor_pic);
             infoBtn = itemView.findViewById(R.id.training_session_button_info);
             infoBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

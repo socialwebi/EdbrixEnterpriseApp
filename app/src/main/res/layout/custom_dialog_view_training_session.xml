@@ -1,12 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/training_session_linear"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorWhiteSmoke"
-    android:orientation="vertical"
-    android:padding="@dimen/app_normal_padding"
-    tools:context="com.edbrix.enterprise.Adapters.TrainingSessionAdapter">
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/app_min_padding"
+        android:paddingTop="@dimen/app_min_padding">
+
+        <TextView
+            android:id="@+id/session_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/app_min_margin"
+            android:layout_marginTop="@dimen/app_min_margin"
+            android:layout_weight="1"
+            android:text="Mathematics"
+            android:textColor="@color/actionbarText"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:typeface="monospace" />
+
+        <ImageButton
+            android:id="@+id/custom_cancle"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
+            android:layout_margin="@dimen/app_min_margin"
+            android:background="@android:color/transparent"
+            android:padding="@dimen/app_min_padding"
+            android:src="@mipmap/close" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,10 +45,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="@dimen/app_min_padding">
+            android:paddingBottom="@dimen/app_min_padding"
+            android:paddingTop="@dimen/app_min_padding">
 
             <TextView
-                android:id="@+id/training_session_day"
+                android:id="@+id/session_day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -34,17 +62,18 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="2dp"
                 android:background="@color/colorAccent" />
 
             <TextView
-                android:id="@+id/training_session_date"
+                android:id="@+id/session_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/app_normal_margin"
                 android:text="Dec, 2017"
                 android:textAllCaps="true"
                 android:textColor="@color/colorMainText"
+                android:textSize="12sp"
                 android:typeface="monospace" />
 
         </LinearLayout>
@@ -53,7 +82,10 @@
             android:id="@+id/training_session_view"
             android:layout_width="2dp"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/app_min_margin"
+            android:layout_marginEnd="@dimen/app_min_margin"
+            android:layout_marginLeft="@dimen/app_min_margin"
+            android:layout_marginRight="@dimen/app_min_margin"
+            android:layout_marginStart="@dimen/app_min_margin"
             android:background="@color/gray" />
 
         <LinearLayout
@@ -61,43 +93,32 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:padding="@dimen/app_min_padding">
-
-            <TextView
-                android:id="@+id/training_session_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mathematics"
-                android:textColor="@color/actionbarText"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:typeface="monospace" />
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/app_min_margin"
-                android:layout_marginTop="@dimen/app_min_margin"
                 android:orientation="horizontal"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <com.edbrix.enterprise.Utils.RoundedImageView
-                    android:id="@+id/training_session_instructor_pic"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/image_placeholder" />
+                    android:id="@+id/instructor_pic"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@mipmap/user_profile" />
 
                 <TextView
-                    android:id="@+id/training_session_instructor_name"
+                    android:id="@+id/instructor_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/app_min_margin"
                     android:layout_marginStart="@dimen/app_min_margin"
                     android:text="By Meghraj"
-                    android:textColor="@color/colorMainText"
+                    android:textColor="@color/colorAppOrange"
+                    android:textStyle="bold"
                     android:typeface="monospace" />
 
             </LinearLayout>
@@ -109,16 +130,17 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/training_session_time"
+                    android:id="@+id/session_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@mipmap/clock"
                     android:drawablePadding="@dimen/app_min_padding"
                     android:drawableStart="@mipmap/clock"
-                    android:padding="@dimen/app_min_padding"
-                    android:textSize="13sp"
+                    android:paddingBottom="@dimen/app_min_padding"
+                    android:paddingTop="@dimen/app_min_padding"
                     android:text="12.00PM - 3.00PM"
                     android:textColor="@color/colorMainText"
+                    android:textSize="12sp"
                     android:typeface="monospace" />
 
                 <LinearLayout
@@ -126,7 +148,7 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/training_session_place"
+                        android:id="@+id/session_place"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/app_min_margin"
@@ -135,46 +157,17 @@
                         android:drawableLeft="@mipmap/location_icon"
                         android:drawablePadding="@dimen/app_min_padding"
                         android:drawableStart="@mipmap/location_icon"
-                        android:padding="@dimen/app_min_padding"
+                        android:paddingBottom="@dimen/app_min_padding"
+                        android:paddingTop="@dimen/app_min_padding"
                         android:text="Dallas"
-                        android:textSize="13sp"
                         android:textColor="@color/colorMainText"
+                        android:textSize="12sp"
                         android:typeface="monospace" />
 
-                    <ImageButton
-                        android:id="@+id/training_session_button_info"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/app_min_margin"
-                        android:layout_marginEnd="@dimen/app_normal_margin"
-                        android:layout_marginRight="@dimen/app_normal_margin"
-                        android:layout_marginTop="@dimen/app_min_margin"
-                        android:background="@null"
-                        android:padding="@dimen/app_min_padding"
-                        android:src="@mipmap/info_icon"
-                        android:visibility="visible" />
                 </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:contentDescription="@string/image_right_arrow"
-            android:src="@mipmap/right_arrow_start_icon_orange" />
-
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/training_session_text_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/app_normal_padding"
-        android:text="jfdsfj jlklkjfdklfjdklfjd jlkjkljklfjdf kljkljkf"
-        android:textColor="@color/colorMainText"
-        android:typeface="monospace"
-        android:visibility="gone" />
-
 </LinearLayout>

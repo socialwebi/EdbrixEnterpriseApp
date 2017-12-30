@@ -128,7 +128,14 @@ public class MeetingListFragment extends BaseFragment implements SearchView.OnQu
                 meetingNo = meeting.getId();
 
                 assert user != null;
-                if (!user.getUserType().equals("L")) {
+
+                Intent intent = new Intent(context, MeetingDetailActivity.class);
+                intent.putExtra("meetingId", meeting.getId());
+                intent.putExtra("meetingType", meeting.getType());
+                intent.putExtra("meetingTitle", meeting.getTitle());
+                context.startActivity(intent);
+
+                /*if (!user.getUserType().equals("L")) {
                     Intent intent = new Intent(context, MeetingDetailActivity.class);
                     intent.putExtra("meetingId", meeting.getId());
                     intent.putExtra("meetingType", meeting.getType());
@@ -260,7 +267,7 @@ public class MeetingListFragment extends BaseFragment implements SearchView.OnQu
                                 .show();
 
                     }
-                }
+                }*/
             }
         });
 

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.edbrix.enterprise.Models.Courses;
 import com.edbrix.enterprise.R;
+import com.edbrix.enterprise.Utils.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

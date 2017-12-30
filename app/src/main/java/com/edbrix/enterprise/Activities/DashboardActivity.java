@@ -42,6 +42,7 @@ import com.edbrix.enterprise.Utils.SessionManager;
 import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
+import com.edbrix.enterprise.commons.GlobalMethods;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.squareup.picasso.Picasso;
@@ -150,8 +151,14 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
                 final Meeting meeting = (Meeting) object;
                 meetingNo = meeting.getId();
 
+                Intent intent = new Intent(context, MeetingDetailActivity.class);
+                intent.putExtra("meetingId", meeting.getId());
+                intent.putExtra("meetingType", meeting.getType());
+                intent.putExtra("meetingTitle", meeting.getTitle());
+                context.startActivity(intent);
+
                 assert user != null;
-                if (!user.getUserType().equals("L")) {
+               /* if (!user.getUserType().equals("L")) {
                     Intent intent = new Intent(context, MeetingDetailActivity.class);
                     intent.putExtra("meetingId", meeting.getId());
                     intent.putExtra("meetingType", meeting.getType());
@@ -212,9 +219,15 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
                             public void onClick(View view) {
 
                                 try {
-                                    Intent dialIntent = new Intent(Intent.ACTION_DIAL);
-                                    dialIntent.setData(Uri.parse("tel:" + meeting.getMeetingUsers().get(0).getPhoneNo()));
-                                    context.startActivity(dialIntent);
+//                                    Intent dialIntent = new Intent(Intent.ACTION_DIAL);
+//                                    dialIntent.setData(Uri.parse("tel:" + meeting.getMeetingUsers().get(0).getPhoneNo()));
+//                                    context.startActivity(dialIntent);
+
+                                    if (meeting.getMeetingUsers().get(0).getPhoneNo() != null && !meeting.getMeetingUsers().get(0).getPhoneNo().isEmpty()) {
+                                        GlobalMethods.dialContactPhone(context, meeting.getMeetingUsers().get(0).getPhoneNo());
+                                    } else {
+                                        showToast("Phone number not available");
+                                    }
                                 } catch (Exception e) {
                                     Toast.makeText(context, "This feature not supported ", Toast.LENGTH_SHORT).show();
                                     e.printStackTrace();
@@ -228,9 +241,14 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
                             public void onClick(View view) {
 
                                 try {
-                                    Intent sendIntent = new Intent(Intent.ACTION_VIEW);
-                                    sendIntent.setData(Uri.parse("sms:" + meeting.getMeetingUsers().get(0).getPhoneNo()));
-                                    context.startActivity(sendIntent);
+//                                    Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+//                                    sendIntent.setData(Uri.parse("sms:" + meeting.getMeetingUsers().get(0).getPhoneNo()));
+//                                    context.startActivity(sendIntent);
+                                    if (meeting.getMeetingUsers().get(0).getPhoneNo() != null && !meeting.getMeetingUsers().get(0).getPhoneNo().isEmpty()) {
+                                        GlobalMethods.sendSMS(context, meeting.getMeetingUsers().get(0).getPhoneNo(), "");
+                                    } else {
+                                        showToast("Phone number not available");
+                                    }
                                 } catch (Exception e) {
                                     Toast.makeText(context, "This feature not supported ", Toast.LENGTH_SHORT).show();
                                     e.printStackTrace();
@@ -284,7 +302,7 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
                                 .show();
 
                     }
-                }
+                }*/
 
             }
         });

@@ -13,6 +13,7 @@
         android:id="@+id/meeting_course_image"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:scaleType="centerCrop"
         android:contentDescription="@string/image_course"
         android:src="@mipmap/edbrix" />
 

@@ -163,7 +163,7 @@
                 android:paddingRight="@dimen/app_min_margin"
                 android:text="dfjdkjfdjfkldjfkldjfkldjfkldjfkldjkfdsfdffdfdfdfdfdfdffdfdfdfdfdfdfdfdfdfdsfdfdserewrererefdfdfdfdfdffdfdsfdfdfdfdfdfdfdfdfdfdfdfdlfjdklfjdkljfkldjfkldjfkldjfkldjfkldfdfdfddfdffdfdfdfjfjdlkjfldjkfkljdkljfldkjfkl"
                 android:textColor="@color/colorSubText"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:textSize="12sp"
                 android:typeface="monospace" />
         </LinearLayout>

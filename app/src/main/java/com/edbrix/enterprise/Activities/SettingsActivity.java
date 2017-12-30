@@ -92,8 +92,8 @@ public class SettingsActivity extends BaseActivity {
         _settings_linear_edit_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, EditProfileActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(context, EditProfileActivity.class);
+//                startActivity(intent);
             }
         });
 

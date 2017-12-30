@@ -33,6 +33,7 @@ import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -1419,5 +1420,37 @@ fos.close();
             e.printStackTrace();
         }
         return contents;
+    }
+
+    /**
+     * Send intent to messenger to send sms
+     *
+     * @param phoneNumber phone number
+     * @param smsBody     sms body
+     */
+    public static void sendSMS(Context context,String phoneNumber, String smsBody) {
+        Log.i("Send SMS", "");
+        Intent smsIntent = new Intent(Intent.ACTION_VIEW);
+
+        smsIntent.setData(Uri.parse("smsto:"));
+        smsIntent.setType("vnd.android-dir/mms-sms");
+        smsIntent.putExtra("address", phoneNumber);
+        smsIntent.putExtra("sms_body", smsBody);
+
+        try {
+            context.startActivity(smsIntent);
+            Log.i("Finished sending SMS...", "");
+        } catch (android.content.ActivityNotFoundException ex) {
+           Toast.makeText(context,"SMS faild, please try again later.",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Send intent to phone dialer
+     *
+     * @param phoneNumber phone number
+     */
+    public static void dialContactPhone(Context context,final String phoneNumber) {
+        context.startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null)));
     }
 }
