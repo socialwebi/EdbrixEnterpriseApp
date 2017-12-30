@@ -4,41 +4,47 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingTop="15dp"
     android:paddingBottom="15dp"
+    android:paddingTop="15dp"
     tools:context="com.edbrix.enterprise.Adapters.MeetingListAdapter">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="3dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/app_min_margin"
+        android:orientation="vertical"
         android:paddingEnd="10dp"
-        android:paddingRight="10dp"
         android:paddingLeft="10dp"
-        android:paddingStart="10dp"
-        android:orientation="vertical">
+        android:paddingRight="10dp"
+        android:paddingStart="10dp">
 
         <TextView
             android:id="@+id/meetings_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:padding="2dp"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:text="02"
+            android:textColor="@color/actionbarText"
+            android:textSize="22sp"/>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:background="@color/colorAccent" />
+            android:layout_height="2dp"
+            android:background="@color/colorAccent"
+            android:layout_marginTop="@dimen/app_min_margin"
+            android:layout_marginBottom="@dimen/app_min_margin" />
 
         <TextView
             android:id="@+id/meetings_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            />
+            android:textColor="@color/colorMainText"
+            android:textAllCaps="true"
+            android:padding="2dp"
+            android:textSize="14sp"
+            android:text="Dec, 2017"
+            android:typeface="monospace" />
 
     </LinearLayout>
 
@@ -46,34 +52,43 @@
         android:id="@+id/meetings_view"
         android:layout_width="2dp"
         android:layout_height="match_parent"
-        android:background="@color/gray" />
+        android:background="@color/colorDivider" />
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/app_min_margin"
         android:layout_weight="1"
-        android:layout_gravity="center_vertical"
-        android:paddingLeft="10dp"
-        android:paddingStart="10dp"
+        android:orientation="vertical"
         android:paddingEnd="10dp"
+        android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:orientation="vertical">
+        android:paddingStart="10dp">
 
         <TextView
             android:id="@+id/meetings_name"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content"
+            android:text="Meeting Zoom"
+            android:textColor="@color/actionbarText"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:typeface="monospace" />
 
         <TextView
             android:id="@+id/meetings_time"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:drawableStart="@mipmap/clock"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/app_normal_margin"
             android:drawableLeft="@mipmap/clock"
-            android:drawablePadding="10dp" />
+            android:drawablePadding="10dp"
+            android:drawableStart="@mipmap/clock"
+            android:gravity="center_vertical"
+            android:text="12:00PM - 1:00PM"
+            android:textColor="@color/colorMainText"
+            android:textSize="14sp"
+            android:typeface="monospace" />
 
     </LinearLayout>
 
@@ -81,7 +96,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:src="@mipmap/right_arrow_start_icon_orange"
-        android:contentDescription="@string/image_right_arrow" />
+        android:contentDescription="@string/image_right_arrow"
+        android:src="@mipmap/right_arrow_start_icon_orange" />
 
 </LinearLayout>

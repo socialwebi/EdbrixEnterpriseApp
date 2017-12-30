@@ -40,11 +40,9 @@ public class MeetingListAdapter extends RecyclerView.Adapter<MeetingListAdapter.
 
         if (position % 2 == 1) {
             holder.linear.setBackgroundColor(context.getResources().getColor(R.color.colorWhite));
-            holder.view.setBackgroundColor(context.getResources().getColor(R.color.colorActionBar));
 
         } else {
             holder.linear.setBackgroundColor(context.getResources().getColor(R.color.colorActionBar));
-            holder.view.setBackgroundColor(context.getResources().getColor(R.color.colorWhite));
         }
 
         holder.day.setText(list.get(position).getMeetingDay());

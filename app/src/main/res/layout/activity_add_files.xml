@@ -33,11 +33,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:paddingRight="@dimen/app_big_padding"
                     android:gravity="center"
+                    android:paddingRight="@dimen/app_big_padding"
                     android:text="@string/add_content"
-                    android:textColor="@color/colorMainText"
-                    android:textSize="20sp" />
+                    android:textColor="@color/actionbarText"
+                    android:textSize="20sp"
+                    android:typeface="monospace" />
 
             </RelativeLayout>
 
@@ -67,7 +68,8 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/title"
                     android:imeOptions="actionNext"
-                    android:inputType="textCapSentences|text" />
+                    android:inputType="textCapSentences|text"
+                    android:typeface="monospace" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -76,28 +78,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/add_file_text_input_title"
-                android:text="Browse " />
+                android:text="Browse "
+                android:typeface="monospace" />
 
             <Button
                 android:id="@+id/add_file_button_youtube"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/add_file_button_browse"
-                android:text="Youtube video " />
+                android:text="Youtube video "
+                android:typeface="monospace" />
 
             <TextView
                 android:id="@+id/add_file_text_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/add_file_button_youtube" />
+                android:layout_below="@+id/add_file_button_youtube"
+                android:typeface="monospace" />
 
             <ImageView
                 android:id="@+id/add_file_image_preview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/add_file_text_message"
                 android:adjustViewBounds="true"
-                android:cropToPadding="true"
-                android:layout_below="@+id/add_file_text_message"/>
+                android:cropToPadding="true" />
 
         </RelativeLayout>
 
@@ -109,23 +114,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="@color/colorWhite"
         android:layout_margin="@dimen/app_normal_margin"
-        android:padding="@dimen/app_normal_padding"
-        android:gravity="center">
+        android:background="@color/colorWhite"
+        android:gravity="center"
+        android:padding="@dimen/app_normal_padding">
 
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/app_normal_margin"
-            android:textAlignment="center"/>
+            android:textAlignment="center" />
 
         <TextView
             android:id="@+id/add_file_progress_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/app_normal_margin"
-            android:text="Progress... "/>
+            android:text="Progress... "
+            android:typeface="monospace" />
 
     </LinearLayout>
 
@@ -133,11 +139,12 @@
         android:id="@+id/add_file_button_submit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:padding="5dp"
         android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
         android:background="@color/colorAccent"
+        android:padding="5dp"
+        android:text="@string/upload"
         android:textColor="@color/colorWhite"
-        android:text="@string/upload" />
+        android:typeface="monospace" />
 
 </RelativeLayout>

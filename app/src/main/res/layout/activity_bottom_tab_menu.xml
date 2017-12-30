@@ -25,8 +25,8 @@
                 android:id="@+id/relativeLayoutLogo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginRight="@dimen/app_big_margin"
                 android:layout_marginLeft="@dimen/app_big_margin"
+                android:layout_marginRight="@dimen/app_big_margin"
                 android:visibility="visible">
 
                 <TextView
@@ -34,11 +34,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:paddingRight="@dimen/app_big_padding"
                     android:paddingLeft="@dimen/app_big_padding"
+                    android:paddingRight="@dimen/app_big_padding"
                     android:text="@string/course_list"
-                    android:textColor="@color/colorMainText"
-                    android:textSize="20sp" />
+                    android:textColor="@color/actionbarText"
+                    android:textSize="20sp"
+                    android:typeface="monospace" />
 
             </RelativeLayout>
 
@@ -54,7 +55,7 @@
         android:layout_above="@+id/tabLayout"
         android:layout_below="@+id/appBarLayout"
         android:background="@color/colorWhite"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabLayout"
@@ -65,8 +66,8 @@
         android:background="@color/colorActionBar"
         android:clickable="true"
         android:tabStripEnabled="false"
-        app:tabMaxWidth="0dp"
-        app:tabMode="fixed"
         app:tabGravity="fill"
-        app:tabIndicatorColor="@android:color/transparent" />
+        app:tabIndicatorColor="@android:color/transparent"
+        app:tabMaxWidth="0dp"
+        app:tabMode="fixed" />
 </RelativeLayout>

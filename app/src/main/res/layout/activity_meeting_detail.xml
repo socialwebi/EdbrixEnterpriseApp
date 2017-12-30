@@ -35,8 +35,9 @@
                     android:layout_centerInParent="true"
                     android:paddingRight="@dimen/app_big_padding"
                     android:text="@string/meeting_details"
-                    android:textColor="@color/colorMainText"
-                    android:textSize="20sp" />
+                    android:textColor="@color/actionbarText"
+                    android:textSize="20sp"
+                    android:typeface="monospace" />
 
             </RelativeLayout>
 
@@ -69,7 +70,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="2dp"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:typeface="monospace" />
 
                 <View
                     android:layout_width="match_parent"
@@ -83,7 +85,8 @@
                 <TextView
                     android:id="@+id/meeting_detail_date"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:typeface="monospace" />
             </LinearLayout>
 
             <View
@@ -111,7 +114,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/app_min_margin"
                 android:textColor="@color/colorAccent"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:typeface="monospace" />
 
             <TextView
                 android:id="@+id/meeting_detail_time"
@@ -120,7 +124,8 @@
                 android:layout_marginTop="@dimen/app_min_margin"
                 android:drawableLeft="@mipmap/clock"
                 android:drawablePadding="10dp"
-                android:drawableStart="@mipmap/clock" />
+                android:drawableStart="@mipmap/clock"
+                android:typeface="monospace" />
 
             <TextView
                 android:id="@+id/meeting_detail_des"
@@ -128,7 +133,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/app_min_margin"
                 android:layout_marginTop="@dimen/app_min_margin"
-                android:maxLines="5" />
+                android:maxLines="5"
+                android:typeface="monospace" />
 
             <Button
                 android:id="@+id/meeting_detail_button_connect"
@@ -136,7 +142,8 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/app_normal_padding"
                 android:text="@string/connect"
-                android:textColor="@color/colorWhite" />
+                android:textColor="@color/colorWhite"
+                android:typeface="monospace" />
 
         </LinearLayout>
 

@@ -34,7 +34,7 @@
                     android:layout_centerInParent="true"
                     android:paddingLeft="@dimen/app_big_padding"
                     android:text="@string/dashboard"
-                    android:textColor="@color/colorMainText"
+                    android:textColor="@color/actionbarText"
                     android:textSize="20sp"
                     android:typeface="monospace" />
 
@@ -52,7 +52,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:id="@+id/dashboard_text_meetings"
@@ -69,7 +69,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/schedules"
-                    android:textColor="@color/colorMainText"
+                    android:textColor="@color/actionbarText"
                     android:textSize="22sp"
                     android:typeface="monospace" />
 
@@ -122,7 +122,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/courses"
-                    android:textColor="@color/colorMainText"
+                    android:textColor="@color/actionbarText"
                     android:textSize="22sp"
                     android:typeface="monospace" />
 

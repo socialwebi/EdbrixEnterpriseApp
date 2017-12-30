@@ -502,7 +502,12 @@ public class PlayCourseActivity extends BaseActivity {
             jo.put("contentId", contentId);
             jo.put("questionId", questionId);
             jo.put("contentType", contentType);
-            jo.put("contentcomplete_type_id", contentCompleteTypeId);
+            if (contentCompleteTypeId != null && !contentCompleteTypeId.isEmpty()) {
+                jo.put("contentcomplete_type_id", contentCompleteTypeId);
+            } else {
+                if (contentType.equals(Constants.contentType_TrainingSession) || contentType.equals(Constants.contentType_Event))
+                    jo.put("contentcomplete_type_id", "1");
+            }
             jo.put("choiceId", choiceJsonArray);
             if (longAnswer != null && longAnswer.length() > 0) {
                 jo.put("longAnswer", longAnswer);
@@ -607,6 +612,8 @@ public class PlayCourseActivity extends BaseActivity {
         imgDrawerRecyclerView.setVisibility(View.GONE);
 
         timerLayout.setVisibility(View.GONE);
+
+        txtSubmitBtn.setText(R.string.submit);
         txtSubmitBtn.setVisibility(View.VISIBLE);
         txtSubmitBtn.setEnabled(true);
 
@@ -630,15 +637,12 @@ public class PlayCourseActivity extends BaseActivity {
                 } else {
                     imgContentPrevBtn.setVisibility(View.INVISIBLE);
                 }
+
             } else {
                 imgContentPrevBtn.setVisibility(View.VISIBLE);
             }
         }
-        if (response.getNext_content_id().equalsIgnoreCase("0")) {
-            imgContentNextBtn.setVisibility(View.INVISIBLE);
-        } else {
-            imgContentNextBtn.setVisibility(View.VISIBLE);
-        }
+
         if (SettingsMy.getActiveUser().getUserType().equals("L")) {
             imgContentNextBtn.setVisibility(View.INVISIBLE);
         } else {
@@ -705,9 +709,25 @@ public class PlayCourseActivity extends BaseActivity {
                 break;
             case Constants.contentType_TrainingSession:
 //                txtContentType.setText(getString(R.string.test));
-                if (playCourseContentResponseData.getCourse_content().getTrainingSessionEventContentDataList() != null && playCourseContentResponseData.getCourse_content().getTrainingSessionEventContentDataList().size() > 0) {
-                    showSessionEventList(playCourseContentResponseData.getCourse_content().getTrainingSessionEventContentDataList());
+                if (SettingsMy.getActiveUser().getUserType().equals("L")) {
+                    txtSubmitBtn.setVisibility(View.VISIBLE);
+                    txtSubmitBtn.setText(R.string.complete_continue);
+                } else {
+                    txtSubmitBtn.setVisibility(View.GONE);
                 }
+
+                if (response.getCourse_content().getTrainingSessionEventContentDataList() != null && response.getCourse_content().getTrainingSessionEventContentDataList().size() > 0) {
+                    showSessionEventList(response.getCourse_content().getTrainingSessionEventContentDataList());
+                }
+                break;
+            case Constants.contentType_Event:
+                if (SettingsMy.getActiveUser().getUserType().equals("L")) {
+                    txtSubmitBtn.setVisibility(View.VISIBLE);
+                    txtSubmitBtn.setText(R.string.complete_continue);
+                } else {
+                    txtSubmitBtn.setVisibility(View.GONE);
+                }
+
                 break;
         }
 
@@ -754,6 +774,21 @@ public class PlayCourseActivity extends BaseActivity {
                 editTxtLongAns.setVisibility(View.VISIBLE);
             }
         }
+
+        if (response.getCourse_content().getSubmit_data() != null && response.getCourse_content().getSubmit_data().getNext_question_id() != null) {
+            if (response.getCourse_content().getSubmit_data().getNext_question_id().equals("0") && response.getNext_content_id().equals("0")) {
+                txtSubmitBtn.setVisibility(View.VISIBLE);
+                txtSubmitBtn.setText(R.string.submit_course);
+                imgContentNextBtn.setVisibility(View.INVISIBLE);
+            }
+        } else {
+            if (response.getNext_content_id().equals("0")) {
+                imgContentNextBtn.setVisibility(View.INVISIBLE);
+                txtSubmitBtn.setVisibility(View.VISIBLE);
+                txtSubmitBtn.setText(R.string.submit_course);
+            }
+        }
+
     }
 
     private void addTrueFalseRadioButton(ArrayList<ChoicesData> choiceList) {
@@ -1045,6 +1080,7 @@ public class PlayCourseActivity extends BaseActivity {
                             questionId = playCourseContentResponseData.getCourse_content().getSubmit_data().getQuestion_id();
                         }
                     }
+
                     submitPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(),
                             playCourseContentResponseData.getContent_id(),
                             questionId,
@@ -1218,6 +1254,12 @@ public class PlayCourseActivity extends BaseActivity {
         sessionEventRecyclerView.setVisibility(View.VISIBLE);
         sessionEventRecyclerView.setLayoutManager(new LinearLayoutManager(PlayCourseActivity.this));
         sessionEventRecyclerView.setAdapter(sessionEventListAdapter);
+
+//        if(SettingsMy.getActiveUser().getUserType().equals("L")){
+//            txtSubmitBtn.setVisibility(View.GONE);
+//            txtSkipBtn.setVisibility(View.VISIBLE);
+//            txtSkipBtn.setText("Complete");
+//        }
     }
 
     @Override

@@ -26,8 +26,8 @@
                 android:id="@+id/relativeLayoutLogo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginRight="@dimen/app_big_margin"
                 android:layout_marginLeft="@dimen/app_big_margin"
+                android:layout_marginRight="@dimen/app_big_margin"
                 android:visibility="visible">
 
                 <TextView
@@ -36,11 +36,12 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:gravity="center"
-                    android:paddingRight="@dimen/app_big_padding"
                     android:paddingLeft="@dimen/app_big_padding"
+                    android:paddingRight="@dimen/app_big_padding"
                     android:text="@string/invite_learner"
-                    android:textColor="@color/colorMainText"
-                    android:textSize="20sp" />
+                    android:textColor="@color/actionbarText"
+                    android:textSize="20sp"
+                    android:typeface="monospace" />
 
             </RelativeLayout>
 
@@ -64,7 +65,8 @@
             android:layout_margin="@dimen/app_normal_margin"
             android:text="Max Limit : 2"
             android:textColor="@color/colorMainText"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:typeface="monospace" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -89,8 +91,8 @@
             android:layout_weight="1"
             android:background="@color/colorAppOrange"
             android:text="@string/skip"
-            android:visibility="gone"
-            android:textColor="@color/colorWhite" />
+            android:textColor="@color/colorWhite"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btnInvite"
@@ -100,7 +102,8 @@
             android:layout_weight="1"
             android:background="@color/colorAppOrange"
             android:text="@string/invite"
-            android:textColor="@color/colorWhite" />
+            android:textColor="@color/colorWhite"
+            android:typeface="monospace" />
     </LinearLayout>
 
 </RelativeLayout>

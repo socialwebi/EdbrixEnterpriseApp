@@ -25,8 +25,8 @@
                 android:id="@+id/relativeLayoutLogo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginRight="@dimen/app_big_margin"
                 android:layout_marginEnd="@dimen/app_big_margin"
+                android:layout_marginRight="@dimen/app_big_margin"
                 android:visibility="visible">
 
                 <TextView
@@ -37,8 +37,9 @@
                     android:gravity="center"
                     android:paddingRight="@dimen/app_big_padding"
                     android:text="@string/create_video_course"
-                    android:textColor="@color/colorMainText"
-                    android:textSize="20sp" />
+                    android:textColor="@color/actionbarText"
+                    android:textSize="20sp"
+                    android:typeface="monospace" />
 
             </RelativeLayout>
 
@@ -82,7 +83,8 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="Add video "
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:typeface="monospace" />
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -132,7 +134,8 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="Add document "
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:typeface="monospace" />
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -158,8 +161,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:text="Course Content: "
-        android:visibility="invisible"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:typeface="monospace"
+        android:visibility="invisible" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/create_recycler"

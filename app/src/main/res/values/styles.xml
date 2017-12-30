@@ -24,7 +24,7 @@
 
     <style name="DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
-        <item name="color">@color/colorMainText</item>
+        <item name="color">@color/actionbarText</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

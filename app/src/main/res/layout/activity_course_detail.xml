@@ -37,8 +37,9 @@
                     android:gravity="center"
                     android:paddingRight="@dimen/app_big_margin"
                     android:text="@string/course_details"
-                    android:textColor="@color/colorMainText"
-                    android:textSize="20sp" />
+                    android:textColor="@color/actionbarText"
+                    android:textSize="20sp"
+                    android:typeface="monospace" />
 
             </RelativeLayout>
 
@@ -92,7 +93,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/colorMainText"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:typeface="monospace" />
                     </LinearLayout>
                 </RelativeLayout>
 
@@ -111,14 +113,15 @@
                         <Button
                             android:id="@+id/btnCourseStart"
                             android:layout_width="wrap_content"
-                            android:background="@drawable/background_enable_disable"
-                            android:text="@string/start_course"
+                            android:layout_height="wrap_content"
                             android:layout_marginRight="@dimen/app_normal_margin"
                             android:layout_marginTop="@dimen/app_min_margin"
+                            android:background="@drawable/background_enable_disable"
                             android:padding="@dimen/app_normal_padding"
+                            android:text="@string/start_course"
                             android:textColor="@color/colorWhite"
-                            android:visibility="gone"
-                            android:layout_height="wrap_content" />
+                            android:typeface="monospace"
+                            android:visibility="gone" />
 
                         <ImageView
                             android:id="@+id/btnCoursePlay"
@@ -155,7 +158,8 @@
                         android:layout_centerVertical="true"
                         android:text="By John Doe"
                         android:textColor="@color/colorAppOrange"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:typeface="monospace" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -168,7 +172,8 @@
                         android:id="@+id/txtCourseDesc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorMainText" />
+                        android:textColor="@color/colorMainText"
+                        android:typeface="monospace" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

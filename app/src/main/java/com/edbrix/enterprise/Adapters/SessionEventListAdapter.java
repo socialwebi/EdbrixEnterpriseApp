@@ -2,10 +2,13 @@ package com.edbrix.enterprise.Adapters;
 
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -59,6 +62,12 @@ public class SessionEventListAdapter extends RecyclerView.Adapter<SessionEventLi
         holder.title.setText(list.get(position).getTitle());
         holder.place.setText(list.get(position).getLocation());
         holder.time.setText(list.get(position).getStartDateTime() + " - " + list.get(position).getEndDateTime());
+        if (list.get(position).getDescription() != null && !list.get(position).getDescription().isEmpty()) {
+            holder.info.setText(list.get(position).getDescription());
+            holder.infoBtn.setVisibility(View.VISIBLE);
+        } else {
+            holder.infoBtn.setVisibility(View.GONE);
+        }
 
     }
 
@@ -81,6 +90,9 @@ public class SessionEventListAdapter extends RecyclerView.Adapter<SessionEventLi
         private TextView title;
         private TextView time;
         private TextView place;
+        private TextView info;
+        private ImageButton infoBtn;
+        private boolean infoShowing;
 
         ViewHolder(View itemView, final SessionEventItemListener sessionEventItemListener) {
             super(itemView);
@@ -91,6 +103,21 @@ public class SessionEventListAdapter extends RecyclerView.Adapter<SessionEventLi
             title = itemView.findViewById(R.id.training_session_name);
             time = itemView.findViewById(R.id.training_session_time);
             place = itemView.findViewById(R.id.training_session_place);
+            info = itemView.findViewById(R.id.training_session_text_info);
+            infoBtn = itemView.findViewById(R.id.training_session_button_info);
+            infoBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    infoShowing = !infoShowing;
+                    if (infoShowing) {
+                        info.setVisibility(View.VISIBLE);
+                        infoBtn.setImageDrawable(ContextCompat.getDrawable(context, R.mipmap.info_active_icon));
+                    } else {
+                        info.setVisibility(View.GONE);
+                        infoBtn.setImageDrawable(ContextCompat.getDrawable(context, R.mipmap.info_icon));
+                    }
+                }
+            });
 
             itemView.setClickable(true);
             itemView.setOnClickListener(new View.OnClickListener() {

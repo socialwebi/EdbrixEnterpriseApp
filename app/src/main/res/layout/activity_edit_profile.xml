@@ -44,8 +44,9 @@
                         android:gravity="center"
                         android:paddingRight="@dimen/app_big_padding"
                         android:text="@string/edit_profile"
-                        android:textColor="@color/colorMainText"
-                        android:textSize="20sp" />
+                        android:textColor="@color/actionbarText"
+                        android:textSize="20sp"
+                        android:typeface="monospace" />
 
                 </RelativeLayout>
 

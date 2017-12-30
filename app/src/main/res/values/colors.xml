@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#f5f5f5</color>
-    <color name="colorPrimaryDark">#666666</color>
+    <color name="colorPrimaryDark">#505050</color>
     <color name="colorAccent">#ff6600</color>
 
     <color name="WalkThroughTextColor">#666666</color>
@@ -30,5 +30,6 @@
 
     <color name="publisher_border_color">#FFFFFF</color>
     <color name="archiving_indicator_color">#FF0000</color>
+    <color name="actionbarText">#505050</color>
 
 </resources>

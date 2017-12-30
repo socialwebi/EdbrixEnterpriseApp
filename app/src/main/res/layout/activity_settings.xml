@@ -35,7 +35,7 @@
                     android:gravity="center"
                     android:paddingRight="@dimen/app_big_margin"
                     android:text="@string/settings"
-                    android:textColor="@color/colorMainText"
+                    android:textColor="@color/actionbarText"
                     android:textSize="20sp"
                     android:typeface="monospace" />
 
@@ -89,6 +89,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:text="@string/name"
+                        android:textColor="@color/actionbarText"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:typeface="monospace" />
@@ -132,6 +133,7 @@
                     android:drawableStart="@android:drawable/ic_menu_upload"
                     android:gravity="center_vertical"
                     android:text="@string/change_profile"
+                    android:textColor="@color/actionbarText"
                     android:typeface="monospace" />
 
                 <ImageView
@@ -171,6 +173,7 @@
                     android:drawableStart="@android:drawable/ic_menu_edit"
                     android:gravity="center_vertical"
                     android:text="@string/edit_profile"
+                    android:textColor="@color/actionbarText"
                     android:typeface="monospace" />
 
                 <ImageView
@@ -210,6 +213,7 @@
                     android:drawableStart="@mipmap/change_password"
                     android:gravity="center_vertical"
                     android:text="@string/change_password"
+                    android:textColor="@color/actionbarText"
                     android:typeface="monospace" />
 
                 <ImageView
@@ -249,6 +253,7 @@
                     android:drawableStart="@mipmap/tour"
                     android:gravity="center_vertical"
                     android:text="@string/app_tour"
+                    android:textColor="@color/actionbarText"
                     android:typeface="monospace" />
 
                 <ImageView
@@ -290,6 +295,7 @@
                     android:drawableStart="@mipmap/share"
                     android:gravity="center_vertical"
                     android:text="@string/share"
+                    android:textColor="@color/actionbarText"
                     android:typeface="monospace" />
 
                 <ImageView
@@ -329,6 +335,7 @@
                     android:drawableStart="@mipmap/logout"
                     android:gravity="center_vertical"
                     android:text="@string/logout"
+                    android:textColor="@color/actionbarText"
                     android:typeface="monospace" />
 
                 <ImageView

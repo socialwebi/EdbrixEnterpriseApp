@@ -42,7 +42,7 @@
                         android:gravity="center"
                         android:paddingRight="@dimen/app_big_padding"
                         android:text="@string/set_availability"
-                        android:textColor="@color/colorMainText"
+                        android:textColor="@color/actionbarText"
                         android:textSize="20sp"
                         android:typeface="monospace" />
 

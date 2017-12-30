@@ -92,7 +92,9 @@
     <string name="welcome_title">Welcome to Edbrix </string>
     <string name="welcome_description"> Edbrix, a premier collaborative education platform enables enhanced education and optimal use of resources. It offers numerous innovative benefits for education and PD. Become an exemplary institution, by ensuring superior performance without extending your resources. </string>
     <string name="submit"> Submit </string>
+    <string name="submit_course"> Submit Course </string>
     <string name="complete_after"> Complete after </string>
+    <string name="complete_continue"> Complete &amp; Continue </string>
     <string name="login"> Login </string>
     <string name="signin"> Sign In </string>
     <string name="signup"> Sign Up </string>
