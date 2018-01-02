@@ -275,6 +275,7 @@
                 android:textStyle="bold"
                 android:typeface="monospace" />
 
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
