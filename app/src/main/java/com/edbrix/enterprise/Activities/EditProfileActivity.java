@@ -14,6 +14,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -40,14 +41,14 @@ public class EditProfileActivity extends BaseActivity {
 
     Context context;
     ConstraintLayout layout;
-    Spinner _edit_profile_name_title;
-    Spinner _edit_profile_timezone;
-    TextInputEditText _edit_profile_first_name;
-    TextInputEditText _edit_profile_last_name;
-    TextInputEditText _edit_profile_dob;
-    TextInputEditText _edit_profile_about_you;
-    CheckBox _edit_profile_check_1;
-    CheckBox _edit_profile_check_2;
+    Spinner spnrTitle;
+    Spinner spnrTimezone;
+    EditText edtFirstName;
+    EditText edtLastName;
+    EditText edtDOB;
+    EditText edtAbtUrSelf;
+    CheckBox checkEmailNotification;
+    CheckBox checkCommentOnWall;
     User user;
     private String firstName;
     private String lastName;
@@ -58,7 +59,7 @@ public class EditProfileActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_profile);
+        setContentView(R.layout.activity_edit_profile_new);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -68,29 +69,29 @@ public class EditProfileActivity extends BaseActivity {
         user = SettingsMy.getActiveUser();
 
         layout = findViewById(R.id.edit_profile_layout);
-        _edit_profile_timezone = findViewById(R.id.edit_profile_timezone);
-        _edit_profile_name_title = findViewById(R.id.edit_profile_name_title);
+        spnrTimezone = findViewById(R.id.spnrTimezone);
+        spnrTitle = findViewById(R.id.spnrTitle);
 
-        _edit_profile_first_name = findViewById(R.id.edit_profile_first_name);
-        _edit_profile_last_name = findViewById(R.id.edit_profile_last_name);
-        _edit_profile_dob = findViewById(R.id.edit_profile_dob);
-        _edit_profile_about_you = findViewById(R.id.edit_profile_about_you);
-        _edit_profile_check_1 = findViewById(R.id.edit_profile_check_1);
-        _edit_profile_check_2 = findViewById(R.id.edit_profile_check_2);
+        edtFirstName = findViewById(R.id.edtFirstName);
+        edtLastName = findViewById(R.id.edtLastName);
+        edtDOB = findViewById(R.id.edtDOB);
+        edtAbtUrSelf = findViewById(R.id.edtAbtUrSelf);
+        checkEmailNotification = findViewById(R.id.checkEmailNotification);
+        checkCommentOnWall = findViewById(R.id.checkCommentOnWall);
 
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this, R.array.name_title, R.layout.custom_text_layout);
         adapter.setDropDownViewResource(R.layout.custom_text_layout);
-        _edit_profile_name_title.setAdapter(adapter);
+        spnrTitle.setAdapter(adapter);
 
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(
                 this, R.array.name_title, R.layout.custom_text_layout);
         adapter2.setDropDownViewResource(R.layout.custom_text_layout);
-        _edit_profile_timezone.setAdapter(adapter2);
+        spnrTimezone.setAdapter(adapter2);
 
 
-        _edit_profile_dob.setOnClickListener(new View.OnClickListener() {
+        edtDOB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -107,8 +108,8 @@ public class EditProfileActivity extends BaseActivity {
                                                   int monthOfYear, int dayOfMonth) {
                                 if (view.isShown()) {
                                     String mDate = (monthOfYear + 1) + "/" + dayOfMonth + "/" + year;
-                                    _edit_profile_dob.setText(mDate);
-                                    _edit_profile_dob.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+                                    edtDOB.setText(mDate);
+                                    edtDOB.setImeOptions(EditorInfo.IME_ACTION_NEXT);
                                 }
                             }
                         }, mYear, mMonth, mDay);
@@ -122,10 +123,10 @@ public class EditProfileActivity extends BaseActivity {
     }
 
     private void setValues() {
-        _edit_profile_first_name.setText(user.getFirstName());
-        _edit_profile_last_name.setText(user.getLastName());
+        edtFirstName.setText(user.getFirstName());
+        edtLastName.setText(user.getLastName());
         // _edit_profile_dob.setText(user.getGender());
-        _edit_profile_about_you.setText(user.getAboutMe());
+        edtAbtUrSelf.setText(user.getAboutMe());
 
     }
 
@@ -142,24 +143,24 @@ public class EditProfileActivity extends BaseActivity {
 
     private void checkValidations() {
 
-        firstName = _edit_profile_first_name.getText().toString().trim();
-        lastName = _edit_profile_last_name.getText().toString().trim();
-        dob = _edit_profile_dob.getText().toString().trim();
-        aboutYou = _edit_profile_about_you.getText().toString().trim();
+        firstName = edtFirstName.getText().toString().trim();
+        lastName = edtLastName.getText().toString().trim();
+        dob = edtDOB.getText().toString().trim();
+        aboutYou = edtAbtUrSelf.getText().toString().trim();
 
+        edtFirstName.setError(null);
+        edtLastName.setError(null);
+        edtAbtUrSelf.setError(null);
+        edtDOB.setError(null);
 
         if (firstName.isEmpty()) {
-            _edit_profile_first_name.setError(getString(R.string.error_edit_text));
+            edtFirstName.setError(getString(R.string.error_edit_text));
         } else if (lastName.isEmpty()) {
-            _edit_profile_first_name.setError(null);
-            _edit_profile_last_name.setError(getString(R.string.error_edit_text));
+            edtLastName.setError(getString(R.string.error_edit_text));
         } else if (dob.isEmpty()) {
-            _edit_profile_last_name.setError(null);
-            _edit_profile_dob.setError(getString(R.string.error_edit_text));
+            edtDOB.setError(getString(R.string.error_edit_text));
         } else if (aboutYou.isEmpty()) {
-            _edit_profile_dob.setError(null);
-            _edit_profile_about_you.setError(getString(R.string.error_edit_text));
-
+            edtAbtUrSelf.setError(getString(R.string.error_edit_text));
         } else {
 
             // saveProfile();
@@ -176,8 +177,8 @@ public class EditProfileActivity extends BaseActivity {
                 jo.put("UserId", user.getId());
                 jo.put("AccessToken", user.getAccessToken());
 
-                _edit_profile_check_1.isChecked();
-                _edit_profile_check_2.isChecked();
+                checkEmailNotification.isChecked();
+                checkCommentOnWall.isChecked();
 
             } catch (JSONException e) {
                 Timber.e(e, "Parse profile exception");

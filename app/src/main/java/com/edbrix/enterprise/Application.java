@@ -1,8 +1,10 @@
 package com.edbrix.enterprise;
 
 
+import android.os.Environment;
 import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -10,6 +12,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.edbrix.enterprise.Utils.FontsOverride;
 import com.edbrix.enterprise.Volley.OkHttpStack;
+
+import java.io.File;
 
 import timber.log.Timber;
 
@@ -46,6 +50,12 @@ public class Application extends android.app.Application {
         super.onCreate();
 
         mInstance = this;
+
+        File yourAppStorageDir = new File(Environment.getExternalStorageDirectory(), "/" + getResources().getString(R.string.app_name) + "/");
+        if (!yourAppStorageDir.exists()) {
+            boolean isDirCreated = yourAppStorageDir.mkdirs();
+            Log.d(TAG, "App mediaStorageDirectory created :" + isDirCreated);
+        }
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());

@@ -20,7 +20,7 @@
     <string name="price">Price  </string>
     <string name="payment">PayPal Email </string>
     <string name="session">Session start </string>
-    <string name="title">TItle </string>
+    <string name="title">Title </string>
     <string name="start_date">Start Date </string>
     <string name="start_time">Start Time </string>
     <string name="minutes">Minutes </string>
@@ -75,6 +75,8 @@
     <string name="check_course_wall">Learner post/comment on wall </string>
 
 
+    <string name="upload_answer">Upload Answer</string>
+    <string name="download">Download</string>
     <string name="content">Content</string>
     <string name="survey">Survey</string>
     <string name="test">Test</string>
@@ -117,7 +119,13 @@
     <string name="edit_profile">Edit Profile</string>
     <string name="all_meetings"> View All Meetings </string>
     <string name="all_courses"> View All Courses </string>
-
+    <string name="about_yourself">About Yourself</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="enter_first_name">Enter first name</string>
+    <string name="enter_last_name">Enter last name</string>
+    <string name="enter_your_tagline">Enter your tagline</string>
+    <string name="enter_about_urself">Enter about yourself</string>
+    <string name="select_date_of_birth">Select date of birth</string>
     <string-array name="minutes">
         <item>Select Timespan</item>
         <item>15</item>

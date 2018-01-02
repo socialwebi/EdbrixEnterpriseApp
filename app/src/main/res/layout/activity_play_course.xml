@@ -338,6 +338,78 @@
                     android:scrollbars="vertical"
                     android:visibility="gone" />
 
+                <LinearLayout
+                    android:id="@+id/assignmentLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/app_normal_margin"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/app_normal_margin"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:text="@string/upload_answer"
+                            android:textColor="@color/actionbarText"
+                            android:typeface="monospace" />
+
+                        <TextView
+                            android:id="@+id/btnDownloadASContent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginBottom="@dimen/app_normal_margin"
+                            android:padding="@dimen/app_normal_padding"
+                            android:text="@string/download"
+                            android:textAllCaps="true"
+                            android:textColor="@color/colorAppOrange"
+                            android:textStyle="bold"
+                            android:typeface="monospace"
+                            android:visibility="gone" />
+
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="@dimen/app_big_margin"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/btnBrowseFile"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/background_enable_disable"
+                            android:enabled="true"
+                            android:text="@string/browse"
+                            android:textColor="@color/colorWhite" />
+
+                        <TextView
+                            android:id="@+id/edtAssignmentFile"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/border"
+                            android:hint="only ppt | pptx | doc | docx | xls | xlsx | pdf | jpg | jpeg | gif | png : files only "
+                            android:padding="@dimen/app_normal_padding"
+                            android:textColor="@color/colorMainText"
+                            android:textColorHint="@color/colorHintText"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView

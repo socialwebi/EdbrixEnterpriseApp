@@ -14,6 +14,7 @@ public class Constants {
     public final static String contentType_Test = "TEST";
     public final static String contentType_Section = "sec";
     public final static String contentType_TrainingSession = "TS";
+    public final static String contentType_Assignment = "AS";
     public final static String contentType_Event = "E";
     public final static String docContentType_File = "file";
     public final static String docContentType_Img = "img";

@@ -326,7 +326,7 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
                 .setSelectedFiles(photoPaths)
                 .setActivityTheme(R.style.AppTheme)
                 .enableVideoPicker(true)
-                .enableCameraSupport(false)
+                .enableCameraSupport(true)
                 .enableImagePicker(false)
                 .showGifs(false)
                 .showFolderView(true)
@@ -693,23 +693,25 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
                     photoPaths = new ArrayList<>();
                     photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
                     // mOutputText.setText(photoPaths.toString());
-                    filePath = Uri.fromFile(new File(photoPaths.get(0)));
+                    if (!photoPaths.isEmpty()) {
+                        filePath = Uri.fromFile(new File(photoPaths.get(0)));
 
-                    imageView.setVisibility(View.VISIBLE);
+                        imageView.setVisibility(View.VISIBLE);
 
-                    Glide.with(context).load(filePath)
-                            .apply(RequestOptions
-                                    .centerCropTransform()
-                                    .dontAnimate()
-                                    .override(imageSize, imageSize)
-                                    .placeholder(droidninja.filepicker.R.drawable.image_placeholder))
-                            .thumbnail(0.5f)
-                            .into(imageView);
+                        Glide.with(context).load(filePath)
+                                .apply(RequestOptions
+                                        .centerCropTransform()
+                                        .dontAnimate()
+                                        .override(imageSize, imageSize)
+                                        .placeholder(droidninja.filepicker.R.drawable.image_placeholder))
+                                .thumbnail(0.5f)
+                                .into(imageView);
 
-                    imageView.setClickable(true);
-                    fileExtension = photoPaths.get(0).substring(photoPaths.get(0).lastIndexOf("."));
-                    Log.d("TAG", photoPaths.toString() + " _-_ " + fileExtension);
-                    // uploadToEdbrix(uri);
+                        imageView.setClickable(true);
+                        fileExtension = photoPaths.get(0).substring(photoPaths.get(0).lastIndexOf("."));
+                        Log.d("TAG", photoPaths.toString() + " _-_ " + fileExtension);
+                        // uploadToEdbrix(uri);
+                    }
                 }
                 break;
 
@@ -718,20 +720,22 @@ public class AddFilesActivity extends BaseActivity implements EasyPermissions.Pe
                     docPaths = new ArrayList<>();
                     docPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS));
                     //mOutputText.setText(docPaths.toString());
-                    filePath = Uri.fromFile(new File(docPaths.get(0)));
-                    Glide.with(context).load(filePath)
-                            .apply(RequestOptions
-                                    .centerCropTransform()
-                                    .dontAnimate()
-                                    .override(imageSize, imageSize)
-                                    .placeholder(R.mipmap.document_icon))
-                            .thumbnail(0.5f)
-                            .into(imageView);
+                    if (!docPaths.isEmpty()) {
+                        filePath = Uri.fromFile(new File(docPaths.get(0)));
+                        Glide.with(context).load(filePath)
+                                .apply(RequestOptions
+                                        .centerCropTransform()
+                                        .dontAnimate()
+                                        .override(imageSize, imageSize)
+                                        .placeholder(R.mipmap.document_icon))
+                                .thumbnail(0.5f)
+                                .into(imageView);
 
-                    imageView.setClickable(false);
-                    fileExtension = docPaths.get(0).substring(docPaths.get(0).lastIndexOf("."));
-                    Log.d("TAG", docPaths.toString() + " _-_ " + fileExtension);
-                    // uploadToEdbrix(uri);
+                        imageView.setClickable(false);
+                        fileExtension = docPaths.get(0).substring(docPaths.get(0).lastIndexOf("."));
+                        Log.d("TAG", docPaths.toString() + " _-_ " + fileExtension);
+                        // uploadToEdbrix(uri);
+                    }
                 }
                 break;
         }

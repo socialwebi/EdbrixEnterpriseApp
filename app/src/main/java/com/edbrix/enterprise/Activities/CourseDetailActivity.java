@@ -6,10 +6,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,7 +30,7 @@ public class CourseDetailActivity extends BaseActivity {
 
     private TextView title;
     private TextView txtCourseBy;
-    private TextView courseDesc;
+    private WebView courseDesc;
 
     private ImageView courseImage;
     private ImageView btnCoursePlay;
@@ -57,7 +59,7 @@ public class CourseDetailActivity extends BaseActivity {
 
         title = (TextView) toolbar.findViewById(R.id.title);
         txtCourseBy = (TextView) findViewById(R.id.txtCourseBy);
-        courseDesc = (TextView) findViewById(R.id.txtCourseDesc);
+        courseDesc = (WebView) findViewById(R.id.txtCourseDesc);
         fabEdit = (FloatingActionButton) findViewById(R.id.fabEdit);
 
         courseImage = (ImageView) findViewById(R.id.courseImage);
@@ -155,7 +157,17 @@ public class CourseDetailActivity extends BaseActivity {
     private void setCourseDetails() {
         title.setText(courseDetailItem.getTitle());
         txtCourseBy.setText("By " + courseDetailItem.getInstructor_name());
-        courseDesc.setText(courseDetailItem.getDescription());
+        String justifiedDesc="<html><body style=\"text-align:justify;font-family:Open Sans;\">"+courseDetailItem.getDescription()+" </body></html";
+
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+//            courseDesc.setText(Html.fromHtml(justifiedDesc,Html.FROM_HTML_MODE_LEGACY));
+//        } else {
+//            courseDesc.setText(Html.fromHtml(justifiedDesc));
+//        }
+
+        courseDesc.loadData(justifiedDesc,"text/html", "utf-8");
+
+//        courseDesc.setText(courseDetailItem.getDescription());
         btnCourseCall.setTag(courseDetailItem.getInstructor_mobileno());
         btnCourseMsg.setTag(courseDetailItem.getInstructor_mobileno());
 

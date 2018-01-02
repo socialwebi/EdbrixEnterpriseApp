@@ -1,11 +1,16 @@
 package com.edbrix.enterprise.Activities;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,6 +26,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.widget.Button;
@@ -68,16 +74,34 @@ import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
 import com.edbrix.enterprise.commons.AlertDialogManager;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import droidninja.filepicker.FilePickerBuilder;
+import droidninja.filepicker.FilePickerConst;
+import droidninja.filepicker.utils.Orientation;
+import permissions.dispatcher.NeedsPermission;
+import pub.devrel.easypermissions.EasyPermissions;
 import timber.log.Timber;
 import us.zoom.sdk.JoinMeetingOptions;
 import us.zoom.sdk.MeetingError;
@@ -94,6 +118,8 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
 
     public static final String courseItemBundleKey = "courseItem";
 
+    static final int REQUEST_PERMISSION_EXTERNAL = 1004;
+
     private Courses courseItem;
 
     private LinearLayout checkboxGroupLayout;
@@ -101,6 +127,7 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
     private LinearLayout imageContentLayout;
     private LinearLayout timerLayout;
     private LinearLayout audioContentLayout;
+    private LinearLayout assignmentLayout;
     private RelativeLayout imageChoiceGroupLayout;
     private RadioGroup radioGroupLayout;
 
@@ -114,6 +141,10 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
     private TextView txtSubmitBtn;
     private TextView txtSkipBtn;
     private TextView txtSurveyProgress;
+    private TextView edtAssignmentFile;
+    private TextView btnDownloadASContent;
+
+    private Button btnBrowseFile;
 
     private EditText editTxtLongAns;
 
@@ -174,12 +205,23 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
     private String sessionID;
     private String sessionTOKEN;
 
+    private ArrayList<String> assignmentFilePaths = new ArrayList<>();
+
+    private FirebaseStorage storage;
+    private StorageReference storageRef;
+    private UploadTask uploadTask;
+
+    private File assignmentFile;
+
 //    private ImageLoader imageLoader; // Get singleton instance
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_drawer);
+
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReferenceFromUrl("gs://edbrixcbuilder.appspot.com");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -193,6 +235,8 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
         txtSubmitBtn = (TextView) findViewById(R.id.txtSubmitBtn);
         txtSkipBtn = (TextView) findViewById(R.id.txtSkipBtn);
         editTxtLongAns = (EditText) findViewById(R.id.editTxtLongAns);
+        edtAssignmentFile = (TextView) findViewById(R.id.edtAssignmentFile);
+        btnDownloadASContent = (TextView) findViewById(R.id.btnDownloadASContent);
         txtTimer = (TextView) findViewById(R.id.txtTimer);
         txtSurveyProgress = (TextView) findViewById(R.id.txtSurveyProgress);
 
@@ -200,6 +244,7 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
         imgNextBtn = (ImageView) findViewById(R.id.imgNextBtn);
 
         btnBack = (Button) findViewById(R.id.btnBack);
+        btnBrowseFile = (Button) findViewById(R.id.btnBrowseFile);
 
         imgContentPrevBtn = (ImageView) findViewById(R.id.imgContentPrevBtn);
         imgContentNextBtn = (ImageView) findViewById(R.id.imgContentNextBtn);
@@ -248,6 +293,7 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
         imageContentLayout = (LinearLayout) findViewById(R.id.imageContentLayout);
         timerLayout = (LinearLayout) findViewById(R.id.timerLayout);
         audioContentLayout = (LinearLayout) findViewById(R.id.audioContentLayout);
+        assignmentLayout = (LinearLayout) findViewById(R.id.assignmentLayout);
         imageChoiceGroupLayout = (RelativeLayout) findViewById(R.id.imageChoiceGroupLayout);
         radioGroupLayout = (RadioGroup) findViewById(R.id.radioGroupLayout);
         imageChoiceListView = (RecyclerView) findViewById(R.id.imageChoiceListView);
@@ -264,8 +310,8 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
 
         courseItem = (Courses) getIntent().getSerializableExtra(courseItemBundleKey);
 
-        sessionID ="";
-        sessionTOKEN="";
+        sessionID = "";
+        sessionTOKEN = "";
 
         if (courseItem != null) {
             title.setText(courseItem.getTitle());
@@ -360,7 +406,7 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
 
                                 if (SettingsMy.getActiveUser().getUserType().equals("L")) {
                                     if (response.getJumpContentId().equals("0")) {
-                                        if (response.getCourseContentList() != null)
+                                        if (response.getCourseContentList() != null && !response.getCourseContentList().isEmpty())
                                             setQuestionAchievementIndex("0", response.getCourseContentList());
 
                                         getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), response.getJumpContentId(), "0", "0");
@@ -373,7 +419,7 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
                                                         dialog.dismiss();
-                                                        if (response.getCourseContentList() != null)
+                                                        if (response.getCourseContentList() != null && !response.getCourseContentList().isEmpty())
                                                             setQuestionAchievementIndex(response.getJumpContentId(), response.getCourseContentList());
 
                                                         getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), response.getJumpContentId(), "0", "0");
@@ -384,7 +430,7 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
                                                     public void onClick(DialogInterface dialog, int i) {
                                                         dialog.dismiss();
 
-                                                        if (response.getCourseContentList() != null)
+                                                        if (response.getCourseContentList() != null && !response.getCourseContentList().isEmpty())
                                                             setQuestionAchievementIndex("0", response.getCourseContentList());
 
                                                         // set start over as 1 for starting course from start
@@ -396,7 +442,7 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
                                     }
                                 } else {
 
-                                    if (response.getCourseContentList() != null)
+                                    if (response.getCourseContentList() != null && !response.getCourseContentList().isEmpty())
                                         setQuestionAchievementIndex("0", response.getCourseContentList());
 
                                     getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), response.getJumpContentId(), "0", "0");
@@ -513,7 +559,7 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
         }
     }
 
-    private void submitPlayCourseContent(final User activeUser, final String courseId, String contentId, String questionId, String contentType, String contentCompleteTypeId, String longAnswer, JSONArray choiceJsonArray) {
+    private void submitPlayCourseContent(final User activeUser, final String courseId, String contentId, String questionId, String contentType, String contentCompleteTypeId, String longAnswer, String assignmentFileName, JSONArray choiceJsonArray) {
         try {
             showBusyProgress();
 
@@ -534,6 +580,10 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
             jo.put("choiceId", choiceJsonArray);
             if (longAnswer != null && longAnswer.length() > 0) {
                 jo.put("longAnswer", longAnswer);
+            }
+
+            if (assignmentFileName != null && assignmentFileName.length() > 0) {
+                jo.put("fileName", assignmentFileName);
             }
 
 /*            jo.put("UserId", "1");
@@ -567,7 +617,8 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
                                     finish();
                                 } else {
 
-                                    setQuestionAchievementIndex(response.getNext_content_id(), courseContentDataList);
+                                    if (courseContentDataList != null && !courseContentDataList.isEmpty())
+                                        setQuestionAchievementIndex(response.getNext_content_id(), courseContentDataList);
 
                                     getPlayCourseContent(SettingsMy.getActiveUser(), courseId, response.getNext_content_id(), response.getQuestion_id(), "0");
                                 }
@@ -594,8 +645,8 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
 
     private void clearData() {
 
-        sessionID ="";
-        sessionTOKEN="";
+        sessionID = "";
+        sessionTOKEN = "";
 
         // questionIndex = 0;
         contentDescWebView.setVisibility(View.GONE);
@@ -646,6 +697,12 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
         txtSkipBtn.setVisibility(View.GONE);
 
         sessionEventRecyclerView.setVisibility(View.GONE);
+
+        assignmentLayout.setVisibility(View.GONE);
+        edtAssignmentFile.setText("");
+        assignmentFile = null;
+        assignmentFilePaths = null;
+        btnDownloadASContent.setVisibility(View.GONE);
     }
 
     private void setContentData(PlayCourseContentResponseData response) {
@@ -677,7 +734,8 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
 
         choiceInput = new ArrayList<>();
 //        txtContentDesc.setText(Html.fromHtml(response.getCourse_content().getDescription()));
-        loadContentDescWebView(response.getCourse_content().getDescription());
+        if (response.getCourse_content().getDescription() != null && !response.getCourse_content().getDescription().isEmpty())
+            loadContentDescWebView(response.getCourse_content().getDescription());
 //        if(response.getContent_type().equalsIgnoreCase(Constants.contentType_WC)){
 //            txtContentType.setText(getString(R.string.web_content));
 //            mediaWebView.setVisibility(View.VISIBLE);
@@ -753,6 +811,19 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
                 } else {
                     txtSubmitBtn.setVisibility(View.GONE);
                 }
+
+                break;
+
+            case Constants.contentType_Assignment:
+//                new DownloadFileFromURL().execute("");
+                if (response.getCourse_content().getAssignment_content() != null && !response.getCourse_content().getAssignment_content().isEmpty()) {
+                    loadDocWebContent(response.getCourse_content().getAssignment_content());
+                    btnDownloadASContent.setVisibility(View.VISIBLE);
+                } else {
+                    btnDownloadASContent.setVisibility(View.GONE);
+                }
+
+                assignmentLayout.setVisibility(View.VISIBLE);
 
                 break;
         }
@@ -1085,10 +1156,6 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
 
                 stopCountdown();
                 if (playCourseContentResponseData != null) {
-//                    String qId = playCourseContentResponseData.getQuestion_id();
-//                    if (playCourseContentResponseData.getContent_type().equalsIgnoreCase(Constants.contentType_Test) || playCourseContentResponseData.getContent_type().equalsIgnoreCase(Constants.contentType_Survey)) {
-//                        qId = playCourseContentResponseData.getCourse_content().getSubmit_data().getQuestion_id();
-//                    }
 
                     if (playCourseContentResponseData.getContent_type().equalsIgnoreCase(Constants.contentType_Test) ||
                             playCourseContentResponseData.getContent_type().equalsIgnoreCase(Constants.contentType_Survey)) {
@@ -1107,13 +1174,33 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
                         }
                     }
 
-                    submitPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(),
-                            playCourseContentResponseData.getContent_id(),
-                            questionId,
-                            playCourseContentResponseData.getContent_type(),
-                            playCourseContentResponseData.getContentcomplete_type_id(),
-                            editTxtLongAns.getText().toString(),
-                            mJSONArray);
+                    if (playCourseContentResponseData.getContent_type().equalsIgnoreCase(Constants.contentType_Assignment)) {
+
+                        if (assignmentFile != null && !edtAssignmentFile.getText().toString().isEmpty()) {
+                            uploadAssignmentSubmit(assignmentFile);
+                        } else {
+                            if (playCourseContentResponseData != null) {
+                                submitPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(),
+                                        playCourseContentResponseData.getContent_id(),
+                                        playCourseContentResponseData.getQuestion_id(),
+                                        playCourseContentResponseData.getContent_type(),
+                                        playCourseContentResponseData.getContentcomplete_type_id(),
+                                        null,
+                                        null,
+                                        mJSONArray);
+                            }
+                        }
+
+                    } else {
+                        submitPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(),
+                                playCourseContentResponseData.getContent_id(),
+                                questionId,
+                                playCourseContentResponseData.getContent_type(),
+                                playCourseContentResponseData.getContentcomplete_type_id(),
+                                editTxtLongAns.getText().toString(),
+                                null,
+                                mJSONArray);
+                    }
                 }
             }
         });
@@ -1148,14 +1235,16 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
                             !playCourseContentResponseData.getCourse_content().getSubmit_data().getNext_question_id().equalsIgnoreCase("0")) {
                         showBusyProgress();
 
-                        setQuestionAchievementIndex(playCourseContentResponseData.getContent_id(), courseContentDataList);
+                        if (courseContentDataList != null && !courseContentDataList.isEmpty())
+                            setQuestionAchievementIndex(playCourseContentResponseData.getContent_id(), courseContentDataList);
 
                         getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), playCourseContentResponseData.getContent_id(), playCourseContentResponseData.getCourse_content().getSubmit_data().getNext_question_id(), "0");
                         questionIndex++;
                     } else {
                         showBusyProgress();
 
-                        setQuestionAchievementIndex(playCourseContentResponseData.getNext_content_id(), courseContentDataList);
+                        if (courseContentDataList != null && !courseContentDataList.isEmpty())
+                            setQuestionAchievementIndex(playCourseContentResponseData.getNext_content_id(), courseContentDataList);
 
                         getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), playCourseContentResponseData.getNext_content_id(), "0", "0");
                         questionIndex = 0;
@@ -1180,7 +1269,8 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
                 } else {
                     showBusyProgress();
 
-                    setQuestionAchievementIndex(playCourseContentResponseData.getPrev_content_id(), courseContentDataList);
+                    if (courseContentDataList != null && !courseContentDataList.isEmpty())
+                        setQuestionAchievementIndex(playCourseContentResponseData.getPrev_content_id(), courseContentDataList);
 
                     getPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(), playCourseContentResponseData.getPrev_content_id(), "0", "0");
                 }
@@ -1266,6 +1356,27 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
 
             }
         });
+        btnDownloadASContent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (playCourseContentResponseData != null && playCourseContentResponseData.getCourse_content() != null) {
+
+                    if (playCourseContentResponseData.getCourse_content().getAssignment_content() != null && !playCourseContentResponseData.getCourse_content().getAssignment_content().isEmpty()) {
+                        downloadAssignmentContent(playCourseContentResponseData.getCourse_content().getAssignment_content());
+                    } else {
+                        showToast("No content url found");
+                    }
+
+                }
+            }
+        });
+
+        btnBrowseFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                browseFileForAssignmentUpload();
+            }
+        });
 
     }
 
@@ -1281,10 +1392,10 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 
-                                if(sessionEventContentData.getSessionId()!=null)
+                                if (sessionEventContentData.getSessionId() != null)
                                     sessionID = sessionEventContentData.getSessionId();
 
-                                if(sessionEventContentData.getSessionToken()!=null)
+                                if (sessionEventContentData.getSessionToken() != null)
                                     sessionTOKEN = sessionEventContentData.getSessionToken();
 
                                 if (sessionEventContentData.getConnectType().equals("ZOOM")) {
@@ -1318,16 +1429,16 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
                 day.setText(sessionEventContentData.getSessionEvtDay());
 
                 TextView date = (TextView) dialog.getCustomView().findViewById(R.id.session_date);
-                date.setText(sessionEventContentData.getSessionEvtMonth()+", "+sessionEventContentData.getSessionEvtYear());
+                date.setText(sessionEventContentData.getSessionEvtMonth() + ", " + sessionEventContentData.getSessionEvtYear());
 
                 TextView time = (TextView) dialog.getCustomView().findViewById(R.id.session_time);
-                time.setText(sessionEventContentData.getStartDateTime()+" - "+sessionEventContentData.getEndDateTime());
+                time.setText(sessionEventContentData.getStartDateTime() + " - " + sessionEventContentData.getEndDateTime());
 
                 TextView place = (TextView) dialog.getCustomView().findViewById(R.id.session_place);
                 place.setText(sessionEventContentData.getLocation());
 
                 TextView instructorName = (TextView) dialog.getCustomView().findViewById(R.id.instructor_name);
-                instructorName.setText("By "+sessionEventContentData.getInstructorName());
+                instructorName.setText("By " + sessionEventContentData.getInstructorName());
 
                 RoundedImageView instructorImg = (RoundedImageView) dialog.getCustomView().findViewById(R.id.instructor_pic);
 
@@ -1542,6 +1653,289 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
                         STYPE, "469520738", "USER NAME", opts);*/
 
         Log.i("TAG", "onClickBtnStartMeeting, ret=" + ret);
+    }
+
+    private void browseFileForAssignmentUpload() {
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            onPickFile();
+//            onPickImages();
+        } else {
+            EasyPermissions.requestPermissions(this,
+                    "This app needs to access your Documents.",
+                    REQUEST_PERMISSION_EXTERNAL,
+                    Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+
+    }
+
+    @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    public void onPickFile() {
+        String[] ppts = {".ppt", ".pptx"};
+        String[] pdfs = {".pdf"};
+        String[] docs = {".doc", ".docx"};
+        String[] xls = {".xls", ".xlsx"};
+        String[] jpg = {".jpg", ".jpeg", ".png"};
+        String[] gif = {".gif"};
+        FilePickerBuilder.getInstance()
+                .setMaxCount(1)
+                .setSelectedFiles(assignmentFilePaths)
+                .setActivityTheme(R.style.AppTheme)
+                .addFileSupport("DOC", docs, R.mipmap.doc_icon)
+                .addFileSupport("PDF", pdfs, R.mipmap.pdf_icon)
+                .addFileSupport("PPT", ppts, R.mipmap.ppt_icon)
+                .addFileSupport("XLS", xls, R.mipmap.xls_icon)
+                .addFileSupport("JPG/JPEG/PNG", jpg, R.drawable.image_placeholder)
+                .addFileSupport("GIF", gif, R.drawable.image_placeholder)
+                .enableDocSupport(false)
+                .withOrientation(Orientation.UNSPECIFIED)
+                .pickFile(this);
+    }
+
+    @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    public void onPickImages() {
+        FilePickerBuilder.getInstance()
+                .setMaxCount(1)
+                .setSelectedFiles(assignmentFilePaths)
+                .setActivityTheme(R.style.AppTheme)
+                .enableVideoPicker(false)
+                .enableCameraSupport(false)
+                .enableImagePicker(true)
+                .showGifs(true)
+                .showFolderView(true)
+                .enableSelectAll(false)
+                .withOrientation(Orientation.UNSPECIFIED)
+                .pickPhoto(this);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+
+            case FilePickerConst.REQUEST_CODE_DOC:
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    assignmentFilePaths = new ArrayList<>();
+                    assignmentFilePaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_DOCS));
+
+
+                    if (!assignmentFilePaths.isEmpty()) {
+                        assignmentFile = new File(assignmentFilePaths.get(0));
+                        edtAssignmentFile.setText(assignmentFile.getName());
+                    }
+
+//                    filePath = Uri.fromFile(new File(assignmentFilePaths.get(0)));
+//                    Glide.with(context).load(filePath)
+//                            .apply(RequestOptions
+//                                    .centerCropTransform()
+//                                    .dontAnimate()
+//                                    .override(imageSize, imageSize)
+//                                    .placeholder(R.mipmap.document_icon))
+//                            .thumbnail(0.5f)
+//                            .into(imageView);
+//
+//                    imageView.setClickable(false);
+//                    fileExtension = docPaths.get(0).substring(docPaths.get(0).lastIndexOf("."));
+//                    Log.d("TAG", docPaths.toString() + " _-_ " + fileExtension);
+                    // uploadToEdbrix(uri);
+                }
+                break;
+        }
+    }
+
+    private void uploadAssignmentSubmit(final File fileObject) {
+        try {
+
+            if (fileObject != null) {
+//                showBusyProgress("Uploading files..");
+                showBusyProgress();
+
+                String userId = SettingsMy.getActiveUser().getId();// get user Id from active user
+                StorageReference childRef = storageRef.child("enterprisecoursecontent/" + userId + "/" + fileObject.getName());
+
+                uploadTask = childRef.putFile(Uri.fromFile(fileObject));
+
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        hideBusyProgress();
+                        if (playCourseContentResponseData != null) {
+                            submitPlayCourseContent(SettingsMy.getActiveUser(), courseItem.getId(),
+                                    playCourseContentResponseData.getContent_id(),
+                                    playCourseContentResponseData.getQuestion_id(),
+                                    playCourseContentResponseData.getContent_type(),
+                                    playCourseContentResponseData.getContentcomplete_type_id(),
+                                    null,
+                                    fileObject.getName(),
+                                    mJSONArray);
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        hideBusyProgress();
+                        Log.v("Upload", "Fail Exception :" + e.getMessage());
+                        showToast(e.getMessage());
+                    }
+                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+//                        showBusyProgress("Uploading completed " + (int) progress + "%");
+                    }
+                });
+
+            } else {
+                showToast("NO file found");
+            }
+        } catch (Exception e) {
+            showToast(e.getMessage());
+            Log.v("Upload", e.getMessage());
+        }
+
+    }
+
+    private void downloadAssignmentContent(String assignmentContent) {
+        new DownloadFileFromURL().execute(assignmentContent);
+    }
+
+    /**
+     * https://storage.googleapis.com/edbrixcbuilder/storage/uploads/coursecontent/assignment/24666/59d36d1a5b964.jpg
+     * Background Async Task to download file
+     */
+    private class DownloadFileFromURL extends AsyncTask<String, String, String> {
+
+        /**
+         * Before starting background thread
+         * Show Progress Bar Dialog
+         */
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showBusyProgress("Downloading files..");
+        }
+
+        /**
+         * Downloading file in background thread
+         */
+        @Override
+        protected String doInBackground(String... f_url) {
+            int count;
+            try {
+                File downloadStorageDir = new File(Environment.getExternalStorageDirectory(), "/" + getResources().getString(R.string.app_name) + "/Downloads/");
+                if (!downloadStorageDir.exists()) {
+                    downloadStorageDir.mkdirs();
+                }
+
+                //https://docs.google.com/viewer?embedded=true&url=
+                String urlString = f_url[0];
+                if (urlString.contains("https://docs.google.com/viewer?embedded=true&url=")) {
+                    urlString = urlString.replace("https://docs.google.com/viewer?embedded=true&url=", "");
+                }
+
+                URL url = new URL(urlString);
+//                URL url = new URL("https://docs.google.com/viewer?embedded=true&url=https://storage.googleapis.com/edbrixcbuilder/storage/uploads/coursecontent/assignment/28228/5a4a14683eea5.docx");
+                URLConnection conection = url.openConnection();
+                conection.connect();
+                // this will be useful so that you can show a tipical 0-100% progress bar
+                int lenghtOfFile = conection.getContentLength();
+
+                // download the file
+                InputStream input = new BufferedInputStream(url.openStream(), 8192);
+
+                // Output stream
+                OutputStream output = new FileOutputStream(downloadStorageDir.getPath() + "/" + urlString.substring(urlString.lastIndexOf('/') + 1));
+
+                byte data[] = new byte[1024];
+
+                long total = 0;
+
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+                    // publishing the progress....
+                    // After this onProgressUpdate will be called
+                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
+
+                    // writing data to file
+                    output.write(data, 0, count);
+                }
+
+                // flushing output
+                output.flush();
+
+                // closing streams
+                output.close();
+                input.close();
+
+                return downloadStorageDir.getPath() + "/" + urlString.substring(urlString.lastIndexOf('/') + 1);
+
+            } catch (Exception e) {
+                Log.e("Error: ", e.getMessage());
+                return null;
+            }
+        }
+
+        /**
+         * Updating progress bar
+         */
+        protected void onProgressUpdate(String... progress) {
+            // setting progress percentage
+//            pDialog.setProgress(Integer.parseInt(progress[0]));
+//            showBusyProgress("Downloading completed " + progress[0] + "%");
+        }
+
+        /**
+         * After completing background task
+         * Dismiss the progress dialog
+         **/
+        @Override
+        protected void onPostExecute(String file_url) {
+            // dismiss the dialog after the file was downloaded
+//            dismissDialog(progress_bar_type);
+            hideBusyProgress();
+            showToast("Download Completed : file path : " + file_url);
+//            openFolder(file_url);
+
+            // Displaying downloaded image into image view
+            // Reading image path from sdcard
+//            String imagePath = Environment.getExternalStorageDirectory().toString() + "/downloadedfile.jpg";
+            // setting downloaded into image view
+//            my_image.setImageDrawable(Drawable.createFromPath(imagePath));
+        }
+
+    }
+
+    public void openFolder(String path) {
+        File file = new File(path);
+        MimeTypeMap myMime = MimeTypeMap.getSingleton();
+        Intent newIntent = new Intent(Intent.ACTION_VIEW);
+        String mimeType = myMime.getMimeTypeFromExtension(fileExt(path).substring(1));
+        newIntent.setDataAndType(Uri.fromFile(file), mimeType);
+        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try {
+            startActivity(newIntent);
+        } catch (ActivityNotFoundException e) {
+            showToast("No handler for this type of file.");
+        }
+    }
+
+    private String fileExt(String url) {
+        if (url.indexOf("?") > -1) {
+            url = url.substring(0, url.indexOf("?"));
+        }
+        if (url.lastIndexOf(".") == -1) {
+            return null;
+        } else {
+            String ext = url.substring(url.lastIndexOf(".") + 1);
+            if (ext.indexOf("%") > -1) {
+                ext = ext.substring(0, ext.indexOf("%"));
+            }
+            if (ext.indexOf("/") > -1) {
+                ext = ext.substring(0, ext.indexOf("/"));
+            }
+            return ext.toLowerCase();
+
+        }
     }
 }
 

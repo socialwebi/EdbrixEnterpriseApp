@@ -85,7 +85,7 @@ public class CourseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             courseViewHolder.btnCourseStart.setEnabled(course.isContentAvailable());
 //        courseViewHolder.setRating.setRating(Float.valueOf("2.5"));
 
-            if (course.getInstructor_image_url() != null && !course.getInstructor_image_url().isEmpty()) {
+            if (course.getCourse_image_url() != null && !course.getCourse_image_url().isEmpty()) {
                 Picasso.with(context)
                         .load(course.getCourse_image_url())
                         .error(R.drawable.edbrix_logo)

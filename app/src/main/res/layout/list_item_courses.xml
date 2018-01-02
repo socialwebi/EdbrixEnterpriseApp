@@ -17,7 +17,7 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:padding="@dimen/app_min_padding"
-            android:src="@mipmap/user_profile" />
+            android:src="@mipmap/edbrix" />
 
         <ImageView
 
