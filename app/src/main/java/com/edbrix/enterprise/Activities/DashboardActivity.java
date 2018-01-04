@@ -331,7 +331,7 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
             @Override
             public void onClick(View view) {
                 _floatingActionMenu.collapse();
-                Intent intent = new Intent(DashboardActivity.this, CreateLiveCourseActivity.class);
+                Intent intent = new Intent(DashboardActivity.this, CreateCourseActivity.class);
                 startActivityForResult(intent, 205);
             }
         });
@@ -468,6 +468,10 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
                 startActivity(intent);
                 return true;
 
+            case R.id.refreshOption:
+                refreshDashboard();
+                return true;
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -483,6 +487,21 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
         }
 
         super.onDestroy();
+    }
+
+    private void refreshDashboard(){
+        if (Conditions.isNetworkConnected(DashboardActivity.this)) {
+            meetingAdapter.refresh(null);
+            courseAdapter.refresh(null);
+            getDashBoardList();
+        } else {
+            try {
+                Snackbar.make(layout, getString(R.string.error_network), Snackbar.LENGTH_LONG).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(DashboardActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void registerMeetingServiceListener() {

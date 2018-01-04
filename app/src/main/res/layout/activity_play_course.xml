@@ -384,7 +384,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:layout_marginBottom="@dimen/app_big_margin"
                         android:orientation="horizontal">
 
                         <Button
@@ -402,12 +401,22 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:background="@drawable/border"
-                            android:hint="only ppt | pptx | doc | docx | xls | xlsx | pdf | jpg | jpeg | gif | png : files only "
+                            android:hint="@string/upload_answer"
                             android:padding="@dimen/app_normal_padding"
                             android:textColor="@color/colorMainText"
                             android:textColorHint="@color/colorHintText"
                             android:textSize="16sp" />
                     </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/app_normal_margin"
+                        android:layout_marginTop="@dimen/app_normal_margin"
+                        android:text="Only ppt|pptx|doc|docx|xls|xlsx|pdf|jpg|jpeg|gif|png files allowed."
+                        android:textColor="@color/colorSubText"
+                        android:textSize="12sp"
+                        android:typeface="monospace" />
                 </LinearLayout>
 
             </LinearLayout>

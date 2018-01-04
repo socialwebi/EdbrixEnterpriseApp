@@ -222,6 +222,8 @@
                     android:layout_margin="@dimen/app_min_margin"
                     android:layout_weight="2"
                     android:background="@drawable/border"
+                    android:drawableEnd="@mipmap/footer_calendar_menu_active"
+                    android:drawableRight="@mipmap/footer_calendar_menu_active"
                     android:hint="@string/select_date_of_birth"
                     android:imeOptions="actionNext"
                     android:inputType="textCapSentences"
@@ -229,9 +231,46 @@
                     android:textColor="@color/colorMainText"
                     android:textColorHint="@color/colorHintText"
                     android:textSize="18sp"
-                    android:drawableEnd="@mipmap/footer_calendar_menu_active"
-                    android:drawableRight="@mipmap/footer_calendar_menu_active"
-                    android:typeface="monospace" />
+                    android:typeface="monospace"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="@dimen/app_min_margin"
+                    android:layout_weight="2"
+                    android:background="@drawable/border">
+
+                    <Spinner
+                        android:id="@+id/spnrYear"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/abc_action_button_min_height_material"
+                        android:layout_weight="0.5"
+                        android:dropDownVerticalOffset="8dp"
+                        android:spinnerMode="dropdown"
+                        android:visibility="visible" />
+
+                    <Spinner
+                        android:id="@+id/spnrMonth"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/abc_action_button_min_height_material"
+                        android:layout_weight="0.4"
+                        android:dropDownVerticalOffset="8dp"
+                        android:spinnerMode="dropdown"
+                        android:entries="@array/months"
+                        android:visibility="visible" />
+
+                    <Spinner
+                        android:id="@+id/spnrDay"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/abc_action_button_min_height_material"
+                        android:layout_weight="0.3"
+                        android:dropDownVerticalOffset="8dp"
+                        android:spinnerMode="dropdown"
+                        android:visibility="visible" />
+
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -371,17 +410,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/app_normal_margin">
+
                     <Button
                         android:id="@+id/saveBtn"
                         android:layout_width="175dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/app_normal_margin"
                         android:layout_marginEnd="@dimen/app_normal_margin"
+                        android:layout_marginRight="@dimen/app_normal_margin"
+                        android:layout_toLeftOf="@+id/cancelBtn"
+                        android:layout_toStartOf="@+id/cancelBtn"
                         android:background="@color/colorAppOrange"
                         android:padding="@dimen/app_normal_padding"
                         android:text="@string/save_changes"
-                        android:layout_toStartOf="@+id/cancelBtn"
-                        android:layout_toLeftOf="@+id/cancelBtn"
                         android:textAllCaps="false"
                         android:textColor="@color/colorWhite"
                         android:textSize="18sp" />
@@ -390,11 +430,11 @@
                         android:id="@+id/cancelBtn"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
                         android:background="@color/colorMainText"
                         android:padding="@dimen/app_normal_padding"
                         android:text="@string/cancel"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
                         android:textAllCaps="false"
                         android:textColor="@color/colorWhite"
                         android:textSize="18sp"

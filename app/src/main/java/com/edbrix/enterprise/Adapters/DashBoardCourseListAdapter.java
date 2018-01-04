@@ -61,7 +61,9 @@ public class DashBoardCourseListAdapter extends RecyclerView.Adapter<DashBoardCo
 
     public void refresh(ArrayList<Courses> list) {
         this.list = new ArrayList<>();
-        this.list = list;
+        if(list!=null && !list.isEmpty()) {
+            this.list = list;
+        }
         notifyDataSetChanged();
 
     }

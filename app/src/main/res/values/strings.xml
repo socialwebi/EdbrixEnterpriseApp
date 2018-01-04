@@ -46,6 +46,8 @@
     <string name="meeting_details">Meeting Details</string>
     <string name="create_live_course">Create Course</string>
     <string name="create_course">Create Course</string>
+    <string name="add_video">Add Video</string>
+    <string name="add_document">Add Document</string>
     <string name="edit_live_course">Edit Course</string>
     <string name="create_video_course">Course Content</string>
     <string name="add_content">Add Content</string>
@@ -140,6 +142,21 @@
         <item>150</item>
         <item>165</item>
         <item>180</item>
+    </string-array>
+
+    <string-array name="months">
+        <item>Jan</item>
+        <item>Feb</item>
+        <item>Mar</item>
+        <item>Apr</item>
+        <item>May</item>
+        <item>Jun</item>
+        <item>Jul</item>
+        <item>Aug</item>
+        <item>Sept</item>
+        <item>Oct</item>
+        <item>Nov</item>
+        <item>Dec</item>
     </string-array>
 
     <string-array name="availability">

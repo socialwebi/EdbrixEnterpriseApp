@@ -53,7 +53,9 @@ public class DashBoardMeetingListAdapter extends RecyclerView.Adapter<DashBoardM
 
     public void refresh(ArrayList<Meeting> list) {
         this.list = new ArrayList<>();
-        this.list = list;
+        if(list!=null && !list.isEmpty()) {
+            this.list = list;
+        }
         notifyDataSetChanged();
 
     }

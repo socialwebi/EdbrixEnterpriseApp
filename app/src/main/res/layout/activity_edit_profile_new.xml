@@ -196,7 +196,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/app_normal_margin"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -217,6 +218,8 @@
                     android:layout_margin="@dimen/app_min_margin"
                     android:layout_weight="2"
                     android:background="@drawable/border"
+                    android:drawableEnd="@mipmap/footer_calendar_menu_active"
+                    android:drawableRight="@mipmap/footer_calendar_menu_active"
                     android:hint="@string/select_date_of_birth"
                     android:imeOptions="actionNext"
                     android:inputType="textCapSentences"
@@ -224,9 +227,61 @@
                     android:textColor="@color/colorMainText"
                     android:textColorHint="@color/colorHintText"
                     android:textSize="18sp"
-                    android:drawableEnd="@mipmap/footer_calendar_menu_active"
-                    android:drawableRight="@mipmap/footer_calendar_menu_active"
                     android:typeface="monospace" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/app_normal_margin"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="@dimen/app_min_margin"
+                    android:text="@string/dob"
+                    android:textColor="@color/actionbarText"
+                    android:textSize="16sp"
+                    android:typeface="monospace" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="@dimen/app_min_margin"
+                    android:background="@drawable/border">
+
+                    <Spinner
+                        android:id="@+id/spnrYear"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/abc_action_button_min_height_material"
+                        android:layout_weight="0.5"
+                        android:dropDownVerticalOffset="8dp"
+                        android:spinnerMode="dropdown"
+                        android:visibility="visible" />
+
+                    <Spinner
+                        android:id="@+id/spnrMonth"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.4"
+                        android:dropDownVerticalOffset="8dp"
+                        android:entries="@array/months"
+                        android:spinnerMode="dropdown"
+                        android:visibility="visible" />
+
+                    <Spinner
+                        android:id="@+id/spnrDay"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/abc_action_button_min_height_material"
+                        android:layout_weight="0.3"
+                        android:dropDownVerticalOffset="8dp"
+                        android:spinnerMode="dropdown"
+                        android:visibility="visible" />
+
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
