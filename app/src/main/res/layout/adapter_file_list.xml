@@ -7,29 +7,40 @@
     android:paddingBottom="8dp"
     tools:context="com.edbrix.enterprise.Adapters.FileListAdapter">
 
-    <ImageView android:id="@+id/file_list_icon"
+    <ImageView
+        android:id="@+id/file_list_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp" />
+        android:layout_marginBottom="@dimen/app_normal_margin"
+        android:layout_marginEnd="@dimen/app_min_margin"
+        android:layout_marginLeft="@dimen/app_min_margin"
+        android:layout_marginRight="@dimen/app_min_margin"
+        android:layout_marginStart="@dimen/app_min_margin"
+        android:layout_marginTop="@dimen/app_normal_margin"
+        android:src="@mipmap/document_icon" />
 
     <TextView
         android:id="@+id/file_list_name"
         android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_gravity="center_vertical"
-        android:gravity="center_vertical"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
-    <ImageButton
-        android:id="@+id/file_list_delete"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:src="@android:drawable/ic_delete"/>
+        android:layout_marginBottom="@dimen/app_normal_margin"
+        android:layout_marginEnd="@dimen/app_min_margin"
+        android:layout_marginLeft="@dimen/app_min_margin"
+        android:layout_marginRight="@dimen/app_min_margin"
+        android:layout_marginStart="@dimen/app_min_margin"
+        android:layout_marginTop="@dimen/app_normal_margin"
+        android:layout_weight="1"
+        android:text="@string/record_video"
+        android:textColor="@color/actionbarText"
+        android:textSize="16sp"
+        android:typeface="monospace" />
+
+    <ImageView
+        android:id="@+id/file_list_delete"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:padding="@dimen/app_normal_padding"
+        android:src="@mipmap/close"
+        android:visibility="visible" />
 
 </LinearLayout>

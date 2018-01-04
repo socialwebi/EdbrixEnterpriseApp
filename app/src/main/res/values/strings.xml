@@ -46,6 +46,7 @@
     <string name="meeting_details">Meeting Details</string>
     <string name="create_live_course">Create Course</string>
     <string name="create_course">Create Course</string>
+    <string name="record_video">Record Video</string>
     <string name="add_video">Add Video</string>
     <string name="add_document">Add Document</string>
     <string name="edit_live_course">Edit Course</string>
@@ -80,6 +81,7 @@
     <string name="upload_answer">Upload Answer</string>
     <string name="download">Download</string>
     <string name="content">Content</string>
+    <string name="publish">Publish</string>
     <string name="survey">Survey</string>
     <string name="test">Test</string>
     <string name="simple_content">Simple Content</string>
@@ -123,6 +125,7 @@
     <string name="all_courses"> View All Courses </string>
     <string name="about_yourself">About Yourself</string>
     <string name="save_changes">Save Changes</string>
+    <string name="save_course">Save Course</string>
     <string name="enter_first_name">Enter first name</string>
     <string name="enter_last_name">Enter last name</string>
     <string name="enter_your_tagline">Enter your tagline</string>

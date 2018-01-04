@@ -31,6 +31,8 @@ public class Constants {
     public final static String TolkBox_APIKey= "45467242";
     public final static String TolkBox_Token= "Token";
     public final static String TolkBox_SessionId= "SessionId";
+    public final static String FileType_Playwire= "playwire";
+    public final static String FileType_Document= "document";
 
 
     // TOKBOX
