@@ -38,9 +38,10 @@
     <ImageView
         android:id="@+id/file_list_delete"
         android:layout_width="36dp"
+        android:background="@null"
         android:layout_height="36dp"
         android:padding="@dimen/app_normal_padding"
         android:src="@mipmap/close"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
 </LinearLayout>

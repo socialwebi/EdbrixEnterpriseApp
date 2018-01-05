@@ -135,7 +135,7 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
                 if (course != null) {
                     Intent courseDetail = new Intent(context, CourseDetailActivity.class);
                     courseDetail.putExtra(CourseDetailActivity.courseDetailBundleKey, course);
-                    startActivity(courseDetail);
+                    startActivityForResult(courseDetail, 205);
                 }
               /*  Intent intent = new Intent(DashboardActivity.this, CreateLiveCourseActivity.class);
                 intent.putExtra("courseId", course.getId());

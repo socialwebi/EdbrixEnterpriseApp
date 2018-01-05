@@ -96,7 +96,7 @@ public class FileListAdapter extends RecyclerView.Adapter<FileListAdapter.ViewHo
     class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView name;
-        private ImageButton delete;
+        private ImageView delete;
         private ImageView icon;
 
         ViewHolder(View itemView, final CourseContentButtonListener courseContentButtonListener) {

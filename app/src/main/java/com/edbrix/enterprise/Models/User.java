@@ -11,17 +11,41 @@ public class User {
     private String studentCode;  // userCode
 
     private String userType;
+
     private String firstName;
+
     private String lastName;
+
     private String gender;
+
     private String profileImageUrl;
+
     private String tagline;
+
     private String aboutMe;
+
     private String organizationId;
+
     private String organizationName;
+
     private String accessToken;
 
+    private String birthYear;
+
+    private String birthMonth;
+
+    private String birthDay;
+
+    private int salutationId;
+
+    private int canCommentOnWall;
+
+    private int canReceiveCourseRequestNotification;
+
+    private int timezoneId;
+
     private String zoomUserId;
+
     private String zoomUserToken;
 
 
@@ -137,6 +161,61 @@ public class User {
         this.zoomUserToken = zoomUserToken;
     }
 
+    public String getBirthYear() {
+        return birthYear;
+    }
+
+    public void setBirthYear(String birthYear) {
+        this.birthYear = birthYear;
+    }
+
+    public String getBirthMonth() {
+        return birthMonth;
+    }
+
+    public void setBirthMonth(String birthMonth) {
+        this.birthMonth = birthMonth;
+    }
+
+    public String getBirthDay() {
+        return birthDay;
+    }
+
+    public void setBirthDay(String birthDay) {
+        this.birthDay = birthDay;
+    }
+
+    public int getSalutationId() {
+        return salutationId;
+    }
+
+    public void setSalutationId(int salutationId) {
+        this.salutationId = salutationId;
+    }
+
+    public int getCanCommentOnWall() {
+        return canCommentOnWall;
+    }
+
+    public void setCanCommentOnWall(int canCommentOnWall) {
+        this.canCommentOnWall = canCommentOnWall;
+    }
+
+    public int getCanReceiveCourseRequestNotification() {
+        return canReceiveCourseRequestNotification;
+    }
+
+    public void setCanReceiveCourseRequestNotification(int canReceiveCourseRequestNotification) {
+        this.canReceiveCourseRequestNotification = canReceiveCourseRequestNotification;
+    }
+
+    public int getTimezoneId() {
+        return timezoneId;
+    }
+
+    public void setTimezoneId(int timezoneId) {
+        this.timezoneId = timezoneId;
+    }
 
     @Override
     public String toString() {

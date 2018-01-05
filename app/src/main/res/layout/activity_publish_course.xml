@@ -113,7 +113,7 @@
         </LinearLayout>
 
         <com.getbase.floatingactionbutton.FloatingActionsMenu
-            android:id="@+id/floatingActionMenu"
+            android:id="@+id/fabAddContent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
@@ -128,22 +128,32 @@
             app:fab_labelsPosition="left">
 
             <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_video"
+                android:id="@+id/fabRecordVideo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:fab_colorNormal="@color/colorWhite"
                 app:fab_colorPressed="@color/white_pressed"
-                app:fab_icon="@mipmap/video_icon"
+                app:fab_icon="@mipmap/video_icon_orange"
+                app:fab_size="mini"
+                app:fab_title="@string/record_video" />
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabAddVideo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_colorNormal="@color/colorWhite"
+                app:fab_colorPressed="@color/white_pressed"
+                app:fab_icon="@mipmap/video_file_orange"
                 app:fab_size="mini"
                 app:fab_title="@string/add_video" />
 
             <com.getbase.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_doc"
+                android:id="@+id/fabAddDoc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:fab_colorNormal="@color/colorWhite"
                 app:fab_colorPressed="@color/white_pressed"
-                app:fab_icon="@mipmap/document_icon"
+                app:fab_icon="@mipmap/document_icon_orange"
                 app:fab_size="mini"
                 app:fab_title="@string/add_document" />
 

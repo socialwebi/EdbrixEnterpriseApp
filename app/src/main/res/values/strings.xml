@@ -43,6 +43,7 @@
 
     <string name="schedules">Schedules</string>
     <string name="meetings">Meetings</string>
+    <string name="category">Category</string>
     <string name="meeting_details">Meeting Details</string>
     <string name="create_live_course">Create Course</string>
     <string name="create_course">Create Course</string>
@@ -126,6 +127,8 @@
     <string name="about_yourself">About Yourself</string>
     <string name="save_changes">Save Changes</string>
     <string name="save_course">Save Course</string>
+    <string name="save">Save</string>
+    <string name="update">Update</string>
     <string name="enter_first_name">Enter first name</string>
     <string name="enter_last_name">Enter last name</string>
     <string name="enter_your_tagline">Enter your tagline</string>

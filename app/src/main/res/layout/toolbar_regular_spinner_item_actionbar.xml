@@ -9,6 +9,16 @@
     <TextView
         android:id="@android:id/text1"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/app_normal_padding"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_vertical"
+        android:textColor="@color/colorMainText"
+        android:typeface="monospace" />
+
+   <!-- <TextView
+        android:id="@android:id/text1"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/abc_action_button_min_height_material"
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"
@@ -18,7 +28,7 @@
         android:gravity="center_vertical"
         android:padding="@dimen/app_normal_padding"
         android:textColor="@color/colorMainText"
-        android:typeface="monospace" />
+        android:typeface="monospace" />-->
 
 
 </LinearLayout>

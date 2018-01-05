@@ -102,7 +102,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activities.CreateCourseActivity" />
         <activity android:name=".Activities.PublishCourseActivity" />
-        <activity android:name=".Activities.CreateCourseContentActivity"></activity>
+        <activity android:name=".Activities.CreateCourseContentActivity" />
+        <activity android:name=".Activities.EditCourseActivity"></activity>
     </application>
 
 </manifest>

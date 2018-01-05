@@ -3,6 +3,7 @@ package com.edbrix.enterprise.Activities;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
@@ -10,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,11 +25,17 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.edbrix.enterprise.Adapters.SalutationSpinnerAdapter;
+import com.edbrix.enterprise.Adapters.TimezoneSpinnerAdapter;
 import com.edbrix.enterprise.Application;
 import com.edbrix.enterprise.BuildConfig;
+import com.edbrix.enterprise.Models.ResponseData;
+import com.edbrix.enterprise.Models.SalutationsData;
+import com.edbrix.enterprise.Models.TimezonesData;
 import com.edbrix.enterprise.Models.User;
 import com.edbrix.enterprise.R;
 import com.edbrix.enterprise.Utils.Constants;
+import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.JsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
@@ -45,24 +53,28 @@ import timber.log.Timber;
 
 public class EditProfileActivity extends BaseActivity {
 
-    Calendar calendar;
-    Context context;
-    ConstraintLayout layout;
-    Spinner spnrTitle;
-    Spinner year_spinner, month_spinner, day_spinner;
-    Spinner spnrTimezone;
-    EditText edtFirstName;
-    EditText edtLastName;
-    EditText edtDOB;
-    EditText edtAbtUrSelf;
-    CheckBox checkEmailNotification;
-    CheckBox checkCommentOnWall;
-    User user;
+    private Calendar calendar;
+    private Context context;
+    private ConstraintLayout layout;
+    private Spinner spnrTitle;
+    private Spinner year_spinner, month_spinner, day_spinner;
+    private Spinner spnrTimezone;
+    private EditText edtFirstName;
+    private EditText edtLastName;
+    private EditText edtDOB;
+    private EditText edtAbtUrSelf;
+    private CheckBox checkEmailNotification;
+    private CheckBox checkCommentOnWall;
+    private User user;
     private String firstName;
     private String lastName;
     private String aboutYou;
     private String dob;
     private int mYear, mMonth, mDay;
+
+    private ArrayList<SalutationsData> salutationList;
+    private ArrayList<TimezonesData> timezonesList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +84,16 @@ public class EditProfileActivity extends BaseActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
 
         context = EditProfileActivity.this;
         user = SettingsMy.getActiveUser();
@@ -87,6 +109,8 @@ public class EditProfileActivity extends BaseActivity {
         checkEmailNotification = findViewById(R.id.checkEmailNotification);
         checkCommentOnWall = findViewById(R.id.checkCommentOnWall);
 
+        salutationList = new ArrayList<>();
+        timezonesList = new ArrayList<>();
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this, R.array.name_title, R.layout.custom_text_layout);
@@ -126,21 +150,22 @@ public class EditProfileActivity extends BaseActivity {
             }
         });
 
-        setValues();
 
         year_spinner = (Spinner) findViewById(R.id.spnrYear);
         month_spinner = (Spinner) findViewById(R.id.spnrMonth);
         day_spinner = (Spinner) findViewById(R.id.spnrDay);
 
-        year_spinner.setOnItemSelectedListener( fixDays );
-        month_spinner.setOnItemSelectedListener( fixDays );
+        year_spinner.setOnItemSelectedListener(fixDays);
+        month_spinner.setOnItemSelectedListener(fixDays);
 
         //This option will only allow dates for DOB by min age of 10 and maximum 30
         //This is dynamic, it will always accept DOB for people aged between 10 and 30 depending on current year!
 //        populateYears(10, 30);
 
 //        You may also limit your entry by minYear and max Year using this function instead:
-        populateYearsByRange(1950,Calendar.getInstance().get(Calendar.YEAR));
+        populateYearsByRange(1950, Calendar.getInstance().get(Calendar.YEAR));
+
+        getUserDetails();
 
     }
 
@@ -185,89 +210,25 @@ public class EditProfileActivity extends BaseActivity {
             edtAbtUrSelf.setError(getString(R.string.error_edit_text));
         } else {
 
-            // saveProfile();
+//           updateUserDetails(firstName,lastName,);
         }
     }
 
-    private void saveProfile() {
-
-        User user = SettingsMy.getActiveUser();
-        if (user != null) {
-
-            JSONObject jo = new JSONObject();
-            try {
-                jo.put("UserId", user.getId());
-                jo.put("AccessToken", user.getAccessToken());
-
-                checkEmailNotification.isChecked();
-                checkCommentOnWall.isChecked();
-
-            } catch (JSONException e) {
-                Timber.e(e, "Parse profile exception");
-                return;
-            }
-            if (BuildConfig.DEBUG) Timber.d("Profile: %s", jo.toString());
-
-            JsonRequest req = new JsonRequest(Request.Method.POST, Constants.setCreateCourse, jo, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-//                    Timber.d("Response : %s", response.toString());
-                    try {
-
-                        if (response.getString("ErrorCode").equals("0")) {
-
-                            /*Intent intent = new Intent(CreateScheduleActivity.this, DashboardActivity.class);
-                            startActivity(intent);*/
-
-                        } else {
-                            try {
-                                Snackbar.make(layout, response.getString("ErrorMessage"), Snackbar.LENGTH_LONG).show();
-                            } catch (Exception e2) {
-                                e2.printStackTrace();
-                                Toast.makeText(context, response.getString("ErrorMessage"), Toast.LENGTH_LONG).show();
-                            }
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    try {
-                        Snackbar.make(layout, getString(R.string.error_something_wrong), Snackbar.LENGTH_LONG).show();
-                    } catch (Exception e2) {
-                        e2.printStackTrace();
-                        Toast.makeText(context, getString(R.string.error_something_wrong), Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
-            req.setRetryPolicy(Application.getDefaultRetryPolice());
-            req.setShouldCache(false);
-            Application.getInstance().addToRequestQueue(req, "edit_profile_requests");
-
-        }
-    }
-
-
-    public void setDays()
-    {
+    public void setDays() {
         int year = Integer.parseInt(year_spinner.getSelectedItem().toString());
         String month = month_spinner.getSelectedItem().toString();
 
-        List<String> months = new ArrayList<>(Arrays.asList(getResources().getStringArray( R.array.months)));
+        List<String> months = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.months)));
 
-        Calendar mycal = new GregorianCalendar(year ,months.indexOf(month), 1);
+        Calendar mycal = new GregorianCalendar(year, months.indexOf(month), 1);
 
         // Get the number of days in that month
         int daysInMonth = mycal.getActualMaximum(Calendar.DAY_OF_MONTH);
 
         String[] days_array = new String[daysInMonth];
 
-        for(int k = 0; k < daysInMonth; k++)
-            days_array[k] = ""+ (k+1);
+        for (int k = 0; k < daysInMonth; k++)
+            days_array[k] = "" + (k + 1);
 
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item, days_array);
@@ -276,16 +237,13 @@ public class EditProfileActivity extends BaseActivity {
     }
 
 
-
-
-    public void populateYears(int minAge, int maxAge)
-    {
+    public void populateYears(int minAge, int maxAge) {
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
 
-        String[] years_array = new String[maxAge-minAge];
+        String[] years_array = new String[maxAge - minAge];
 
-        for(int i=0; i < maxAge-minAge; i++)
-            years_array[i] = ""+ (currentYear - minAge - i);
+        for (int i = 0; i < maxAge - minAge; i++)
+            years_array[i] = "" + (currentYear - minAge - i);
 
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item, years_array);
@@ -294,18 +252,17 @@ public class EditProfileActivity extends BaseActivity {
 
     }
 
-    public void populateYearsByRange(int minYear, int maxYear)
-    {
+    public void populateYearsByRange(int minYear, int maxYear) {
 
-        String[] years_array = new String[(maxYear-minYear)];
+        String[] years_array = new String[(maxYear - minYear)];
 
-        int count =0;
+        int count = 0;
 //        for(int i=minYear; i <maxYear; i++) {
 //            years_array[count] = "" + i;
 //            count++;
 //        }
 
-        for(int i=(maxYear-1); i >=minYear; i--) {
+        for (int i = (maxYear - 1); i >= minYear; i--) {
             years_array[count] = "" + i;
             count++;
         }
@@ -328,4 +285,189 @@ public class EditProfileActivity extends BaseActivity {
             //Another interface callback
         }
     };
+
+    private void getSalutationList() {
+        showBusyProgress();
+        if (user != null) {
+
+            JSONObject jo = new JSONObject();
+            try {
+                jo.put("UserId", user.getId());
+                jo.put("AccessToken", user.getAccessToken());
+                jo.put("Gender", user.getGender());
+            } catch (JSONException e) {
+                return;
+            }
+
+            GsonRequest<ResponseData> getSalutationListRequest = new GsonRequest<>(Request.Method.POST, Constants.getSalutations, jo.toString(), ResponseData.class,
+                    new Response.Listener<ResponseData>() {
+                        @Override
+                        public void onResponse(@NonNull ResponseData response) {
+
+                            if (response.getErrorCode() == null) {
+                                salutationList = response.getSalutationsList();
+                                SalutationSpinnerAdapter salutationSpinnerAdapter = new SalutationSpinnerAdapter(EditProfileActivity.this);
+                                salutationSpinnerAdapter.addItems(salutationList);
+                                spnrTitle.setAdapter(salutationSpinnerAdapter);
+                                hideBusyProgress();
+                            } else {
+                                hideBusyProgress();
+                                showToast(response.getErrorMessage());
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    hideBusyProgress();
+                    showToast(SettingsMy.getErrorMessage(error));
+                }
+            });
+            getSalutationListRequest.setRetryPolicy(Application.getDefaultRetryPolice());
+            getSalutationListRequest.setShouldCache(false);
+            Application.getInstance().addToRequestQueue(getSalutationListRequest, "salutation_requests");
+        }
+    }
+
+    private void getTimeZoneList() {
+        showBusyProgress();
+        if (user != null) {
+
+            JSONObject jo = new JSONObject();
+            try {
+                jo.put("UserId", user.getId());
+                jo.put("AccessToken", user.getAccessToken());
+            } catch (JSONException e) {
+                return;
+            }
+
+            GsonRequest<ResponseData> getTimezoneListRequest = new GsonRequest<>(Request.Method.POST, Constants.getTimezoneList, jo.toString(), ResponseData.class,
+                    new Response.Listener<ResponseData>() {
+                        @Override
+                        public void onResponse(@NonNull ResponseData response) {
+
+                            if (response.getErrorCode() == null) {
+                                timezonesList.addAll(response.getTimezonesList());
+                                TimezoneSpinnerAdapter timezoneSpinnerAdapter = new TimezoneSpinnerAdapter(EditProfileActivity.this);
+                                timezoneSpinnerAdapter.addItems(timezonesList);
+                                spnrTimezone.setAdapter(timezoneSpinnerAdapter);
+                                hideBusyProgress();
+                            } else {
+                                hideBusyProgress();
+                                showToast(response.getErrorMessage());
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    hideBusyProgress();
+                    showToast(SettingsMy.getErrorMessage(error));
+                }
+            });
+            getTimezoneListRequest.setRetryPolicy(Application.getDefaultRetryPolice());
+            getTimezoneListRequest.setShouldCache(false);
+            Application.getInstance().addToRequestQueue(getTimezoneListRequest, "timezone_requests");
+        }
+    }
+
+    private void getUserDetails() {
+        showBusyProgress();
+        if (user != null) {
+
+            JSONObject jo = new JSONObject();
+            try {
+                jo.put("UserId", user.getId());
+                jo.put("AccessToken", user.getAccessToken());
+            } catch (JSONException e) {
+                return;
+            }
+
+            GsonRequest<ResponseData> getUserDetailsRequest = new GsonRequest<>(Request.Method.POST, Constants.getUserDetails, jo.toString(), ResponseData.class,
+                    new Response.Listener<ResponseData>() {
+                        @Override
+                        public void onResponse(@NonNull ResponseData response) {
+
+                            if (response.getErrorCode() == null) {
+                                user = response.getUser();
+                                setValues();
+                                hideBusyProgress();
+                            } else {
+                                hideBusyProgress();
+                                showToast(response.getErrorMessage());
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    hideBusyProgress();
+                    showToast(SettingsMy.getErrorMessage(error));
+                }
+            });
+            getUserDetailsRequest.setRetryPolicy(Application.getDefaultRetryPolice());
+            getUserDetailsRequest.setShouldCache(false);
+            Application.getInstance().addToRequestQueue(getUserDetailsRequest, "user_details_requests");
+        }
+    }
+
+    private void updateUserDetails(String firstName, String lastName, int titleId, int timezoneId, String aboutMe, int commentOnWall, int receiveNotification, String dateOfBirth) {
+        showBusyProgress();
+        if (user != null) {
+
+            JSONObject jo = new JSONObject();
+            try {
+                jo.put("UserId", user.getId());
+                jo.put("AccessToken", user.getAccessToken());
+                jo.put("FirstName", firstName);
+                jo.put("LastName", lastName);
+                jo.put("TitleId", titleId);
+                jo.put("TimezoneId", timezoneId);
+                jo.put("AboutMe", aboutMe);
+                jo.put("CanCommentOnWall", commentOnWall);
+                jo.put("CanReceiveCourseRequestNotification", receiveNotification);
+                jo.put("DOB", dateOfBirth);
+
+
+//                "FirstName":"Victor",
+//                        "LastName":"Chang",
+//                        "TitleId": 1,
+//                        "TimezoneId":2,
+//                        "AboutMe":"About me",
+//                        "CanCommentOnWall": 1,
+//                        "CanReceiveCourseRequestNotification": 1,
+//                        "DOB": "2010-01-04"
+
+            } catch (JSONException e) {
+                return;
+            }
+
+            GsonRequest<ResponseData> updateProfileRequest = new GsonRequest<>(Request.Method.POST, Constants.updateUserProfile, jo.toString(), ResponseData.class,
+                    new Response.Listener<ResponseData>() {
+                        @Override
+                        public void onResponse(@NonNull ResponseData response) {
+
+                            if (response.getErrorCode() == null) {
+//                                user = response.getUser();
+//                                setValues();
+
+                                SettingsMy.setActiveUser(response.getUser());
+                                showToast("Your profile is updated successfully.");
+                                hideBusyProgress();
+                                finish();
+                            } else {
+                                hideBusyProgress();
+                                showToast(response.getErrorMessage());
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    hideBusyProgress();
+                    showToast(SettingsMy.getErrorMessage(error));
+                }
+            });
+            updateProfileRequest.setRetryPolicy(Application.getDefaultRetryPolice());
+            updateProfileRequest.setShouldCache(false);
+            Application.getInstance().addToRequestQueue(updateProfileRequest, "update_profile_requests");
+        }
+    }
+
 }

@@ -105,8 +105,25 @@
                 android:padding="@dimen/app_normal_padding"
                 android:typeface="monospace" />
 
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/app_normal_margin"
+                android:background="@drawable/border">
 
-            <Spinner
+                <Spinner
+                    android:id="@+id/create_schedule_minutes"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/abc_action_button_min_height_material"
+                    android:dropDownVerticalOffset="8dp"
+                    android:spinnerMode="dropdown"
+                    android:visibility="visible" />
+
+            </LinearLayout>
+
+            <!--<Spinner
                 android:id="@+id/create_schedule_minutes"
                 android:layout_width="0dp"
                 android:layout_height="56dp"
@@ -114,16 +131,33 @@
                 android:layout_margin="@dimen/app_normal_margin"
                 android:layout_weight="1"
                 android:background="@drawable/border"
-                android:gravity="bottom" />
+                android:gravity="bottom" />-->
 
         </LinearLayout>
 
-        <Spinner
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/app_normal_margin"
+            android:background="@drawable/border">
+
+            <Spinner
+                android:id="@+id/create_schedule_availability"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/abc_action_button_min_height_material"
+                android:dropDownVerticalOffset="8dp"
+                android:spinnerMode="dropdown"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+        <!--<Spinner
             android:id="@+id/create_schedule_availability"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_margin="@dimen/app_normal_margin"
-            android:background="@drawable/border" />
+            android:background="@drawable/border" />-->
 
         <EditText
             android:id="@+id/create_schedule_price"

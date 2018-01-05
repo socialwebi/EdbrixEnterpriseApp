@@ -32,6 +32,7 @@ import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.JsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
+import com.edbrix.enterprise.commons.AlertDialogManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -52,6 +53,7 @@ public class CreateCourseContentActivity extends BaseActivity {
     static final String contentDataKEY = "contentData";
     static final String courseTitleKEY = "courseTitle";
     static final String coursePriceKEY = "coursePrice";
+    static final String courseIDKEY = "courseID";
     static final String contentTypeVideo = "contentVideo";
     static final String contentTypeDoc = "contentDoc";
 
@@ -66,6 +68,7 @@ public class CreateCourseContentActivity extends BaseActivity {
 
     private Button btnSaveCourse;
 
+    private String courseId;
     private String courseTitle;
     private String coursePrice;
     private String contentType;
@@ -93,6 +96,13 @@ public class CreateCourseContentActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               onBackPressed();
+            }
+        });
+
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReferenceFromUrl("gs://edbrixcbuilder.appspot.com");
 
@@ -105,6 +115,9 @@ public class CreateCourseContentActivity extends BaseActivity {
         mProgressBar = findViewById(R.id.mProgressBar);
         txtPercentage = findViewById(R.id.txtPercentage);
 
+        courseId = "0";
+
+        courseId = getIntent().getStringExtra(courseIDKEY);
         courseTitle = getIntent().getStringExtra(courseTitleKEY);
         coursePrice = getIntent().getStringExtra(coursePriceKEY);
 
@@ -181,7 +194,12 @@ public class CreateCourseContentActivity extends BaseActivity {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
                         mProgressBar.setVisibility(View.GONE);
-                        createCourse(courseTitle, coursePrice, 0, 0);
+                        if(courseId.equals("0")){
+                            createCourse(courseTitle, coursePrice, courseId, 0);
+                        }else{
+                            showBusyProgress();
+                            addCourseContent(courseId);
+                        }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -211,7 +229,7 @@ public class CreateCourseContentActivity extends BaseActivity {
 
     }
 
-    private void createCourse(String title, String price, int courseId, int categoryId) {
+    private void createCourse(String title, String price, String courseId, int categoryId) {
 
         User user = SettingsMy.getActiveUser();
         if (user != null) {
@@ -244,6 +262,7 @@ public class CreateCourseContentActivity extends BaseActivity {
 
                     } catch (JSONException e) {
                         e.printStackTrace();
+                        hideBusyProgress();
                         showToast(getString(R.string.error_something_wrong));
                     }
 
@@ -251,6 +270,7 @@ public class CreateCourseContentActivity extends BaseActivity {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    hideBusyProgress();
                     showToast(SettingsMy.getErrorMessage(error));
                 }
             });
@@ -305,6 +325,7 @@ public class CreateCourseContentActivity extends BaseActivity {
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    hideBusyProgress();
                     showToast(SettingsMy.getErrorMessage(error));
                 }
             });
@@ -312,5 +333,20 @@ public class CreateCourseContentActivity extends BaseActivity {
             addCourseContentRequest.setShouldCache(false);
             Application.getInstance().addToRequestQueue(addCourseContentRequest, "create_course_content_requests");
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        getAlertDialogManager().Dialog(R.string.create_course, "Confirm to discontinue..?", "YES", "NO", new AlertDialogManager.onTwoButtonClickListner() {
+            @Override
+            public void onNegativeClick() {
+
+            }
+
+            @Override
+            public void onPositiveClick() {
+                finish();
+            }
+        }).show();
     }
 }

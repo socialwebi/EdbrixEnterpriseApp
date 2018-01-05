@@ -89,6 +89,10 @@ public class Constants {
     //
     public final static String setDeleteCourseContent = BASE_URL.concat("deletecoursecontent.php");
     public final static String getCourseDetails = BASE_URL.concat("getcourseeditdetails.php");
+    public final static String getSalutations = BASE_URL.concat("getsalutations.php");
+    public final static String getTimezoneList = BASE_URL.concat("getTimezones.php");
+    public final static String getUserDetails = BASE_URL.concat("editprofile.php");
+    public final static String updateUserProfile = BASE_URL.concat("updateprofile.php");
     public static final String SESSION_INFO_ENDPOINT = BASE_URL + "/session";
     public static final String ARCHIVE_START_ENDPOINT = BASE_URL + "/archive/start";
     public static final String ARCHIVE_STOP_ENDPOINT = BASE_URL + "/archive/:archiveId/stop";

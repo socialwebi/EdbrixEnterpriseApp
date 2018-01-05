@@ -146,10 +146,11 @@ public class CourseDetailActivity extends BaseActivity {
 
     private void goToEditCourse() {
         if (courseDetailItem != null) {
-            Intent intent = new Intent(CourseDetailActivity.this, CreateLiveCourseActivity.class);
-            intent.putExtra("courseId", courseDetailItem.getId());
-            intent.putExtra("courseTitle", courseDetailItem.getTitle());
-            startActivity(intent);
+            Intent intent = new Intent(CourseDetailActivity.this, EditCourseActivity.class);
+            intent.putExtra(EditCourseActivity.courseIDKEY, courseDetailItem.getId());
+//            intent.putExtra("courseTitle", courseDetailItem.getTitle());
+            startActivityForResult(intent,205);
+            setResult(RESULT_OK);
             finish();
         }
     }

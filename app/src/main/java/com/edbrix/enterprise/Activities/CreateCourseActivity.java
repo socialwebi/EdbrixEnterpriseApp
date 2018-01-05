@@ -13,10 +13,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -56,6 +60,12 @@ public class CreateCourseActivity extends BaseActivity implements EasyPermission
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
@@ -71,15 +81,38 @@ public class CreateCourseActivity extends BaseActivity implements EasyPermission
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final AddContentDialog addContentDialog = new AddContentDialog(CreateCourseActivity.this, R.style.DialogAnimation);
-                addContentDialog.setOnActionButtonListener(new AddContentDialog.OnActionButtonListener() {
-                    @Override
-                    public void onOptionPressed(String optionType) {
-                        fileType = optionType;
-                        checkValidations();
+                checkValidations();
+            }
+        });
+
+        edtCourseName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    if (edtCourseName.getText().toString().trim().isEmpty()) {
+                        edtCourseName.setError(getString(R.string.error_edit_text));
+                        return true;
+                    } else {
+                        return false;
                     }
-                });
-                addContentDialog.showMe();
+
+                }
+                return false;
+            }
+        });
+
+        edtCoursePrice.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    // hide virtual keyboard
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(edtCoursePrice.getWindowToken(), 0);
+                    //doLogin
+                    checkValidations();
+                    return true;
+                }
+                return false;
             }
         });
     }
@@ -93,7 +126,15 @@ public class CreateCourseActivity extends BaseActivity implements EasyPermission
         if (courseTitle.isEmpty()) {
             edtCourseName.setError(getString(R.string.error_edit_text));
         } else {
-           openFileChooser();
+            final AddContentDialog addContentDialog = new AddContentDialog(CreateCourseActivity.this, R.style.DialogAnimation);
+            addContentDialog.setOnActionButtonListener(new AddContentDialog.OnActionButtonListener() {
+                @Override
+                public void onOptionPressed(String optionType) {
+                    fileType = optionType;
+                    openFileChooser();
+                }
+            });
+            addContentDialog.showMe();
         }
     }
 
@@ -198,9 +239,10 @@ public class CreateCourseActivity extends BaseActivity implements EasyPermission
                         Intent courseContent = new Intent(CreateCourseActivity.this, CreateCourseContentActivity.class);
                         courseContent.putExtra(CreateCourseContentActivity.contentTypeKEY, CreateCourseContentActivity.contentTypeVideo);
                         courseContent.putExtra(CreateCourseContentActivity.contentDataKEY, photoPaths.get(0));
+                        courseContent.putExtra(CreateCourseContentActivity.courseIDKEY, "0");
                         courseContent.putExtra(CreateCourseContentActivity.courseTitleKEY, courseTitle);
                         courseContent.putExtra(CreateCourseContentActivity.coursePriceKEY, coursePrice);
-                        startActivityForResult(courseContent,205);
+                        startActivityForResult(courseContent, 205);
                     }
                 }
                 break;
@@ -214,14 +256,15 @@ public class CreateCourseActivity extends BaseActivity implements EasyPermission
                         Intent courseContent = new Intent(CreateCourseActivity.this, CreateCourseContentActivity.class);
                         courseContent.putExtra(CreateCourseContentActivity.contentTypeKEY, CreateCourseContentActivity.contentTypeDoc);
                         courseContent.putExtra(CreateCourseContentActivity.contentDataKEY, docPaths.get(0));
+                        courseContent.putExtra(CreateCourseContentActivity.courseIDKEY, "0");
                         courseContent.putExtra(CreateCourseContentActivity.courseTitleKEY, courseTitle);
                         courseContent.putExtra(CreateCourseContentActivity.coursePriceKEY, coursePrice);
-                        startActivityForResult(courseContent,205);
+                        startActivityForResult(courseContent, 205);
                     }
                 }
                 break;
 
-            case 205 :
+            case 205:
                 setResult(RESULT_OK);
                 finish();
                 break;

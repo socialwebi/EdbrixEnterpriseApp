@@ -203,6 +203,7 @@
         android:background="@color/colorAppOrange"
         android:padding="5dp"
         android:text="@string/save_course"
+        android:textStyle="bold"
         android:textColor="@color/colorWhite"
         android:typeface="monospace" />
 </RelativeLayout>

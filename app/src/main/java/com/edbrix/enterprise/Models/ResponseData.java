@@ -26,6 +26,12 @@ public class ResponseData {
     @SerializedName("courseContents")
     private ArrayList<CourseContents> courseContents;
 
+    @SerializedName("Salutations")
+    private ArrayList<SalutationsData> salutationsList;
+
+    @SerializedName("Timezones")
+    private ArrayList<TimezonesData> timezonesList;
+
     private ArrayList<TypesC> resourcesTypes;
     private ArrayList<TypesC> courseContentsTypes;
     private ArrayList<TypesC> connectivityTypes;
@@ -177,6 +183,22 @@ public class ResponseData {
 
     public void setLearnersList(ArrayList<LearnersData> learnersList) {
         this.learnersList = learnersList;
+    }
+
+    public ArrayList<SalutationsData> getSalutationsList() {
+        return salutationsList;
+    }
+
+    public void setSalutationsList(ArrayList<SalutationsData> salutationsList) {
+        this.salutationsList = salutationsList;
+    }
+
+    public ArrayList<TimezonesData> getTimezonesList() {
+        return timezonesList;
+    }
+
+    public void setTimezonesList(ArrayList<TimezonesData> timezonesList) {
+        this.timezonesList = timezonesList;
     }
 
     @Override
