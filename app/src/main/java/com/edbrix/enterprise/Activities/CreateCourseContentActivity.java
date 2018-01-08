@@ -73,6 +73,7 @@ public class CreateCourseContentActivity extends BaseActivity {
     private String coursePrice;
     private String contentType;
     private String filePathString;
+    private String contentTitle;
     private String fileName;
     private String fileTypeVal;
     private String fileExtention;
@@ -127,6 +128,7 @@ public class CreateCourseContentActivity extends BaseActivity {
 
         contentFile = new File(filePathString);
 
+
         contentFileUri = Uri.fromFile(contentFile);
 
         getWindow().setSoftInputMode(
@@ -146,14 +148,15 @@ public class CreateCourseContentActivity extends BaseActivity {
 
     private void setContent() {
         if (contentFile != null) {
+            fileName = contentFile.getName().substring(0, contentFile.getName().lastIndexOf('.'));
             if (contentType.equals(contentTypeVideo)) {
                 lnrAddedVideo.setVisibility(View.VISIBLE);
-                txtVideoName.setText(contentFile.getName().substring(0, contentFile.getName().lastIndexOf('.')));
+                txtVideoName.setText(fileName);
                 fileTypeVal = Constants.FileType_Playwire;
 
             } else {
                 lnrAddedDoc.setVisibility(View.VISIBLE);
-                txtDocName.setText(contentFile.getName().substring(0, contentFile.getName().lastIndexOf('.')));
+                txtDocName.setText(fileName);
                 fileTypeVal = Constants.FileType_Document;
             }
             fileExtention = contentFile.getName().substring(contentFile.getName().lastIndexOf('.'));
@@ -162,9 +165,9 @@ public class CreateCourseContentActivity extends BaseActivity {
 
 
     private void checkValidations() {
-        fileName = edtContentTitle.getText().toString().trim();
+        contentTitle = edtContentTitle.getText().toString().trim();
 
-        if (fileName.isEmpty()) {
+        if (contentTitle.isEmpty()) {
             edtContentTitle.setError(getString(R.string.error_edit_text));
         } else {
             uploadToEdbrix();
@@ -185,7 +188,7 @@ public class CreateCourseContentActivity extends BaseActivity {
                 txtPercentage.setText("");
 
                 String userId = SettingsMy.getActiveUser().getId();// get user Id from active user
-                StorageReference childRef = storageRef.child("enterprisecoursecontent/" + userId + "/" + fileName + fileExtention);
+                StorageReference childRef = storageRef.child("enterprisecoursecontent/" + userId + "/" + contentFile.getName());
 
                 uploadTask = childRef.putFile(contentFileUri);
 
@@ -292,9 +295,9 @@ public class CreateCourseContentActivity extends BaseActivity {
                 jo.put("AccessToken", user.getAccessToken());
                 jo.put("UserType", user.getUserType());
                 jo.put("CourseId", courseId);
-                jo.put("Title", fileName);
+                jo.put("Title", contentTitle);
                 jo.put("Type", fileTypeVal);
-                jo.put("Content", fileName + fileExtention);
+                jo.put("Content", contentFile.getName());
 
             } catch (JSONException e) {
                 Timber.e(e, "Parse logInWithEmail exception");

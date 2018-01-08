@@ -4,6 +4,10 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +29,7 @@ import com.edbrix.enterprise.Application;
 import com.edbrix.enterprise.BuildConfig;
 import com.edbrix.enterprise.Interfaces.CourseContentButtonListener;
 import com.edbrix.enterprise.Models.CourseContents;
+import com.edbrix.enterprise.Models.Courses;
 import com.edbrix.enterprise.Models.ResponseData;
 import com.edbrix.enterprise.Models.User;
 import com.edbrix.enterprise.R;
@@ -33,12 +38,14 @@ import com.edbrix.enterprise.Utils.Constants;
 import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
+import com.edbrix.enterprise.commons.GlobalMethods;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,6 +87,9 @@ public class PublishCourseActivity extends BaseActivity implements EasyPermissio
     private FloatingActionButton fabAddDoc;
 
     static final int REQUEST_PERMISSION_EXTERNAL = 1004;
+
+    // Camera activity request codes
+    private static final int CAMERA_CAPTURE_VIDEO_REQUEST_CODE = 200;
 
     private String fileType;
 
@@ -138,13 +148,13 @@ public class PublishCourseActivity extends BaseActivity implements EasyPermissio
 
         contentListRecycler.setAdapter(fileListAdapter);
 
-        getCourseContent();
+        getCourseDetails(courseId);
 
         fabRecordVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fabAddContent.collapse();
-                fileType =AddContentDialog.OPT_RECORD_VIDEO;
+                fileType = AddContentDialog.OPT_RECORD_VIDEO;
                 openFileChooser();
             }
         });
@@ -153,7 +163,7 @@ public class PublishCourseActivity extends BaseActivity implements EasyPermissio
             @Override
             public void onClick(View view) {
                 fabAddContent.collapse();
-                fileType =AddContentDialog.OPT_ADD_VIDEO;
+                fileType = AddContentDialog.OPT_ADD_VIDEO;
                 openFileChooser();
             }
         });
@@ -162,18 +172,68 @@ public class PublishCourseActivity extends BaseActivity implements EasyPermissio
             @Override
             public void onClick(View view) {
                 fabAddContent.collapse();
-                fileType =AddContentDialog.OPT_ADD_DOCUMENT;
+                fileType = AddContentDialog.OPT_ADD_DOCUMENT;
                 openFileChooser();
             }
         });
 
     }
 
+    private void getCourseDetails(String courseId) {
+        showBusyProgress();
+        User activeUser = SettingsMy.getActiveUser();
+        if (activeUser != null) {
+
+            JSONObject jo = new JSONObject();
+            try {
+
+                jo.put("UserId", activeUser.getId());
+                jo.put("AccessToken", activeUser.getAccessToken());
+                jo.put("UserType", activeUser.getUserType());
+                jo.put("CourseId", courseId);
+            } catch (JSONException e) {
+                return;
+            }
+
+            GsonRequest<Courses> getCourseDetailsRequest = new GsonRequest<>(Request.Method.POST, Constants.getCourseDetails, jo.toString(), Courses.class,
+                    new Response.Listener<Courses>() {
+                        @Override
+                        public void onResponse(@NonNull Courses response) {
+
+                            if (response.getErrorCode() == null) {
+//                                courseDetailItem = response;
+//                                if (courseDetailItem != null) {
+//                                    //set Course Details
+//                                    setCourseDetails();
+//                                }else{
+//                                    showToast(getString(R.string.error_something_wrong));
+//                                }
+//                                hideBusyProgress();
+                                txtCourseCode.setText(response.getCode());
+                                getCourseContent();
+                            } else {
+                                hideBusyProgress();
+                                showToast(response.getErrorMessage());
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    hideBusyProgress();
+                    showToast(SettingsMy.getErrorMessage(error));
+                }
+            });
+            getCourseDetailsRequest.setRetryPolicy(Application.getDefaultRetryPolice());
+            getCourseDetailsRequest.setShouldCache(false);
+            Application.getInstance().addToRequestQueue(getCourseDetailsRequest, "course_details_requests");
+        }
+    }
+
     private void getCourseContent() {
 
         User user = SettingsMy.getActiveUser();
         if (user != null) {
-            showBusyProgress();
+//            showBusyProgress();
             JSONObject jo = new JSONObject();
             try {
                 jo.put("UserId", user.getId());
@@ -269,7 +329,7 @@ public class PublishCourseActivity extends BaseActivity implements EasyPermissio
 
         switch (fileType) {
             case AddContentDialog.OPT_RECORD_VIDEO:
-
+                getCamera();
                 break;
             case AddContentDialog.OPT_ADD_VIDEO:
                 getVideos();
@@ -277,6 +337,22 @@ public class PublishCourseActivity extends BaseActivity implements EasyPermissio
             case AddContentDialog.OPT_ADD_DOCUMENT:
                 getDocuments();
                 break;
+        }
+    }
+
+    private void getCamera() {
+        if (GlobalMethods.isCameraHardwareAvailable(PublishCourseActivity.this)) {
+
+            if (EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                recordVideo();
+            } else {
+                EasyPermissions.requestPermissions(this,
+                        "This app needs to access your Camera.",
+                        REQUEST_PERMISSION_EXTERNAL,
+                        Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }
+        } else {
+            showToast(getResources().getString(R.string.camera_not_found_error));
         }
     }
 
@@ -303,6 +379,29 @@ public class PublishCourseActivity extends BaseActivity implements EasyPermissio
         }
 
     }
+
+    /**
+     * Launching camera app to record video
+     */
+    @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    private void recordVideo() {
+
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+        Uri fileUri = Uri.fromFile(GlobalMethods.getOutputMediaFile(PublishCourseActivity.this,
+                new File(Environment.getExternalStorageDirectory(), "/" + getResources().getString(R.string.app_name) + "/Video/")));
+
+        // set video quality
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 1800);
+        intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file
+        // name
+
+        // start the video capture Intent
+        startActivityForResult(intent, CAMERA_CAPTURE_VIDEO_REQUEST_CODE);
+    }
+
 
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     public void onPickPhoto() {
@@ -389,6 +488,45 @@ public class PublishCourseActivity extends BaseActivity implements EasyPermissio
                         startActivityForResult(courseContent, 205);
                     }
                 }
+                break;
+
+            case CAMERA_CAPTURE_VIDEO_REQUEST_CODE:
+
+                if (resultCode == RESULT_OK) {
+
+                    // video successfully recorded
+                    if (data != null && data.getData() != null) {
+
+//                        FileData fileData = new FileData(new File(data.getData().getPath()));
+//                        Intent recordPreviewIntent = new Intent(CreateCourseActivity.this, RecordPreviewActivity.class);
+//                        recordPreviewIntent.putExtra("FileUri", data.getData());
+//                        Bundle bundle = new Bundle();
+//                        bundle.putSerializable("FileData", fileData);
+//                        recordPreviewIntent.putExtras(bundle);
+//
+//                        startActivityForResult(recordPreviewIntent, RecordPreviewActivity.REQUEST_CODE);
+
+                        Intent courseContent = new Intent(PublishCourseActivity.this, CreateCourseContentActivity.class);
+                        courseContent.putExtra(CreateCourseContentActivity.contentTypeKEY, CreateCourseContentActivity.contentTypeVideo);
+                        courseContent.putExtra(CreateCourseContentActivity.contentDataKEY, data.getData().getPath());
+                        courseContent.putExtra(CreateCourseContentActivity.courseIDKEY, courseId);
+                        courseContent.putExtra(CreateCourseContentActivity.courseTitleKEY, courseTitle);
+                        courseContent.putExtra(CreateCourseContentActivity.coursePriceKEY, coursePrice);
+                        startActivityForResult(courseContent, 205);
+
+                    } else {
+                        // failed to record video
+                        showToast("Sorry! Unable to fetch recorded video data.");
+                    }
+                } else if (resultCode == RESULT_CANCELED) {
+                    // user cancelled recording
+                    showToast("User cancelled video recording");
+
+                } else {
+                    // failed to record video
+                    showToast("Sorry! Failed to record video");
+                }
+
                 break;
 
             case 205:

@@ -1,7 +1,9 @@
 package com.edbrix.enterprise.Models;
 
 
-public class CourseContents {
+import java.io.Serializable;
+
+public class CourseContents implements Serializable{
 
     private String id;
     private String title;

@@ -114,7 +114,7 @@
     <string name="pay_content">Please use desktop web browser to Pay and Join the meeting. </string>
     <string name="connect">Connect</string>
     <string name="join">Join</string>
-
+    <string name="camera_not_found_error">Sorry.. You are not able to record video. Camera not found on this device.</string>
     <string name="change_password">Change Password</string>
     <string name="choose_organisation">Choose your organisation</string>
     <string name="share">Share </string>
@@ -151,18 +151,18 @@
     </string-array>
 
     <string-array name="months">
-        <item>Jan</item>
-        <item>Feb</item>
-        <item>Mar</item>
-        <item>Apr</item>
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
         <item>May</item>
-        <item>Jun</item>
-        <item>Jul</item>
-        <item>Aug</item>
-        <item>Sept</item>
-        <item>Oct</item>
-        <item>Nov</item>
-        <item>Dec</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
     </string-array>
 
     <string-array name="availability">

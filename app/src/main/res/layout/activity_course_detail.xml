@@ -53,13 +53,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!--<LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:orientation="vertical">
+
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
             app:srcCompat="@drawable/edit_pencil_white" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fabAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/fab_margin"
+                app:srcCompat="@drawable/edit_pencil_white" />
+
+        </LinearLayout>-->
+
 
         <ScrollView
             android:layout_width="match_parent"
@@ -179,5 +194,44 @@
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
+
+        <com.getbase.floatingactionbutton.FloatingActionsMenu
+            android:id="@+id/fabEditMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:visibility="visible"
+            app:fab_addButtonColorNormal="@color/colorAppOrange"
+            app:fab_addButtonColorPressed="@color/white_pressed"
+            app:fab_addButtonPlusIconColor="@color/colorWhite"
+            app:fab_addButtonStrokeVisible="false"
+            app:fab_labelStyle="@style/menu_labels_style"
+            app:fab_labelsPosition="left">
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_edit_course"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_colorNormal="@color/colorWhite"
+                app:fab_colorPressed="@color/white_pressed"
+                app:fab_icon="@mipmap/edit_icon_grey"
+                app:fab_size="mini"
+                app:fab_title="@string/edit_live_course" />
+
+            <com.getbase.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_add_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:fab_colorNormal="@color/colorWhite"
+                app:fab_colorPressed="@color/white_pressed"
+                app:fab_icon="@mipmap/edit_icon_grey"
+                app:fab_size="mini"
+                app:fab_title="@string/add_content" />
+
+        </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
     </FrameLayout>
 </LinearLayout>

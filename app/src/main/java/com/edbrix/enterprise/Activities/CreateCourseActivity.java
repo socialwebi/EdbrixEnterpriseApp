@@ -7,7 +7,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,9 +27,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.edbrix.enterprise.Models.FileData;
 import com.edbrix.enterprise.R;
 import com.edbrix.enterprise.Utils.AddContentDialog;
 import com.edbrix.enterprise.baseclass.BaseActivity;
+import com.edbrix.enterprise.commons.GlobalMethods;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -41,6 +46,10 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class CreateCourseActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks {
 
     static final int REQUEST_PERMISSION_EXTERNAL = 1004;
+
+
+    // Camera activity request codes
+    private static final int CAMERA_CAPTURE_VIDEO_REQUEST_CODE = 200;
 
     private EditText edtCourseName;
     private EditText edtCoursePrice;
@@ -142,7 +151,7 @@ public class CreateCourseActivity extends BaseActivity implements EasyPermission
 
         switch (fileType) {
             case AddContentDialog.OPT_RECORD_VIDEO:
-
+                getCamera();
                 break;
             case AddContentDialog.OPT_ADD_VIDEO:
                 getVideos();
@@ -150,6 +159,22 @@ public class CreateCourseActivity extends BaseActivity implements EasyPermission
             case AddContentDialog.OPT_ADD_DOCUMENT:
                 getDocuments();
                 break;
+        }
+    }
+
+    private void getCamera() {
+        if (GlobalMethods.isCameraHardwareAvailable(CreateCourseActivity.this)) {
+
+            if (EasyPermissions.hasPermissions(this, Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                recordVideo();
+            } else {
+                EasyPermissions.requestPermissions(this,
+                        "This app needs to access your Camera.",
+                        REQUEST_PERMISSION_EXTERNAL,
+                        Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }
+        } else {
+            showToast(getResources().getString(R.string.camera_not_found_error));
         }
     }
 
@@ -176,6 +201,29 @@ public class CreateCourseActivity extends BaseActivity implements EasyPermission
         }
 
     }
+
+    /**
+     * Launching camera app to record video
+     */
+    @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    private void recordVideo() {
+
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+        Uri fileUri = Uri.fromFile(GlobalMethods.getOutputMediaFile(CreateCourseActivity.this,
+                new File(Environment.getExternalStorageDirectory(), "/" + getResources().getString(R.string.app_name) + "/Video/")));
+
+        // set video quality
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 1800);
+        intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file
+        // name
+
+        // start the video capture Intent
+        startActivityForResult(intent, CAMERA_CAPTURE_VIDEO_REQUEST_CODE);
+    }
+
 
     @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
     public void onPickPhoto() {
@@ -262,6 +310,44 @@ public class CreateCourseActivity extends BaseActivity implements EasyPermission
                         startActivityForResult(courseContent, 205);
                     }
                 }
+                break;
+            case CAMERA_CAPTURE_VIDEO_REQUEST_CODE:
+
+                if (resultCode == RESULT_OK) {
+
+                    // video successfully recorded
+                    if (data != null && data.getData() != null) {
+
+//                        FileData fileData = new FileData(new File(data.getData().getPath()));
+//                        Intent recordPreviewIntent = new Intent(CreateCourseActivity.this, RecordPreviewActivity.class);
+//                        recordPreviewIntent.putExtra("FileUri", data.getData());
+//                        Bundle bundle = new Bundle();
+//                        bundle.putSerializable("FileData", fileData);
+//                        recordPreviewIntent.putExtras(bundle);
+//
+//                        startActivityForResult(recordPreviewIntent, RecordPreviewActivity.REQUEST_CODE);
+
+                        Intent courseContent = new Intent(CreateCourseActivity.this, CreateCourseContentActivity.class);
+                        courseContent.putExtra(CreateCourseContentActivity.contentTypeKEY, CreateCourseContentActivity.contentTypeVideo);
+                        courseContent.putExtra(CreateCourseContentActivity.contentDataKEY, data.getData().getPath());
+                        courseContent.putExtra(CreateCourseContentActivity.courseIDKEY, "0");
+                        courseContent.putExtra(CreateCourseContentActivity.courseTitleKEY, courseTitle);
+                        courseContent.putExtra(CreateCourseContentActivity.coursePriceKEY, coursePrice);
+                        startActivityForResult(courseContent, 205);
+
+                    } else {
+                        // failed to record video
+                        showToast("Sorry! Unable to fetch recorded video data.");
+                    }
+                } else if (resultCode == RESULT_CANCELED) {
+                    // user cancelled recording
+                    showToast("User cancelled video recording");
+
+                } else {
+                    // failed to record video
+                    showToast("Sorry! Failed to record video");
+                }
+
                 break;
 
             case 205:

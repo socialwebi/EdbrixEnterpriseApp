@@ -46,6 +46,8 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -85,8 +87,8 @@ public class CourseListFragment extends BaseFragment implements SearchView.OnQue
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(true);
                 coursesArrayList.clear();
-                pageNo = 1;
-                getCourseList(SettingsMy.getActiveUser(), sessionManager.getSessionDeviceType(), dataType, pageNo);
+                pageNo = 0;
+//                getCourseList(SettingsMy.getActiveUser(), sessionManager.getSessionDeviceType(), dataType, pageNo);
 
             }
         });
@@ -216,7 +218,7 @@ public class CourseListFragment extends BaseFragment implements SearchView.OnQue
                 if (courseItem != null) {
                     Intent courseDetail = new Intent(context, CourseDetailActivity.class);
                     courseDetail.putExtra(CourseDetailActivity.courseDetailBundleKey, courseItem);
-                    startActivity(courseDetail);
+                    startActivityForResult(courseDetail,205);
                 } else {
 
                 }
@@ -320,6 +322,16 @@ public class CourseListFragment extends BaseFragment implements SearchView.OnQue
             //update recyclerview
             if (courseListRecyclerView.getAdapter() != null && courseListRecyclerView.getAdapter().getItemCount() > 0)
                 ((CourseListAdapter) courseListRecyclerView.getAdapter()).updateList(temp);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 205 && resultCode == RESULT_OK) {
+            swipeRefreshLayout.setRefreshing(true);
+            coursesArrayList.clear();
+            pageNo = 0;
         }
     }
 }

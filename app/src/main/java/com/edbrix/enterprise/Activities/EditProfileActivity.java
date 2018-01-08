@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -70,7 +71,16 @@ public class EditProfileActivity extends BaseActivity {
     private String lastName;
     private String aboutYou;
     private String dob;
+    private Button saveBtn;
+    private Button cancelBtn;
     private int mYear, mMonth, mDay;
+
+    private List<String> months;
+    private String[] years_array;
+    private String[] days_array;
+
+    private boolean isBOBAlreadySet;
+
 
     private ArrayList<SalutationsData> salutationList;
     private ArrayList<TimezonesData> timezonesList;
@@ -108,19 +118,25 @@ public class EditProfileActivity extends BaseActivity {
         edtAbtUrSelf = findViewById(R.id.edtAbtUrSelf);
         checkEmailNotification = findViewById(R.id.checkEmailNotification);
         checkCommentOnWall = findViewById(R.id.checkCommentOnWall);
+        saveBtn = findViewById(R.id.saveBtn);
+        cancelBtn = findViewById(R.id.cancelBtn);
 
         salutationList = new ArrayList<>();
         timezonesList = new ArrayList<>();
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this, R.array.name_title, R.layout.custom_text_layout);
-        adapter.setDropDownViewResource(R.layout.custom_text_layout);
-        spnrTitle.setAdapter(adapter);
+//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+//                this, R.array.name_title, R.layout.custom_text_layout);
+//        adapter.setDropDownViewResource(R.layout.custom_text_layout);
+//        spnrTitle.setAdapter(adapter);
 
-        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(
-                this, R.array.name_title, R.layout.custom_text_layout);
-        adapter2.setDropDownViewResource(R.layout.custom_text_layout);
-        spnrTimezone.setAdapter(adapter2);
+        getSalutationList();
+
+        getTimeZoneList();
+
+//        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(
+//                this, R.array.name_title, R.layout.custom_text_layout);
+//        adapter2.setDropDownViewResource(R.layout.custom_text_layout);
+//        spnrTimezone.setAdapter(adapter2);
 
 
         edtDOB.setOnClickListener(new View.OnClickListener() {
@@ -150,6 +166,20 @@ public class EditProfileActivity extends BaseActivity {
             }
         });
 
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
 
         year_spinner = (Spinner) findViewById(R.id.spnrYear);
         month_spinner = (Spinner) findViewById(R.id.spnrMonth);
@@ -174,6 +204,37 @@ public class EditProfileActivity extends BaseActivity {
         edtLastName.setText(user.getLastName());
         // _edit_profile_dob.setText(user.getGender());
         edtAbtUrSelf.setText(user.getAboutMe());
+        if ((user.getBirthYear() != null & !user.getBirthYear().isEmpty()) &&
+                (user.getBirthMonth() != null & !user.getBirthMonth().isEmpty()) &&
+                (user.getBirthDay() != null & !user.getBirthDay().isEmpty())) {
+            isBOBAlreadySet = true;
+        }
+        if (years_array != null && years_array.length > 0) {
+            for (int i = 0; i < years_array.length; i++) {
+                if (user.getBirthYear().equalsIgnoreCase(years_array[i])) {
+                    year_spinner.setSelection(i);
+                    break;
+                }
+            }
+        }
+
+        if (months != null && months.size() > 0) {
+            for (int p = 0; p < months.size(); p++) {
+                if (user.getBirthMonth().equalsIgnoreCase(months.get(p))) {
+                    month_spinner.setSelection(p);
+                    break;
+                }
+            }
+        }
+
+        if (days_array != null && days_array.length > 0) {
+            for (int j = 0; j < days_array.length; j++) {
+                if (user.getBirthDay().equalsIgnoreCase(days_array[j])) {
+                    day_spinner.setSelection(j);
+                    break;
+                }
+            }
+        }
 
     }
 
@@ -209,7 +270,7 @@ public class EditProfileActivity extends BaseActivity {
         } else if (aboutYou.isEmpty()) {
             edtAbtUrSelf.setError(getString(R.string.error_edit_text));
         } else {
-
+updateUserDetails(firstName,lastName,0,0,aboutYou,0,0,"");
 //           updateUserDetails(firstName,lastName,);
         }
     }
@@ -218,14 +279,14 @@ public class EditProfileActivity extends BaseActivity {
         int year = Integer.parseInt(year_spinner.getSelectedItem().toString());
         String month = month_spinner.getSelectedItem().toString();
 
-        List<String> months = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.months)));
+        months = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.months)));
 
         Calendar mycal = new GregorianCalendar(year, months.indexOf(month), 1);
 
         // Get the number of days in that month
         int daysInMonth = mycal.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-        String[] days_array = new String[daysInMonth];
+        days_array = new String[daysInMonth];
 
         for (int k = 0; k < daysInMonth; k++)
             days_array[k] = "" + (k + 1);
@@ -254,7 +315,7 @@ public class EditProfileActivity extends BaseActivity {
 
     public void populateYearsByRange(int minYear, int maxYear) {
 
-        String[] years_array = new String[(maxYear - minYear)];
+        years_array = new String[(maxYear - minYear)];
 
         int count = 0;
 //        for(int i=minYear; i <maxYear; i++) {
@@ -277,7 +338,9 @@ public class EditProfileActivity extends BaseActivity {
     AdapterView.OnItemSelectedListener fixDays = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            setDays();
+            if (!isBOBAlreadySet) {
+                setDays();
+            }
         }
 
         @Override
@@ -287,7 +350,7 @@ public class EditProfileActivity extends BaseActivity {
     };
 
     private void getSalutationList() {
-        showBusyProgress();
+//        showBusyProgress();
         if (user != null) {
 
             JSONObject jo = new JSONObject();
@@ -329,7 +392,7 @@ public class EditProfileActivity extends BaseActivity {
     }
 
     private void getTimeZoneList() {
-        showBusyProgress();
+//        showBusyProgress();
         if (user != null) {
 
             JSONObject jo = new JSONObject();

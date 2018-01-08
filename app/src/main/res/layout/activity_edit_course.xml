@@ -35,7 +35,7 @@
                     android:layout_centerInParent="true"
                     android:gravity="center"
                     android:paddingRight="@dimen/app_big_padding"
-                    android:text="@string/create_live_course"
+                    android:text="@string/edit_live_course"
                     android:textColor="@color/actionbarText"
                     android:textSize="20sp"
                     android:typeface="monospace" />
