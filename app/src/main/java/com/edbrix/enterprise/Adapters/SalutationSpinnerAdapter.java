@@ -82,17 +82,6 @@ public class SalutationSpinnerAdapter extends BaseAdapter {
         return mItems.get(position).getSalutation();
     }
 
-    public int getCategoryListPosition (String categoryId){
-        if(mItems!=null && !mItems.isEmpty()) {
-            for (int i = 0; i < mItems.size(); i++) {
-                if (categoryId.equalsIgnoreCase(mItems.get(i).getId())) {
-                    return i;
-                }
-            }
-        }
-        return 0;
-    }
-
     // This funtion called for each row ( Called data.size() times )
     public View getCustomView(int position, View convertView, ViewGroup parent) {
 

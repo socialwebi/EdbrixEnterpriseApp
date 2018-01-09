@@ -756,7 +756,9 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
                 break;
             case Constants.contentType_Video:
 //                txtContentType.setText(getString(R.string.video_content));
-                loadWebContent(response.getCourse_content().getVideo_content());
+//                loadWebContent(response.getCourse_content().getVideo_content());
+                loadVideoContent(response.getCourse_content().getVideo_content());
+
                 break;
             case Constants.contentType_Iframe:
 //                txtContentType.setText(getString(R.string.iframe_content));
@@ -995,6 +997,29 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
         if (webContent != null && webContent.length() > 0) {
             mediaWebView.setVisibility(View.VISIBLE);
             mediaWebView.loadData(webContent, "text/html", "utf-8");
+            if (!isTablet()) {
+                mediaWebView.getSettings().setLoadWithOverviewMode(true);
+                mediaWebView.getSettings().setUseWideViewPort(true);
+            }
+        } else {
+            mediaWebView.setVisibility(View.GONE);
+        }
+    }
+
+    private void loadVideoContent(String videoContent){
+        if (videoContent != null && videoContent.length() > 0) {
+
+            mediaWebView.setVisibility(View.VISIBLE);
+            if(videoContent.contains("cdn.video.playwire.com")) {
+                String dt = "\u003Ciframe width=\"100%\" height=\"100%\" src=\"" + videoContent + "\" frameborder=\"0\"allowfullscreen\u003E\u003C/iframe\u003E";
+                mediaWebView.loadData( dt, "text/html", "UTF-8");
+            }else if(!videoContent.contains("iframe")){
+                String dt = "\u003Ciframe width=\"100%\" height=\"100%\" src=\"" + videoContent + "\" frameborder=\"0\"allowfullscreen\u003E\u003C/iframe\u003E";
+                mediaWebView.loadData( dt, "text/html", "UTF-8");
+            }else{
+                mediaWebView.loadData( videoContent, "text/html", "UTF-8");
+            }
+
             if (!isTablet()) {
                 mediaWebView.getSettings().setLoadWithOverviewMode(true);
                 mediaWebView.getSettings().setUseWideViewPort(true);

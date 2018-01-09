@@ -215,7 +215,7 @@ public class CreateCourseActivity extends BaseActivity implements EasyPermission
 
         // set video quality
         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 1800);
+        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 3600);
         intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file
         // name

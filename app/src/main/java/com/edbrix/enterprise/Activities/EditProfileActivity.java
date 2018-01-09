@@ -67,10 +67,14 @@ public class EditProfileActivity extends BaseActivity {
     private CheckBox checkEmailNotification;
     private CheckBox checkCommentOnWall;
     private User user;
+    private int titleId;
+    private int timezoneId;
     private String firstName;
     private String lastName;
     private String aboutYou;
     private String dob;
+    private int emailNotification;
+    private int commentOnWall;
     private Button saveBtn;
     private Button cancelBtn;
     private int mYear, mMonth, mDay;
@@ -169,6 +173,13 @@ public class EditProfileActivity extends BaseActivity {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                int month = month_spinner.getSelectedItemPosition() + 1;
+//                String day = (String) day_spinner.getSelectedItem();
+//                String yr = (String) year_spinner.getSelectedItem();
+//
+//                showToast(yr + "/" + String.format("%02d", month) + "/" + String.format("%02d", Integer.parseInt(day)));
+
+                checkValidations();
 
             }
         });
@@ -176,7 +187,7 @@ public class EditProfileActivity extends BaseActivity {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                finish();
             }
         });
 
@@ -204,6 +215,19 @@ public class EditProfileActivity extends BaseActivity {
         edtLastName.setText(user.getLastName());
         // _edit_profile_dob.setText(user.getGender());
         edtAbtUrSelf.setText(user.getAboutMe());
+
+        if (user.getCanCommentOnWall() == 1) {
+            checkCommentOnWall.setChecked(true);
+        } else {
+            checkCommentOnWall.setChecked(false);
+        }
+
+        if (user.getCanReceiveCourseRequestNotification() == 1) {
+            checkEmailNotification.setChecked(true);
+        } else {
+            checkEmailNotification.setChecked(false);
+        }
+
         if ((user.getBirthYear() != null & !user.getBirthYear().isEmpty()) &&
                 (user.getBirthMonth() != null & !user.getBirthMonth().isEmpty()) &&
                 (user.getBirthDay() != null & !user.getBirthDay().isEmpty())) {
@@ -236,6 +260,24 @@ public class EditProfileActivity extends BaseActivity {
             }
         }
 
+        if (salutationList != null && !salutationList.isEmpty()) {
+            for (int s = 0; s < salutationList.size(); s++) {
+                if (user.getSalutationId() == salutationList.get(s).getId()) {
+                    spnrTitle.setSelection(s);
+                    break;
+                }
+            }
+        }
+
+        if (timezonesList != null && !timezonesList.isEmpty()) {
+            for (int t = 0; t < timezonesList.size(); t++) {
+                if (user.getTimezoneId() == timezonesList.get(t).getId()) {
+                    spnrTimezone.setSelection(t);
+                    break;
+                }
+            }
+        }
+
     }
 
     @Override
@@ -250,11 +292,23 @@ public class EditProfileActivity extends BaseActivity {
     }
 
     private void checkValidations() {
+        int month = month_spinner.getSelectedItemPosition() + 1;
+        String day = (String) day_spinner.getSelectedItem();
+        String yr = (String) year_spinner.getSelectedItem();
+        dob = yr + "-" + String.format("%02d", month) + "-" + String.format("%02d", Integer.parseInt(day));
 
+        titleId = salutationList.get(spnrTitle.getSelectedItemPosition()).getId();
+        timezoneId = timezonesList.get(spnrTimezone.getSelectedItemPosition()).getId();
         firstName = edtFirstName.getText().toString().trim();
         lastName = edtLastName.getText().toString().trim();
-        dob = edtDOB.getText().toString().trim();
         aboutYou = edtAbtUrSelf.getText().toString().trim();
+        if (checkCommentOnWall.isChecked()) {
+            commentOnWall = 1;
+        }
+
+        if (checkEmailNotification.isChecked()) {
+            emailNotification = 1;
+        }
 
         edtFirstName.setError(null);
         edtLastName.setError(null);
@@ -270,7 +324,7 @@ public class EditProfileActivity extends BaseActivity {
         } else if (aboutYou.isEmpty()) {
             edtAbtUrSelf.setError(getString(R.string.error_edit_text));
         } else {
-updateUserDetails(firstName,lastName,0,0,aboutYou,0,0,"");
+            updateUserDetails(firstName, lastName, titleId, timezoneId, aboutYou, commentOnWall, emailNotification, dob);
 //           updateUserDetails(firstName,lastName,);
         }
     }
@@ -368,7 +422,7 @@ updateUserDetails(firstName,lastName,0,0,aboutYou,0,0,"");
                         public void onResponse(@NonNull ResponseData response) {
 
                             if (response.getErrorCode() == null) {
-                                salutationList = response.getSalutationsList();
+                                salutationList.addAll(response.getSalutationsList());
                                 SalutationSpinnerAdapter salutationSpinnerAdapter = new SalutationSpinnerAdapter(EditProfileActivity.this);
                                 salutationSpinnerAdapter.addItems(salutationList);
                                 spnrTitle.setAdapter(salutationSpinnerAdapter);
@@ -478,6 +532,7 @@ updateUserDetails(firstName,lastName,0,0,aboutYou,0,0,"");
             JSONObject jo = new JSONObject();
             try {
                 jo.put("UserId", user.getId());
+                jo.put("UserType", user.getUserType());
                 jo.put("AccessToken", user.getAccessToken());
                 jo.put("FirstName", firstName);
                 jo.put("LastName", lastName);
@@ -508,13 +563,15 @@ updateUserDetails(firstName,lastName,0,0,aboutYou,0,0,"");
                         public void onResponse(@NonNull ResponseData response) {
 
                             if (response.getErrorCode() == null) {
-//                                user = response.getUser();
-//                                setValues();
-
-                                SettingsMy.setActiveUser(response.getUser());
-                                showToast("Your profile is updated successfully.");
                                 hideBusyProgress();
-                                finish();
+                                if (response.getUser() != null) {
+
+                                    SettingsMy.setActiveUser(response.getUser());
+                                    showToast("Your profile is updated successfully.");
+                                    finish();
+                                } else {
+                                    showToast(getString(R.string.error_something_wrong));
+                                }
                             } else {
                                 hideBusyProgress();
                                 showToast(response.getErrorMessage());

@@ -7,7 +7,7 @@ package com.edbrix.enterprise.Models;
 public class SalutationsData {
     private String Salutation;
 
-    private String Id;
+    private int Id;
 
     public String getSalutation() {
         return Salutation;
@@ -17,11 +17,11 @@ public class SalutationsData {
         this.Salutation = Salutation;
     }
 
-    public String getId() {
+    public int getId() {
         return Id;
     }
 
-    public void setId(String Id) {
+    public void setId(int Id) {
         this.Id = Id;
     }
 

@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/refreshOption"
-        android:icon="@drawable/zm_btn_refresh_pressed"
+        android:icon="@mipmap/refresh_icon"
         android:title="@string/settings"
         app:showAsAction="always" />
 

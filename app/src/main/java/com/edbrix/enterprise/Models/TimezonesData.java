@@ -9,7 +9,7 @@ public class TimezonesData {
 
     private String Location;
 
-    private String Id;
+    private int Id;
 
     public String getTimezone ()
     {
@@ -31,12 +31,12 @@ public class TimezonesData {
         this.Location = Location;
     }
 
-    public String getId ()
+    public int getId ()
     {
         return Id;
     }
 
-    public void setId (String Id)
+    public void setId (int Id)
     {
         this.Id = Id;
     }
