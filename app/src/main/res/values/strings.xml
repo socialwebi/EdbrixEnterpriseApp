@@ -127,6 +127,7 @@
     <string name="about_yourself">About Yourself</string>
     <string name="save_changes">Save Changes</string>
     <string name="save_course">Save Course</string>
+    <string name="save_to_course">Save To Course</string>
     <string name="save">Save</string>
     <string name="update">Update</string>
     <string name="enter_first_name">Enter first name</string>

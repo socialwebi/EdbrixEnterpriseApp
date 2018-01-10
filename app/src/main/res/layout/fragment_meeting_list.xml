@@ -21,9 +21,10 @@
 
     <ImageView
         android:id="@+id/meeting_list_No_Meetings"
-        android:layout_width="match_parent"
+        android:layout_width="215dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:padding="@dimen/app_big_padding"
         android:foregroundGravity="center"
         android:src="@drawable/no_meeting"
         android:gravity="center"

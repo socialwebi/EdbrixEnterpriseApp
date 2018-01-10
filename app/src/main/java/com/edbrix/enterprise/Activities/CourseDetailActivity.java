@@ -157,7 +157,14 @@ public class CourseDetailActivity extends BaseActivity {
 
         courseDetailItem = (Courses) getIntent().getSerializableExtra(courseDetailBundleKey);
 
-        getCourseDetails(courseDetailItem.getId());
+        if (courseDetailItem != null) {
+            //set Course Details
+            setCourseDetails();
+        } else {
+            showToast(getString(R.string.error_something_wrong));
+        }
+
+//        getCourseDetails(courseDetailItem.getId());
     }
 
   /*  @Override
@@ -233,7 +240,9 @@ public class CourseDetailActivity extends BaseActivity {
         publishIntent.putExtra(PublishCourseActivity.courseIDKEY, courseDetailItem.getId());
         publishIntent.putExtra(PublishCourseActivity.courseTitleKEY, courseDetailItem.getTitle());
         publishIntent.putExtra(PublishCourseActivity.coursePriceKEY, courseDetailItem.getPrice());
-        startActivity(publishIntent);
+        startActivityForResult(publishIntent, 205);
+        setResult(RESULT_OK);
+        finish();
     }
 
 
@@ -242,21 +251,23 @@ public class CourseDetailActivity extends BaseActivity {
             Intent intent = new Intent(CourseDetailActivity.this, EditCourseActivity.class);
             intent.putExtra(EditCourseActivity.courseIDKEY, courseDetailItem.getId());
             startActivityForResult(intent, 205);
+            setResult(RESULT_OK);
+            finish();
         }
     }
 
     private void setCourseDetails() {
         title.setText(courseDetailItem.getTitle());
         txtCourseBy.setText("By " + courseDetailItem.getInstructor_name());
-        String justifiedDesc = "<html><body style=\"text-align:justify;font-family:Open Sans;\">" + courseDetailItem.getDescription() + " </body></html";
-
+        if (courseDetailItem.getDescription() != null) {
+            String justifiedDesc = "<html><body style=\"text-align:justify;font-family:Open Sans;\">" + courseDetailItem.getDescription() + " </body></html>";
+            courseDesc.loadData(justifiedDesc, "text/html", "utf-8");
+        }
 //        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
 //            courseDesc.setText(Html.fromHtml(justifiedDesc,Html.FROM_HTML_MODE_LEGACY));
 //        } else {
 //            courseDesc.setText(Html.fromHtml(justifiedDesc));
 //        }
-
-        courseDesc.loadData(justifiedDesc, "text/html", "utf-8");
 
 //        courseDesc.setText(courseDetailItem.getDescription());
         btnCourseCall.setTag(courseDetailItem.getInstructor_mobileno());

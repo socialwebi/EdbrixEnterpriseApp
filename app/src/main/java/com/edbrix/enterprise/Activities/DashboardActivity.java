@@ -122,6 +122,9 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
         _fab_course = findViewById(R.id.fab_course);
         _fab_meeting = findViewById(R.id.fab_meeting);
 
+        _dashboard_text_all_meetings.setText("No meetings available ");
+        _dashboard_text_all_course.setText("No courses available ");
+
         if (savedInstanceState == null) {
             ZoomSDK sdk = ZoomSDK.getInstance();
             sdk.initialize(this, Constants.APP_KEY, Constants.APP_SECRET, Constants.WEB_DOMAIN, this);
@@ -408,16 +411,24 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
                             _dashboard_progress.setVisibility(View.INVISIBLE);
                             if (response.getErrorCode() == null) {
 
-                                if (response.getCoursesList() != null) {
+                                if (response.getCoursesList() != null && !response.getCoursesList().isEmpty()) {
                                     courseAdapter.refresh(response.getCoursesList());
                                     courseAdapter.notifyDataSetChanged();
+
+                                    _dashboard_text_all_course.setText(R.string.all_courses);
+                                    _dashboard_text_all_course.setEnabled(true);
+
                                 } else {
+                                    _dashboard_text_all_course.setEnabled(false);
                                     _dashboard_text_all_course.setText("No courses available ");
                                 }
-                                if (response.getMeetings() != null) {
+                                if (response.getMeetings() != null && !response.getMeetings().isEmpty()) {
                                     meetingAdapter.refresh(response.getMeetings());
                                     meetingAdapter.notifyDataSetChanged();
+                                    _dashboard_text_all_meetings.setEnabled(true);
+                                    _dashboard_text_all_meetings.setText(R.string.all_meetings);
                                 } else {
+                                    _dashboard_text_all_meetings.setEnabled(false);
                                     _dashboard_text_all_meetings.setText("No meetings available ");
                                 }
                             } else {
@@ -489,7 +500,7 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
         super.onDestroy();
     }
 
-    private void refreshDashboard(){
+    private void refreshDashboard() {
         if (Conditions.isNetworkConnected(DashboardActivity.this)) {
             meetingAdapter.refresh(null);
             courseAdapter.refresh(null);

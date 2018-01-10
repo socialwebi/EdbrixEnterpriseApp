@@ -325,7 +325,7 @@ public class MeetingListFragment extends BaseFragment implements SearchView.OnQu
                             Timber.d("response: %s", response.toString());
                             if (response.getErrorCode() == null) {
 
-                                if (response.getMeetings() != null) {
+                                if (response.getMeetings() != null && !response.getMeetings().isEmpty()) {
                                     _meeting_list_No_Meetings.setVisibility(View.GONE);
 //                                    adapter.refresh(response.getMeetings());
                                     list.addAll(response.getMeetings());

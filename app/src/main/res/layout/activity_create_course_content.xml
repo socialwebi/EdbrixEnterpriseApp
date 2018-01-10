@@ -191,7 +191,6 @@
 
         </LinearLayout>
 
-
     </LinearLayout>
 
     <Button
@@ -202,7 +201,7 @@
         android:layout_margin="10dp"
         android:background="@color/colorAppOrange"
         android:padding="5dp"
-        android:text="@string/save_course"
+        android:text="@string/save_to_course"
         android:textStyle="bold"
         android:textColor="@color/colorWhite"
         android:typeface="monospace" />

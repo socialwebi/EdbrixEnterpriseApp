@@ -40,6 +40,8 @@ public class Courses implements Serializable {
 
     private String price;
 
+    private String start_date;
+
     private String coursecategoryId;
 
     @SerializedName("iscontentavailable")
@@ -178,6 +180,14 @@ public class Courses implements Serializable {
         ErrorCode = errorCode;
     }
 
+    public String getStart_date() {
+        return start_date;
+    }
+
+    public void setStart_date(String start_date) {
+        this.start_date = start_date;
+    }
+
     public String getErrorMessage() {
         return ErrorMessage;
     }
@@ -185,6 +195,8 @@ public class Courses implements Serializable {
     public void setErrorMessage(String errorMessage) {
         ErrorMessage = errorMessage;
     }
+
+
 
     @Override
     public String toString() {
