@@ -44,6 +44,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.easyvideoplayer.EasyVideoPlayer;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.Request;
@@ -129,6 +130,7 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
     private LinearLayout audioContentLayout;
     private LinearLayout assignmentLayout;
     private RelativeLayout imageChoiceGroupLayout;
+    private RelativeLayout videoLayout;
     private RadioGroup radioGroupLayout;
 
     private TextView title;
@@ -156,11 +158,15 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
 
     private ImageView imgPreview;
 
+    private ImageView fullScreenBtn;
+
     private ProgressBar pbarSurvey;
     private CheckBox checkSubmit;
     private CustomViewPager imgViewPager;
     private RecyclerView imageChoiceListView;
     private RecyclerView imgDrawerRecyclerView;
+
+    private EasyVideoPlayer vdPlayer;
 
     private CustomWebView questionWebView;
 
@@ -243,6 +249,9 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
         imgPrevBtn = (ImageView) findViewById(R.id.imgPrevBtn);
         imgNextBtn = (ImageView) findViewById(R.id.imgNextBtn);
 
+        fullScreenBtn = (ImageView) findViewById(R.id.fullScreenBtn);
+        vdPlayer = (EasyVideoPlayer) findViewById(R.id.vdPlayer);
+
         btnBack = (Button) findViewById(R.id.btnBack);
         btnBrowseFile = (Button) findViewById(R.id.btnBrowseFile);
 
@@ -295,6 +304,7 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
         audioContentLayout = (LinearLayout) findViewById(R.id.audioContentLayout);
         assignmentLayout = (LinearLayout) findViewById(R.id.assignmentLayout);
         imageChoiceGroupLayout = (RelativeLayout) findViewById(R.id.imageChoiceGroupLayout);
+        videoLayout = (RelativeLayout) findViewById(R.id.videoLayout);
         radioGroupLayout = (RadioGroup) findViewById(R.id.radioGroupLayout);
         imageChoiceListView = (RecyclerView) findViewById(R.id.imageChoiceListView);
         imgDrawerRecyclerView = (RecyclerView) findViewById(R.id.imgDrawerRecyclerView);
@@ -668,6 +678,8 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
         radioGroupLayout.setVisibility(View.GONE);
         imageContentLayout.setVisibility(View.GONE);
 
+        videoLayout.setVisibility(View.GONE);
+
         mediaWebView.setVisibility(View.GONE);
         mediaWebView.reload();
 
@@ -756,9 +768,7 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
                 break;
             case Constants.contentType_Video:
 //                txtContentType.setText(getString(R.string.video_content));
-//                loadWebContent(response.getCourse_content().getVideo_content());
                 loadVideoContent(response.getCourse_content().getVideo_content());
-
                 break;
             case Constants.contentType_Iframe:
 //                txtContentType.setText(getString(R.string.iframe_content));
@@ -1006,26 +1016,37 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
         }
     }
 
-    private void loadVideoContent(String videoContent){
+    private void loadVideoContent(final String videoContent) {
         if (videoContent != null && videoContent.length() > 0) {
 
-            mediaWebView.setVisibility(View.VISIBLE);
-            if(videoContent.contains("cdn.video.playwire.com")) {
+            if (videoContent.contains("cdn.video.playwire.com")) {
+                videoLayout.setVisibility(View.VISIBLE);
+                vdPlayer.setSource(Uri.parse(videoContent));
+
+                fullScreenBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (!videoContent.isEmpty()) {
+                            vdPlayer.stop();
+                            Intent videoPlayer = new Intent(PlayCourseActivity.this, VideoPlayerActivity.class);
+                            videoPlayer.putExtra("FileUrl", videoContent);
+                            startActivity(videoPlayer);
+                        }
+                    }
+                });
+            } else if (!videoContent.contains("iframe")) {
+                mediaWebView.setVisibility(View.VISIBLE);
                 String dt = "\u003Ciframe width=\"100%\" height=\"100%\" src=\"" + videoContent + "\" frameborder=\"0\"allowfullscreen\u003E\u003C/iframe\u003E";
-                mediaWebView.loadData( dt, "text/html", "UTF-8");
-            }else if(!videoContent.contains("iframe")){
-                String dt = "\u003Ciframe width=\"100%\" height=\"100%\" src=\"" + videoContent + "\" frameborder=\"0\"allowfullscreen\u003E\u003C/iframe\u003E";
-                mediaWebView.loadData( dt, "text/html", "UTF-8");
-            }else{
-                mediaWebView.loadData( videoContent, "text/html", "UTF-8");
+                mediaWebView.loadData(dt, "text/html", "UTF-8");
+            } else {
+                mediaWebView.setVisibility(View.VISIBLE);
+                mediaWebView.loadData(videoContent, "text/html", "UTF-8");
             }
 
             if (!isTablet()) {
                 mediaWebView.getSettings().setLoadWithOverviewMode(true);
                 mediaWebView.getSettings().setUseWideViewPort(true);
             }
-        } else {
-            mediaWebView.setVisibility(View.GONE);
         }
     }
 

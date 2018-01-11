@@ -313,6 +313,47 @@
 
             </LinearLayout>
 
+            <RelativeLayout
+                android:id="@+id/videoLayout"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:visibility="gone"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/colorHintText">
+
+                <com.afollestad.easyvideoplayer.EasyVideoPlayer
+                    android:id="@+id/vdPlayer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:evp_autoFullscreen="true"
+                    app:evp_autoPlay="true"
+                    app:evp_customLabelText="Custom label text if rightAction is customLabel"
+                    app:evp_disableControls="false"
+                    app:evp_hideControlsOnPlay="true"
+                    app:evp_leftAction="restart"
+                    app:evp_loop="false"
+                    app:evp_pauseDrawable="@drawable/evp_action_pause"
+                    app:evp_playDrawable="@drawable/evp_action_play"
+                    app:evp_restartDrawable="@drawable/restart_white"
+                    app:evp_retryText="@string/evp_retry"
+                    app:evp_rightAction="none"
+                    app:evp_submitText="@string/evp_submit"
+                    app:evp_themeColor="@color/ColorBlackTransparent" />
+
+                <ImageView
+                    android:id="@+id/fullScreenBtn"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_margin="@dimen/app_min_margin"
+                    android:padding="@dimen/app_min_padding"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/full_screen"
+                    android:visibility="visible" />
+
+            </RelativeLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
