@@ -326,7 +326,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:evp_autoFullscreen="true"
-                    app:evp_autoPlay="true"
+                    app:evp_autoPlay="false"
                     app:evp_customLabelText="Custom label text if rightAction is customLabel"
                     app:evp_disableControls="false"
                     app:evp_hideControlsOnPlay="true"
@@ -339,6 +339,15 @@
                     app:evp_rightAction="none"
                     app:evp_submitText="@string/evp_submit"
                     app:evp_themeColor="@color/ColorBlackTransparent" />
+
+                <com.edbrix.enterprise.Utils.CustomWebView
+                    android:id="@+id/videoWebView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:fadeScrollbars="true"
+                    android:scrollbars="vertical"
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/fullScreenBtn"

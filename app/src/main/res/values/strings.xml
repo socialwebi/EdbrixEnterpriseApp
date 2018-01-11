@@ -130,6 +130,8 @@
     <string name="save_to_course">Save To Course</string>
     <string name="save">Save</string>
     <string name="update">Update</string>
+    <string name="audio">Audio</string>
+    <string name="video">Video</string>
     <string name="enter_first_name">Enter first name</string>
     <string name="enter_last_name">Enter last name</string>
     <string name="enter_your_tagline">Enter your tagline</string>

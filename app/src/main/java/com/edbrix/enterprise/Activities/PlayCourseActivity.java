@@ -172,6 +172,8 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
 
     private CustomWebView mediaWebView;
 
+    private CustomWebView videoWebView;
+
     private CustomWebView docWebView;
 
     private CustomWebView audioWebView;
@@ -265,6 +267,7 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
 
         questionWebView = (CustomWebView) findViewById(R.id.questionWebView);
         mediaWebView = (CustomWebView) findViewById(R.id.mediaWebView);
+        videoWebView = (CustomWebView) findViewById(R.id.videoWebView);
         docWebView = (CustomWebView) findViewById(R.id.docWebView);
         audioWebView = (CustomWebView) findViewById(R.id.audioWebView);
         contentDescWebView = (CustomWebView) findViewById(R.id.contentDescWebView);
@@ -280,6 +283,11 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
         mediaWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         mediaWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
         mediaWebView.setWebChromeClient(new WebChromeClient());
+
+        videoWebView.getSettings().setJavaScriptEnabled(true);
+        videoWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        videoWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
+        videoWebView.setWebChromeClient(new WebChromeClient());
 
         docWebView.getSettings().setJavaScriptEnabled(true);
         docWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
@@ -683,6 +691,9 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
         mediaWebView.setVisibility(View.GONE);
         mediaWebView.reload();
 
+        videoWebView.setVisibility(View.GONE);
+        videoWebView.reload();
+
         docWebView.setVisibility(View.GONE);
         docWebView.reload();
 
@@ -1017,36 +1028,54 @@ public class PlayCourseActivity extends BaseActivity implements ZoomSDKInitializ
     }
 
     private void loadVideoContent(final String videoContent) {
-        if (videoContent != null && videoContent.length() > 0) {
-
-            if (videoContent.contains("cdn.video.playwire.com")) {
+        try {
+            if (videoContent != null && videoContent.length() > 0) {
                 videoLayout.setVisibility(View.VISIBLE);
-                vdPlayer.setSource(Uri.parse(videoContent));
+                if (videoContent.contains("cdn.video.playwire.com")) {
+                    vdPlayer.setVisibility(View.VISIBLE);
+                    videoWebView.setVisibility(View.GONE);
+
+                    vdPlayer.setSource(Uri.parse(videoContent));
+
+                } else if (!videoContent.contains("iframe")) {
+                    vdPlayer.setVisibility(View.GONE);
+                    videoWebView.setVisibility(View.VISIBLE);
+                    String dt = "\u003Ciframe width=\"100%\" height=\"100%\" src=\"" + videoContent + "\" frameborder=\"0\"allowfullscreen\u003E\u003C/iframe\u003E";
+                    videoWebView.loadData(dt, "text/html", "UTF-8");
+                } else {
+                    vdPlayer.setVisibility(View.GONE);
+                    videoWebView.setVisibility(View.VISIBLE);
+                    videoWebView.loadData(videoContent, "text/html", "UTF-8");
+                }
+
+                if (!isTablet()) {
+                    videoWebView.getSettings().setLoadWithOverviewMode(true);
+                    videoWebView.getSettings().setUseWideViewPort(true);
+                }
+
 
                 fullScreenBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (!videoContent.isEmpty()) {
-                            vdPlayer.stop();
+                        if (videoContent.contains("cdn.video.playwire.com")) {
                             Intent videoPlayer = new Intent(PlayCourseActivity.this, VideoPlayerActivity.class);
+                            videoPlayer.putExtra("FileUrl", videoContent);
+                            startActivity(videoPlayer);
+                        } else if (!videoContent.contains("iframe")) {
+                            String vdContent = "\u003Ciframe width=\"100%\" height=\"100%\" src=\"" + videoContent + "\" frameborder=\"0\"allowfullscreen\u003E\u003C/iframe\u003E";
+                            Intent videoPlayer = new Intent(PlayCourseActivity.this, VideoWebView.class);
+                            videoPlayer.putExtra("FileUrl", vdContent);
+                            startActivity(videoPlayer);
+                        } else {
+                            Intent videoPlayer = new Intent(PlayCourseActivity.this, VideoWebView.class);
                             videoPlayer.putExtra("FileUrl", videoContent);
                             startActivity(videoPlayer);
                         }
                     }
                 });
-            } else if (!videoContent.contains("iframe")) {
-                mediaWebView.setVisibility(View.VISIBLE);
-                String dt = "\u003Ciframe width=\"100%\" height=\"100%\" src=\"" + videoContent + "\" frameborder=\"0\"allowfullscreen\u003E\u003C/iframe\u003E";
-                mediaWebView.loadData(dt, "text/html", "UTF-8");
-            } else {
-                mediaWebView.setVisibility(View.VISIBLE);
-                mediaWebView.loadData(videoContent, "text/html", "UTF-8");
             }
-
-            if (!isTablet()) {
-                mediaWebView.getSettings().setLoadWithOverviewMode(true);
-                mediaWebView.getSettings().setUseWideViewPort(true);
-            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

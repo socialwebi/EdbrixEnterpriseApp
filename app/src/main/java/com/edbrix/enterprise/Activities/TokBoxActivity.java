@@ -1,38 +1,36 @@
 package com.edbrix.enterprise.Activities;
 
 import android.Manifest;
-import android.content.Context;
+import android.opengl.GLSurfaceView;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.app.AlertDialog;
+import android.widget.TextView;
+import android.widget.ToggleButton;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.edbrix.enterprise.Interfaces.Listeners;
 import com.edbrix.enterprise.R;
 import com.edbrix.enterprise.Utils.Constants;
-import com.opentok.android.OpentokError;
-import com.opentok.android.Publisher;
-import com.opentok.android.PublisherKit;
+import com.edbrix.enterprise.Utils.TokBoxWebServiceCoordinator;
 import com.opentok.android.Session;
 import com.opentok.android.Stream;
+import com.opentok.android.Publisher;
+import com.opentok.android.PublisherKit;
 import com.opentok.android.Subscriber;
 import com.opentok.android.SubscriberKit;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.opentok.android.BaseVideoRenderer;
+import com.opentok.android.OpentokError;
 
 import java.util.List;
 
@@ -40,81 +38,42 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class TokBoxActivity extends AppCompatActivity implements Session.SessionListener, EasyPermissions.PermissionCallbacks,
-        PublisherKit.PublisherListener, SubscriberKit.SubscriberListener, Session.ArchiveListener, Listeners.Listener {
 
-    private static final String LOG_TAG = TokBoxActivity.class.getSimpleName();
+public class TokBoxActivity extends AppCompatActivity
+        implements  EasyPermissions.PermissionCallbacks,
+        TokBoxWebServiceCoordinator.Listener,
+        Session.SessionListener,
+        PublisherKit.PublisherListener,
+        SubscriberKit.SubscriberListener,
+        Session.ArchiveListener {
+
+    private static final String LOG_TAG = "TokBox";//MainActivity.class.getSimpleName();
     private static final int RC_SETTINGS_SCREEN_PERM = 123;
     private static final int RC_VIDEO_APP_PERM = 124;
-    private static String API_KEY = "45467242";
-    private static String SESSION_ID = "";
-    private static String TOKEN = "";
-    private static RequestQueue reqQueue;
-    private Session mSession;
-    private Publisher mPublisher;
-    private Subscriber mSubscriber;
-    private FrameLayout mPublisherViewContainer;
-    private FrameLayout mSubscriberViewContainer;
-    private ImageView mArchivingIndicatorView;
+
+    // Suppressing this warning. mWebServiceCoordinator will get GarbageCollected if it is local.
+    @SuppressWarnings("FieldCanBeLocal")
+    private TokBoxWebServiceCoordinator mWebServiceCoordinator;
+
     private String mApiKey;
     private String mSessionId;
     private String mToken;
+    private Session mSession;
+    private Publisher mPublisher;
+    private Subscriber mSubscriber;
     private String mCurrentArchiveId;
     private String mPlayableArchiveId;
-    private Context context;
-    private Response.Listener delegate;
+
+    private FrameLayout mPublisherViewContainer;
+    private FrameLayout mSubscriberViewContainer;
+    private ImageView mArchivingIndicatorView;
+    private Button swapCamera,leavemeetButton;
+    private ToggleButton toggleVideo,toggleAudio;
 
     private Menu mMenu;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tok_box);
-
-        API_KEY = Constants.TolkBox_APIKey;
-        SESSION_ID = getIntent().getStringExtra(Constants.TolkBox_SessionId);
-        TOKEN = getIntent().getStringExtra(Constants.TolkBox_Token);
-
-        mSession = new Session.Builder(this, API_KEY, SESSION_ID).build();
-        mSession.setSessionListener(this);
-        mSession.connect(TOKEN);
-
-        requestPermissions();
-
-        mPublisherViewContainer = (FrameLayout) findViewById(R.id.publisher_container);
-        mSubscriberViewContainer = (FrameLayout) findViewById(R.id.subscriber_container);
-
-
-    }
-
-    @AfterPermissionGranted(RC_VIDEO_APP_PERM)
-    private void requestPermissions() {
-        String[] perms = {Manifest.permission.INTERNET, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
-        if (EasyPermissions.hasPermissions(this, perms)) {
-            // initialize view objects from your layout
-            mPublisherViewContainer = (FrameLayout) findViewById(R.id.publisher_container);
-            mSubscriberViewContainer = (FrameLayout) findViewById(R.id.subscriber_container);
-            mArchivingIndicatorView = (ImageView) findViewById(R.id.archiving_indicator_view);
-
-            /* // initialize and connect to the session
-            fetchSessionConnectionData(); */
-
-            // OR \\
-
-            // initialize and connect to the session
-            mSession = new Session.Builder(this, API_KEY, SESSION_ID).build();
-            mSession.setSessionListener(this);
-            mSession.connect(TOKEN);
-
-
-        } else {
-            EasyPermissions.requestPermissions(this, "This app needs access to your camera and mic to make video calls", RC_VIDEO_APP_PERM, perms);
-        }
-    }
-
-    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
@@ -129,7 +88,6 @@ public class TokBoxActivity extends AppCompatActivity implements Session.Session
         Log.d(LOG_TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
 
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-
             new AppSettingsDialog.Builder(this)
                     .setTitle(getString(R.string.title_settings_dialog))
                     .setRationale(getString(R.string.rationale_ask_again))
@@ -141,43 +99,96 @@ public class TokBoxActivity extends AppCompatActivity implements Session.Session
         }
     }
 
-    public void fetchSessionConnectionData() {
-        RequestQueue reqQueue = Volley.newRequestQueue(this);
-        reqQueue.add(new JsonObjectRequest(Request.Method.GET,
-                "https://YOURAPPNAME.herokuapp.com" + "/session",
-                null, new Response.Listener<JSONObject>() {
+    @AfterPermissionGranted(RC_VIDEO_APP_PERM)
+    private void requestPermissions() {
+        String[] perms = { Manifest.permission.INTERNET, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO };
+        if (EasyPermissions.hasPermissions(this, perms))
+        {
+            // initialize view objects from your layout
+            mPublisherViewContainer = (FrameLayout) findViewById(R.id.publisher_container);
+            mSubscriberViewContainer = (FrameLayout) findViewById(R.id.subscriber_container);
+            mArchivingIndicatorView = (ImageView) findViewById(R.id.archiving_indicator_view);
 
+            // initialize WebServiceCoordinator and kick off request for session data
+            // session initialization occurs once data is returned, in onSessionConnectionDataReady
+            mWebServiceCoordinator = new TokBoxWebServiceCoordinator(this, this);
+            // mWebServiceCoordinator.fetchSessionConnectionData("/session");
+
+            String API_KEY = Constants.TolkBox_APIKey;
+            String SESSION_ID = getIntent().getStringExtra(Constants.TolkBox_SessionId);
+            String TOKEN = getIntent().getStringExtra(Constants.TolkBox_Token);
+            Log.i(LOG_TAG, "TokBoxActivity :\nApi : "+API_KEY+"\nSession : "+SESSION_ID+"\n Token :"+TOKEN);
+
+            TokBoxWebServiceCoordinator.delegate.onSessionConnectionDataReady(API_KEY, SESSION_ID, TOKEN);
+        } else {
+            EasyPermissions.requestPermissions(this, getString(R.string.rationale_video_app), RC_VIDEO_APP_PERM, perms);
+        }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_tok_box);
+
+        swapCamera = (Button) findViewById(R.id.swapCamera);
+        leavemeetButton =(Button)findViewById(R.id.leaveMeet);
+        leavemeetButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    API_KEY = response.getString("apiKey");
-                    SESSION_ID = response.getString("sessionId");
-                    TOKEN = response.getString("token");
+            public void onClick(View v)
+            {   finish();   }
+        });
 
-                    Log.i(LOG_TAG, "API_KEY: " + API_KEY);
-                    Log.i(LOG_TAG, "SESSION_ID: " + SESSION_ID);
-                    Log.i(LOG_TAG, "TOKEN: " + TOKEN);
+        requestPermissions();
+        swapCamera.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (mPublisher == null) {
+                    return;
+                }
+                mPublisher.cycleCamera();
+            }
+        });
 
-                    mSession = new Session.Builder(TokBoxActivity.this, API_KEY, SESSION_ID).build();
-                    mSession.setSessionListener(TokBoxActivity.this);
-                    mSession.connect(TOKEN);
-
-                } catch (JSONException error) {
-                    Log.e(LOG_TAG, "Web Service error: " + error.getMessage());
+        toggleAudio = (ToggleButton) findViewById(R.id.toggleAudio);
+        toggleAudio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (mPublisher == null) {
+                    return;
+                }
+                if (isChecked) {
+                    mPublisher.setPublishAudio(true);
+                } else {
+                    mPublisher.setPublishAudio(false);
                 }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(LOG_TAG, "Web Service error: " + error.getMessage());
+        });
+
+        toggleVideo = (ToggleButton) findViewById(R.id.toggleVideo);
+        toggleVideo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (mPublisher == null) {
+                    return;
+                }
+                if (isChecked) {
+                    mPublisher.setPublishVideo(true);
+                } else {
+                    mPublisher.setPublishVideo(false);
+                }
             }
-        }));
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        setStopArchiveEnabled(false);
+        mPublisher.destroy();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_record, menu);
+        getMenuInflater().inflate(R.menu.menu_chat, menu);
         mMenu = menu;
         return true;
     }
@@ -187,21 +198,38 @@ public class TokBoxActivity extends AppCompatActivity implements Session.Session
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
+        switch(item.getItemId()) {
             case R.id.action_settings:
                 return true;
             case R.id.action_start_archive:
-                startArchive(mSessionId); // mSessionId from server (DB)
+                startArchive();
                 return true;
             case R.id.action_stop_archive:
-                stopArchive(mSessionId);
+                stopArchive();
                 return true;
             case R.id.action_play_archive:
-                archivePlaybackUri(mSessionId);
+                playArchive();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void initializeSession(String apiKey, String sessionId, String token) {
+        mSession = new Session.Builder(this, apiKey, sessionId).build();
+        mSession.setSessionListener(this);
+        mSession.setArchiveListener(this);
+        mSession.connect(token);
+    }
+
+    private void initializePublisher() {
+        // initialize Publisher and set this object to listen to Publisher events
+        mPublisher = new Publisher.Builder(this).build();
+        mPublisher.setPublisherListener(this);
+
+        // set publisher video style to fill view
+        mPublisher.getRenderer().setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE, BaseVideoRenderer.STYLE_VIDEO_FILL);
+        mPublisherViewContainer.addView(mPublisher.getView(), 0);
     }
 
     private void logOpenTokError(OpentokError opentokError) {
@@ -211,69 +239,22 @@ public class TokBoxActivity extends AppCompatActivity implements Session.Session
 
     /* methods calling mWebServiceCoordinator to control Archiving */
 
-    public void startArchive(String sessionId) {
-        JSONObject postBody = null;
-        try {
-            postBody = new JSONObject("{\"sessionId\": \"" + sessionId + "\"}");
-        } catch (JSONException e) {
-            Log.e(LOG_TAG, "Parsing json body failed");
-            e.getStackTrace();
+    private void startArchive() {
+        if(mSession != null) {
+            mWebServiceCoordinator.startArchive(mSessionId);
+            setStartArchiveEnabled(false);
         }
-
-        this.reqQueue.add(new JsonObjectRequest(Request.Method.POST, Constants.ARCHIVE_START_ENDPOINT,
-                postBody,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i(LOG_TAG, "archive started");
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(LOG_TAG, "Web Service error: " + error.getMessage());
-            }
-        }));
     }
 
-    public void stopArchive(String archiveId) {
-        String requestUrl = Constants.ARCHIVE_STOP_ENDPOINT.replace(":archiveId", archiveId);
-        this.reqQueue.add(new JsonObjectRequest(Request.Method.POST, requestUrl, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.i(LOG_TAG, "archive stopped");
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(LOG_TAG, "Web Service error: " + error.getMessage());
-            }
-        }));
+    private void stopArchive() {
+        mWebServiceCoordinator.stopArchive(mCurrentArchiveId);
+        setStopArchiveEnabled(false);
     }
 
-    public void archivePlaybackUri(String archiveId) {
-        Uri playArchiveUri = Uri.parse(Constants.ARCHIVE_PLAY_ENDPOINT.replace(":archiveId", archiveId));
+    private void playArchive() {
+        Uri playArchiveUri = mWebServiceCoordinator.archivePlaybackUri(mPlayableArchiveId);
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, playArchiveUri);
         startActivity(browserIntent);
-    }
-
-    /* Web Service Coordinator delegate methods */
-
-    @Override
-    public void onSessionConnectionDataReady(String apiKey, String sessionId, String token) {
-        Log.i(LOG_TAG, apiKey);
-        Log.i(LOG_TAG, sessionId);
-        Log.i(LOG_TAG, token);
-
-        mApiKey = apiKey;
-        mSessionId = sessionId;
-        mToken = token;
-
-    }
-
-    @Override
-    public void onWebServiceCoordinatorError(Exception error) {
-        Log.e(LOG_TAG, "Web Service error: " + error);
-        Log.e(LOG_TAG, "Web Service error message: " + error.getMessage());
     }
 
     /* Activity lifecycle methods */
@@ -298,20 +279,61 @@ public class TokBoxActivity extends AppCompatActivity implements Session.Session
         }
     }
 
+    /* Web Service Coordinator delegate methods */
+
+    @Override
+    public void onSessionConnectionDataReady(String apiKey, String sessionId, String token) {
+        Log.i(LOG_TAG, apiKey);
+        Log.i(LOG_TAG, sessionId);
+        Log.i(LOG_TAG, token);
+
+        mApiKey = apiKey;
+        mSessionId = sessionId;
+        mToken = token;
+
+        initializeSession(apiKey, sessionId, token);
+        initializePublisher();
+    }
+
+    @Override
+    public void onWebServiceCoordinatorError(Exception error) {
+        Log.e(LOG_TAG, "Web Service error: " + error);
+        Log.e(LOG_TAG, "Web Service error message: " + error.getMessage());
+    }
+
+    /* Session Listener methods */
+
     @Override
     public void onConnected(Session session) {
         Log.i(LOG_TAG, "Session Connected");
 
+        Log.d(LOG_TAG, "onConnected: Connected to session: "+session.getSessionId());
+
+        // initialize Publisher and set this object to listen to Publisher events
         mPublisher = new Publisher.Builder(this).build();
         mPublisher.setPublisherListener(this);
 
+        // set publisher video style to fill view
+        mPublisher.getRenderer().setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE,
+                BaseVideoRenderer.STYLE_VIDEO_FILL);
         mPublisherViewContainer.addView(mPublisher.getView());
-        mSession.publish(mPublisher);
+        if (mPublisher.getView() instanceof GLSurfaceView) {
+            ((GLSurfaceView) mPublisher.getView()).setZOrderOnTop(true);
+        }
+
+        if (mPublisher != null) {
+            mSession.publish(mPublisher);
+        }
+
+        setStartArchiveEnabled(true);
     }
 
     @Override
     public void onDisconnected(Session session) {
+        Log.i(LOG_TAG, "Session Disconnected");
 
+        setStartArchiveEnabled(false);
+        setStopArchiveEnabled(false);
     }
 
     @Override
@@ -320,6 +342,9 @@ public class TokBoxActivity extends AppCompatActivity implements Session.Session
 
         if (mSubscriber == null) {
             mSubscriber = new Subscriber.Builder(this, stream).build();
+            mSubscriber.setSubscriberListener(this);
+            mSubscriber.getRenderer().setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE,
+                    BaseVideoRenderer.STYLE_VIDEO_FILL);
             mSession.subscribe(mSubscriber);
             mSubscriberViewContainer.addView(mSubscriber.getView());
         }
@@ -337,23 +362,52 @@ public class TokBoxActivity extends AppCompatActivity implements Session.Session
 
     @Override
     public void onError(Session session, OpentokError opentokError) {
+        Log.e(LOG_TAG, "onError: "+ opentokError.getErrorDomain() + " : " +
+                opentokError.getErrorCode() + " - "+opentokError.getMessage() + " in session: "+ session.getSessionId());
 
+        logOpenTokError(opentokError);
     }
+
+    /* Publisher Listener methods */
 
     @Override
     public void onStreamCreated(PublisherKit publisherKit, Stream stream) {
-
+        Log.i(LOG_TAG, "Publisher Stream Created");
     }
 
     @Override
     public void onStreamDestroyed(PublisherKit publisherKit, Stream stream) {
-
+        Log.i(LOG_TAG, "Publisher Stream Destroyed");
     }
 
     @Override
     public void onError(PublisherKit publisherKit, OpentokError opentokError) {
-
+        logOpenTokError(opentokError);
     }
+
+    /* Subscriber Listener methods */
+
+    @Override
+    public void onConnected(SubscriberKit subscriberKit) {
+        Log.i(LOG_TAG, "Subscriber Connected");
+
+        // mSubscriberViewContainer.addView(mSubscriber.getView());
+    }
+
+    @Override
+    public void onDisconnected(SubscriberKit subscriberKit) {
+        Log.i(LOG_TAG, "Subscriber Disconnected");
+    }
+
+    @Override
+    public void onError(SubscriberKit subscriberKit, OpentokError opentokError) {
+        Log.e(LOG_TAG, "onError: "+opentokError.getErrorDomain() + " : " +
+                opentokError.getErrorCode() +  " - "+opentokError.getMessage());
+
+        logOpenTokError(opentokError);
+    }
+
+    /* Archive Listener methods */
 
     @Override
     public void onArchiveStarted(Session session, String archiveId, String archiveName) {
@@ -371,39 +425,25 @@ public class TokBoxActivity extends AppCompatActivity implements Session.Session
         mArchivingIndicatorView.setVisibility(View.INVISIBLE);
     }
 
-    @Override
-    public void onConnected(SubscriberKit subscriberKit) {
-
-    }
-
-    @Override
-    public void onDisconnected(SubscriberKit subscriberKit) {
-
-    }
-
-    @Override
-    public void onError(SubscriberKit subscriberKit, OpentokError opentokError) {
-
-    }
-
     /* Options menu helpers */
 
     private void setStartArchiveEnabled(boolean enabled) {
-        mMenu.findItem(R.id.action_start_archive)
+       /* mMenu.findItem(R.id.action_start_archive1)
                 .setEnabled(enabled)
-                .setVisible(enabled);
+                .setVisible(enabled);*/
     }
 
     private void setStopArchiveEnabled(boolean enabled) {
-        mMenu.findItem(R.id.action_stop_archive)
+       /* mMenu.findItem(R.id.action_stop_archive1)
                 .setEnabled(enabled)
-                .setVisible(enabled);
+                .setVisible(enabled);*/
     }
 
     private void setPlayArchiveEnabled(boolean enabled) {
-        mMenu.findItem(R.id.action_play_archive)
+      /*  mMenu.findItem(R.id.action_play_archive1)
                 .setEnabled(enabled)
-                .setVisible(enabled);
-    }
+                .setVisible(enabled);*/
 
+
+    }
 }

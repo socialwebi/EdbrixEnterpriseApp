@@ -1,43 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="horizontal"
     tools:context="com.edbrix.enterprise.Activities.TokBoxActivity">
 
     <FrameLayout
+        android:id="@+id/subscriber_container"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <FrameLayout
-            android:id="@+id/subscriber_container"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
-
-        <FrameLayout
+            android:layout_weight="1"
             android:id="@+id/publisher_container"
-            android:layout_width="@dimen/publisher_layout_width"
-            android:layout_height="@dimen/publisher_layout_height"
-            android:layout_gravity="bottom|end"
-            android:layout_marginBottom="@dimen/publisher_bottom_margin"
-            android:layout_marginEnd="@dimen/publisher_right_margin"
-            android:layout_marginRight="@dimen/publisher_right_margin"
-            android:padding="@dimen/publisher_padding"
-            android:background="@color/publisher_border_color">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/publisher_border_color"/>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_gravity="bottom"
+            android:layout_below="@+id/leaveLinearLayout">
+
+            <ToggleButton
+                android:text="Toggle Audio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/toggleAudio"
+                android:layout_weight="1"
+                android:textOff="@string/audio"
+                android:textOn="@string/audio"
+                android:checked="true"
+                android:layout_gravity="end" />
+
+            <ToggleButton
+                android:text="Toggle Video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/toggleVideo"
+                android:layout_weight="1"
+                android:textOff="@string/video"
+                android:textOn="@string/video"
+                android:checked="true"
+                android:layout_gravity="end" />
+
+            <Button
+                android:text="Swap Cam"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/swapCamera"
+                android:layout_weight="1"
+                android:layout_gravity="end" />
+
+            <Button
+                android:text="Leave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/leaveMeet"
+                android:layout_weight="1"
+                android:layout_gravity="end" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/leaveLinearLayout"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/archiving_indicator_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top|end"
                 android:src="@drawable/archiving_indicator"
                 android:layout_marginTop="@dimen/archiving_indicator_top_margin"
                 android:layout_marginEnd="@dimen/archiving_indicator_right_margin"
                 android:layout_marginRight="@dimen/archiving_indicator_end_margin"
-                android:visibility="invisible" />
+                android:visibility="invisible"
+                android:layout_gravity="right"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/leavemeetingTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Leave"
+                android:textColor="@color/zm_red"
+                android:layout_gravity="right"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>
+    <!--<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.edbrix.enterprise.Activities.TokBoxActivity">
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <FrameLayout
+                android:id="@+id/subscriber_container"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent" />
+
+            <FrameLayout
+                android:id="@+id/publisher_container"
+                android:layout_width="@dimen/publisher_layout_width"
+                android:layout_height="@dimen/publisher_layout_height"
+                android:layout_gravity="bottom|end"
+                android:layout_marginBottom="@dimen/publisher_bottom_margin"
+                android:layout_marginEnd="@dimen/publisher_right_margin"
+                android:layout_marginRight="@dimen/publisher_right_margin"
+                android:padding="@dimen/publisher_padding"
+                android:background="@color/publisher_border_color">
+
+                <ImageView
+                    android:id="@+id/archiving_indicator_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|end"
+                    android:src="@drawable/archiving_indicator"
+                    android:layout_marginTop="@dimen/archiving_indicator_top_margin"
+                    android:layout_marginEnd="@dimen/archiving_indicator_right_margin"
+                    android:layout_marginRight="@dimen/archiving_indicator_end_margin"
+                    android:visibility="invisible" />
+            </FrameLayout>
         </FrameLayout>
-
-    </FrameLayout>
-
-
-</android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>-->
