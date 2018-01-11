@@ -1,6 +1,7 @@
 package com.edbrix.enterprise.Activities;
 
 import android.Manifest;
+import android.content.pm.ActivityInfo;
 import android.opengl.GLSurfaceView;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -129,6 +130,7 @@ public class TokBoxActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tok_box);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         swapCamera = (Button) findViewById(R.id.swapCamera);
         leavemeetButton =(Button)findViewById(R.id.leaveMeet);
