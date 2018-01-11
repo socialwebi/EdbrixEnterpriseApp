@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Activities.VideoPlayerActivity">
+
+
+    <com.afollestad.easyvideoplayer.EasyVideoPlayer
+        android:id="@+id/player"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:evp_autoFullscreen="true"
+        app:evp_autoPlay="true"
+        app:evp_customLabelText="Custom label text if rightAction is customLabel"
+        app:evp_disableControls="false"
+        app:evp_hideControlsOnPlay="true"
+        app:evp_leftAction="restart"
+        app:evp_loop="false"
+        app:evp_pauseDrawable="@drawable/evp_action_pause"
+        app:evp_playDrawable="@drawable/evp_action_play"
+        app:evp_restartDrawable="@drawable/restart_white"
+        app:evp_retryText="@string/evp_retry"
+        app:evp_rightAction="none"
+        app:evp_submitText="@string/evp_submit"
+        app:evp_themeColor="@color/ColorBlackTransparent" />
+
+
+</RelativeLayout>
