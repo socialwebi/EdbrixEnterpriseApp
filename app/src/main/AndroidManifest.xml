@@ -94,7 +94,9 @@
 
         <activity android:name=".Activities.CreateScheduleActivity" />
         <activity android:name=".Activities.EditProfileActivity" />
-        <activity android:name=".Activities.TokBoxActivity" />
+        <activity
+            android:name=".Activities.TokBoxActivity"
+            android:screenOrientation="landscape" />
         <activity android:name=".Activities.LearnersListActivity" />
         <activity
             android:name=".Activities.Test_Drawer"
@@ -107,7 +109,8 @@
         <activity
             android:name=".Activities.VideoPlayerActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activities.VideoWebView"
+        <activity
+            android:name=".Activities.VideoWebView"
             android:screenOrientation="landscape"></activity>
     </application>
 
