@@ -27,8 +27,8 @@ public class SettingsMy {
     public static final String PREF_ACTIVE_USER = "pref_active_user";
     public static final String PREF_USER_EMAIL = "pref_user_email";
 
-    public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
-    public static final String REGISTRATION_COMPLETE = "registrationComplete";
+    public static final String ZOOM_USER_ID = "zoom_user_id";
+    public static final String ZOOM_USER_TOKEN = "zoom_user_token";
 
     private static final String TAG = SettingsMy.class.getSimpleName();
     private static User activeUser;
@@ -79,6 +79,23 @@ public class SettingsMy {
         SharedPreferences.Editor editor = getSettings().edit();
         editor.putString(PREF_ACTIVE_USER, json);
         editor.apply();
+    }
+
+    public static void setZoomCredential(String Id, String token){
+        SharedPreferences.Editor editor = getSettings().edit();
+        editor.putString(ZOOM_USER_ID, Id);
+        editor.putString(ZOOM_USER_TOKEN, token);
+        editor.apply();
+    }
+
+    public String getZoomUserId(){
+        SharedPreferences prefs = getSettings();
+       return prefs.getString(ZOOM_USER_ID, "");
+    }
+
+    public String getZoomUserToken(){
+        SharedPreferences prefs = getSettings();
+        return prefs.getString(ZOOM_USER_TOKEN, "");
     }
 
 

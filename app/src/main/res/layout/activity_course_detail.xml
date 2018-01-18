@@ -86,12 +86,27 @@
                 android:layout_marginBottom="@dimen/app_big_margin"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/courseImage"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="350dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="centerCrop" />
+                    android:layout_height="350dp">
+
+                    <ImageView
+                        android:id="@+id/courseImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="350dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop" />
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/fabCamera"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|right"
+                        android:layout_margin="@dimen/fab_margin"
+                        app:srcCompat="@drawable/camera_white" />
+
+
+                </FrameLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"

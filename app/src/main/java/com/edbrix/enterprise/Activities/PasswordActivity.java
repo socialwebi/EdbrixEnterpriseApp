@@ -159,6 +159,7 @@ public class PasswordActivity extends BaseActivity {
                         if (response.getErrorCode() == null) {
 
                             SettingsMy.setActiveUser(response.getUser());
+                            SettingsMy.setZoomCredential(response.getUser().getZoomUserId(),response.getUser().getZoomUserToken());
 
                             // editor.putBoolean("first", false);
                             // editor.commit();

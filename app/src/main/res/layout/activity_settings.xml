@@ -88,7 +88,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:text="@string/name"
                         android:textColor="@color/actionbarText"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -100,7 +99,6 @@
                         android:layout_height="0dp"
                         android:layout_marginTop="@dimen/app_min_margin"
                         android:layout_weight="1"
-                        android:text="@string/email"
                         android:textColor="@color/colorAppOrange"
                         android:typeface="monospace" />
 

@@ -1,5 +1,7 @@
 package com.edbrix.enterprise.Activities;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -20,7 +22,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.edbrix.enterprise.Application;
+import com.edbrix.enterprise.BuildConfig;
 import com.edbrix.enterprise.Models.Courses;
+import com.edbrix.enterprise.Models.ResponseData;
 import com.edbrix.enterprise.Models.User;
 import com.edbrix.enterprise.R;
 import com.edbrix.enterprise.Utils.Constants;
@@ -29,14 +33,33 @@ import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.util.ArrayList;
+
+import droidninja.filepicker.FilePickerBuilder;
+import droidninja.filepicker.FilePickerConst;
+import droidninja.filepicker.utils.Orientation;
+import permissions.dispatcher.NeedsPermission;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
+import timber.log.Timber;
+
 public class CourseDetailActivity extends BaseActivity {
 
     public static final String courseDetailBundleKey = "courseDetailItem";
+
+    static final int REQUEST_PERMISSION_EXTERNAL = 1006;
 
     private Courses courseDetailItem;
 
@@ -49,7 +72,7 @@ public class CourseDetailActivity extends BaseActivity {
     private ImageView btnCourseMsg;
     private ImageView btnCourseCall;
     private Button btnCourseStart;
-//    private FloatingActionButton fabEdit;
+    private android.support.design.widget.FloatingActionButton fabCamera;
 
     private FloatingActionsMenu fabEditMenu;
 
@@ -60,6 +83,14 @@ public class CourseDetailActivity extends BaseActivity {
     private Context context;
 
     private boolean isUpdated;
+
+    private Uri filePath;
+    private String fileExtension;
+    private String fileName;
+    private FirebaseStorage storage;
+    private StorageReference storageRef;
+    private UploadTask uploadTask;
+    private ArrayList<String> photoPaths = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,16 +112,19 @@ public class CourseDetailActivity extends BaseActivity {
         title = (TextView) toolbar.findViewById(R.id.title);
         txtCourseBy = (TextView) findViewById(R.id.txtCourseBy);
         courseDesc = (WebView) findViewById(R.id.txtCourseDesc);
-//        fabEdit = (FloatingActionButton) findViewById(R.id.fabEdit);
-        fabEditMenu = (FloatingActionsMenu) findViewById(R.id.fabEditMenu);
-        fabEditCourse = (FloatingActionButton) findViewById(R.id.fab_edit_course);
-        fabAddContent = (FloatingActionButton) findViewById(R.id.fab_add_content);
+        fabCamera =  findViewById(R.id.fabCamera);
+        fabEditMenu =findViewById(R.id.fabEditMenu);
+        fabEditCourse = findViewById(R.id.fab_edit_course);
+        fabAddContent = findViewById(R.id.fab_add_content);
 
         courseImage = (ImageView) findViewById(R.id.courseImage);
         btnCoursePlay = (ImageView) findViewById(R.id.btnCoursePlay);
         btnCourseMsg = (ImageView) findViewById(R.id.btnCourseMsg);
         btnCourseCall = (ImageView) findViewById(R.id.btnCourseCall);
         btnCourseStart = (Button) findViewById(R.id.btnCourseStart);
+
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReferenceFromUrl("gs://edbrixcbuilder.appspot.com");
 
         btnCourseStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,12 +166,12 @@ public class CourseDetailActivity extends BaseActivity {
             }
         });
 
-//        fabEdit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                goToEditCourse();
-//            }
-//        });
+        fabCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                browseClick();
+            }
+        });
 
         fabEditCourse.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -285,6 +319,7 @@ public class CourseDetailActivity extends BaseActivity {
 
         if (SettingsMy.getActiveUser().getUserType().equals("L")) {
             fabEditMenu.setVisibility(View.GONE);
+            fabCamera.setVisibility(View.GONE);
             btnCourseStart.setVisibility(View.VISIBLE);
             btnCourseMsg.setVisibility(View.GONE);
             btnCourseCall.setVisibility(View.GONE);
@@ -293,6 +328,7 @@ public class CourseDetailActivity extends BaseActivity {
 
         } else {
             fabEditMenu.setVisibility(View.VISIBLE);
+            fabCamera.setVisibility(View.VISIBLE);
             btnCourseStart.setVisibility(View.GONE);
             btnCourseMsg.setVisibility(View.VISIBLE);
             btnCourseCall.setVisibility(View.VISIBLE);
@@ -333,15 +369,15 @@ public class CourseDetailActivity extends BaseActivity {
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 205 && resultCode == RESULT_OK) {
-            getCourseDetails(courseDetailItem.getId());
-            isUpdated = true;
-        }
-
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == 205 && resultCode == RESULT_OK) {
+//            getCourseDetails(courseDetailItem.getId());
+//            isUpdated = true;
+//        }
+//
+//    }
 
     @Override
     public void onBackPressed() {
@@ -350,4 +386,204 @@ public class CourseDetailActivity extends BaseActivity {
         }
         super.onBackPressed();
     }
+
+    private void browseClick() {
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            onPickPhoto();
+        } else {
+            EasyPermissions.requestPermissions(this,
+                    "This app needs to access your Images.",
+                    REQUEST_PERMISSION_EXTERNAL,
+                    Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+    }
+
+    @NeedsPermission({Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    @AfterPermissionGranted(REQUEST_PERMISSION_EXTERNAL)
+    public void onPickPhoto() {
+
+        FilePickerBuilder.getInstance()
+                .setMaxCount(1)
+                .setSelectedFiles(photoPaths)
+                .setActivityTheme(R.style.AppTheme)
+                .enableVideoPicker(false)
+                .enableCameraSupport(true)
+                .enableImagePicker(true)
+                .showGifs(false)
+                .showFolderView(true)
+                .enableSelectAll(false)
+                .withOrientation(Orientation.UNSPECIFIED)
+                .pickPhoto(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+
+            case FilePickerConst.REQUEST_CODE_PHOTO:
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    photoPaths = new ArrayList<>();
+                    photoPaths.addAll(data.getStringArrayListExtra(FilePickerConst.KEY_SELECTED_MEDIA));
+                    // mOutputText.setText(photoPaths.toString());
+                    filePath = Uri.fromFile(new File(photoPaths.get(0)));
+
+                    fileName = photoPaths.get(0).substring(photoPaths.get(0).lastIndexOf("/"));
+                    fileName = fileName.replace("/", "");
+
+                    fileExtension = photoPaths.get(0).substring(photoPaths.get(0).lastIndexOf("."));
+                    Log.d("TAG", photoPaths.toString() + " _-_ " + fileExtension);
+                    uploadToEdbrix(filePath);
+                }
+                break;
+
+            case 205:
+                if (resultCode == RESULT_OK) {
+                    getCourseDetails(courseDetailItem.getId());
+                    isUpdated = true;
+                }
+                break;
+        }
+    }
+
+    private void uploadToEdbrix(final Uri fileUri) {
+        try {
+
+            if (fileUri != null) {
+//                _settings_progress.setVisibility(View.VISIBLE);
+//                btnUpload.setVisibility(View.GONE);
+//                btnCancel.setVisibility(View.VISIBLE);
+//
+//                mProgressBar.setVisibility(View.VISIBLE);
+//                textPercentage.setVisibility(View.VISIBLE);
+//                textPercentage.setText("");
+//                userId = sessionManager.getLoggedUserData().getId();
+//                accessToken = sessionManager.getSessionProfileToken();
+                showBusyProgress();
+                String userId = SettingsMy.getActiveUser().getId();// get user Id from active user
+                StorageReference childRef = storageRef.child("enterprisecoursecontent/" + userId + "/" + fileName);
+                //uploading the image
+                uploadTask = childRef.putFile(fileUri);
+
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                        _settings_progress.setVisibility(View.GONE);
+                        //showToast(taskSnapshot.getDownloadUrl().toString());
+                        Log.d("TAG", taskSnapshot.getDownloadUrl().toString());
+
+                        // save to server
+
+                        isUpdated = true;
+                        Picasso.with(context)
+                                .load(fileUri)
+                                .placeholder(R.mipmap.edbrix)
+                                .error(R.mipmap.edbrix)
+                                .into(courseImage);
+
+//                        btnUpload.setVisibility(View.VISIBLE);
+//                        btnUpload.setEnabled(false);
+//                        btnCancel.setVisibility(View.GONE);
+//
+//                        mProgressBar.setVisibility(View.GONE);
+//                        uploadVideoToMyFiles(userId, accessToken, fileData.getFileName());
+                        uploadCoursePic(courseDetailItem.getId(), fileName);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+//                        _settings_progress.setVisibility(View.GONE);
+                        hideBusyProgress();
+                        Log.v("Upload", "Fail Exception :" + e.getMessage());
+                        showToast(e.getMessage());
+//                        btnUpload.setEnabled(true);
+//                        btnUpload.setVisibility(View.VISIBLE);
+//                        btnCancel.setVisibility(View.GONE);
+//
+//                        mProgressBar.setVisibility(View.GONE);
+//                        textPercentage.setText("Upload Failed.");
+                    }
+                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+//                        mProgressBar.setProgress((int) progress);
+//                        textPercentage.setText("Uploading completed " + (int) progress + "%");
+                    }
+                });
+
+            } else {
+                showToast("NO file found");
+            }
+        } catch (Exception e) {
+            Log.v("Upload", e.getMessage());
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(
+                requestCode, permissions, grantResults, this);
+    }
+
+
+    private void uploadCoursePic(String courseId, String fileName) {
+
+        User user = SettingsMy.getActiveUser();
+        if (user != null) {
+            JSONObject jo = new JSONObject();
+            try {
+
+                jo.put("userid", user.getId());
+                jo.put("AccessToken", user.getAccessToken());
+                jo.put("UserType", user.getUserType());
+                jo.put("courseid", courseId);
+                jo.put("filename", fileName);
+
+            } catch (JSONException e) {
+                Timber.e(e, "Parse logInWithEmail exception");
+                return;
+            }
+            if (BuildConfig.DEBUG) Timber.d("Login user: %s", jo.toString());
+
+            GsonRequest<ResponseData> updateCourseImageRequest = new GsonRequest<>(Request.Method.POST, Constants.updateCoursePic, jo.toString(), ResponseData.class,
+                    new Response.Listener<ResponseData>() {
+                        @Override
+                        public void onResponse(@NonNull ResponseData response) {
+                            Timber.d("response: %s", response.toString());
+                            if (response.getErrorCode() == null) {
+                                hideBusyProgress();
+                                showToast(response.getMessage());
+                                isUpdated = true;
+//                                Intent publishIntent = new Intent(CreateCourseContentActivity.this, PublishCourseActivity.class);
+//                                publishIntent.putExtra(PublishCourseActivity.courseIDKEY, courseId);
+//                                publishIntent.putExtra(courseTitleKEY, courseTitle);
+//                                publishIntent.putExtra(coursePriceKEY, coursePrice);
+//                                startActivity(publishIntent);
+//                                finish();
+                            } else {
+                                hideBusyProgress();
+                                isUpdated = false;
+                                showToast(response.getErrorMessage());
+                            }
+
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    hideBusyProgress();
+                    isUpdated = false;
+                    showToast(SettingsMy.getErrorMessage(error));
+                }
+            });
+            updateCourseImageRequest.setRetryPolicy(Application.getDefaultRetryPolice());
+            updateCourseImageRequest.setShouldCache(false);
+            Application.getInstance().addToRequestQueue(updateCourseImageRequest, "update_course_picture");
+        }
+    }
+
 }

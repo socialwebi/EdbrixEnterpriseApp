@@ -230,6 +230,7 @@ public class LoginActivity extends BaseActivity {
                             //((MainActivity) getActivity()).onCategoryListSelected();  //onCategoryMenuSelected
                             if (response.getIsOrganizationListShow().equals("0")) {
                                 SettingsMy.setActiveUser(response.getUser());
+                                SettingsMy.setZoomCredential(response.getUser().getZoomUserId(),response.getUser().getZoomUserToken());
 
                                 Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

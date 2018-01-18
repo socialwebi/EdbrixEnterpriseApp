@@ -18,10 +18,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.edbrix.enterprise.Application;
+import com.edbrix.enterprise.BuildConfig;
 import com.edbrix.enterprise.MainActivity;
+import com.edbrix.enterprise.Models.ResponseData;
 import com.edbrix.enterprise.Models.User;
 import com.edbrix.enterprise.R;
+import com.edbrix.enterprise.Utils.Constants;
 import com.edbrix.enterprise.Utils.RoundedImageView;
+import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,6 +40,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -41,6 +52,7 @@ import droidninja.filepicker.utils.Orientation;
 import permissions.dispatcher.NeedsPermission;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
+import timber.log.Timber;
 
 public class SettingsActivity extends BaseActivity {
 
@@ -88,6 +100,16 @@ public class SettingsActivity extends BaseActivity {
         _settings_linear_share = findViewById(R.id.settings_linear_share);
         _settings_progress = findViewById(R.id.settings_progress);
 
+        _settings_image_profile_pic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (user.getProfileImageUrl() != null && !user.getProfileImageUrl().isEmpty()) {
+                    Intent intent = new Intent(context, PhotoPopUpActivity.class);
+                    intent.putExtra("IMGURL", user.getProfileImageUrl());
+                    startActivity(intent);
+                }
+            }
+        });
 
         _settings_linear_edit_profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,6 +163,7 @@ public class SettingsActivity extends BaseActivity {
                             public void onClick(DialogInterface dialog, int which) {
 
                                 SettingsMy.setActiveUser(null);
+                                SettingsMy.setZoomCredential("", "");
 
                                 if (isTablet()) {
                                     Intent intent = new Intent(context, LoginActivity.class);
@@ -161,6 +184,10 @@ public class SettingsActivity extends BaseActivity {
             }
         });
 
+        getUserDetails();
+    }
+
+    private void setValues() {
         if (user != null) {
             String name = user.getFirstName() + " " + user.getLastName();
             _settings_text_user_name.setText(name);
@@ -207,7 +234,7 @@ public class SettingsActivity extends BaseActivity {
                 .setSelectedFiles(photoPaths)
                 .setActivityTheme(R.style.AppTheme)
                 .enableVideoPicker(false)
-                .enableCameraSupport(false)
+                .enableCameraSupport(true)
                 .enableImagePicker(true)
                 .showGifs(false)
                 .showFolderView(true)
@@ -243,7 +270,8 @@ public class SettingsActivity extends BaseActivity {
         try {
 
             if (fileUri != null) {
-                _settings_progress.setVisibility(View.VISIBLE);
+                showBusyProgress();
+//                _settings_progress.setVisibility(View.VISIBLE);
 //                btnUpload.setVisibility(View.GONE);
 //                btnCancel.setVisibility(View.VISIBLE);
 //
@@ -261,12 +289,11 @@ public class SettingsActivity extends BaseActivity {
                 uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        _settings_progress.setVisibility(View.GONE);
+//                        _settings_progress.setVisibility(View.GONE);
                         //showToast(taskSnapshot.getDownloadUrl().toString());
                         Log.d("TAG", taskSnapshot.getDownloadUrl().toString());
 
                         // save to server
-                        Toast.makeText(context, "Upload successful ", Toast.LENGTH_SHORT).show();
 
                         Picasso.with(context)
                                 .load(fileUri)
@@ -280,11 +307,13 @@ public class SettingsActivity extends BaseActivity {
 //
 //                        mProgressBar.setVisibility(View.GONE);
 //                        uploadVideoToMyFiles(userId, accessToken, fileData.getFileName());
+                        uploadProfilePic(fileName);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        _settings_progress.setVisibility(View.GONE);
+//                        _settings_progress.setVisibility(View.GONE);
+                        hideBusyProgress();
                         Log.v("Upload", "Fail Exception :" + e.getMessage());
                         showToast(e.getMessage());
 //                        btnUpload.setEnabled(true);
@@ -320,5 +349,95 @@ public class SettingsActivity extends BaseActivity {
         EasyPermissions.onRequestPermissionsResult(
                 requestCode, permissions, grantResults, this);
     }
+
+
+    private void uploadProfilePic(String fileName) {
+
+//        showBusyProgress();
+        User user = SettingsMy.getActiveUser();
+        if (user != null) {
+            JSONObject jo = new JSONObject();
+            try {
+
+                jo.put("userid", user.getId());
+                jo.put("AccessToken", user.getAccessToken());
+                jo.put("filename", fileName);
+
+            } catch (JSONException e) {
+                Timber.e(e, "Parse logInWithEmail exception");
+                return;
+            }
+            if (BuildConfig.DEBUG) Timber.d("Login user: %s", jo.toString());
+
+            GsonRequest<ResponseData> updateUserProfileImageRequest = new GsonRequest<>(Request.Method.POST, Constants.updateUserProfilePic, jo.toString(), ResponseData.class,
+                    new Response.Listener<ResponseData>() {
+                        @Override
+                        public void onResponse(@NonNull ResponseData response) {
+                            Timber.d("response: %s", response.toString());
+                            hideBusyProgress();
+                            if (response.getErrorCode() == null) {
+                                showToast(response.getMessage());
+//                                Intent publishIntent = new Intent(CreateCourseContentActivity.this, PublishCourseActivity.class);
+//                                publishIntent.putExtra(PublishCourseActivity.courseIDKEY, courseId);
+//                                publishIntent.putExtra(courseTitleKEY, courseTitle);
+//                                publishIntent.putExtra(coursePriceKEY, coursePrice);
+//                                startActivity(publishIntent);
+//                                finish();
+                            } else {
+                                showToast(response.getErrorMessage());
+                            }
+
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    hideBusyProgress();
+                    showToast(SettingsMy.getErrorMessage(error));
+                }
+            });
+            updateUserProfileImageRequest.setRetryPolicy(Application.getDefaultRetryPolice());
+            updateUserProfileImageRequest.setShouldCache(false);
+            Application.getInstance().addToRequestQueue(updateUserProfileImageRequest, "update_user_profile_picture");
+        }
+    }
+
+    private void getUserDetails() {
+        if (user != null) {
+            showBusyProgress();
+            JSONObject jo = new JSONObject();
+            try {
+                jo.put("UserId", user.getId());
+                jo.put("AccessToken", user.getAccessToken());
+            } catch (JSONException e) {
+                return;
+            }
+
+            GsonRequest<ResponseData> getUserDetailsRequest = new GsonRequest<>(Request.Method.POST, Constants.getUserDetails, jo.toString(), ResponseData.class,
+                    new Response.Listener<ResponseData>() {
+                        @Override
+                        public void onResponse(@NonNull ResponseData response) {
+
+                            if (response.getErrorCode() == null) {
+                                user = response.getUser();
+                                setValues();
+                                hideBusyProgress();
+                            } else {
+                                hideBusyProgress();
+                                showToast(response.getErrorMessage());
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    hideBusyProgress();
+                    showToast(SettingsMy.getErrorMessage(error));
+                }
+            });
+            getUserDetailsRequest.setRetryPolicy(Application.getDefaultRetryPolice());
+            getUserDetailsRequest.setShouldCache(false);
+            Application.getInstance().addToRequestQueue(getUserDetailsRequest, "user_details_requests");
+        }
+    }
+
 
 }

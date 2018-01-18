@@ -18,7 +18,7 @@
             android:background="@color/colorWhite"
             android:visibility="visible"
             app:layoutManager="LinearLayoutManager"
-            tools:listitem="@layout/list_item_courses_copy" />
+            tools:listitem="@layout/list_item_courses" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
