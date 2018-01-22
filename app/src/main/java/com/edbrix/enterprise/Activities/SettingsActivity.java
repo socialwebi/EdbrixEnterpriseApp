@@ -30,6 +30,7 @@ import com.edbrix.enterprise.R;
 import com.edbrix.enterprise.Utils.Constants;
 import com.edbrix.enterprise.Utils.RoundedImageView;
 import com.edbrix.enterprise.Volley.GsonRequest;
+import com.edbrix.enterprise.Volley.JsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -360,7 +361,7 @@ public class SettingsActivity extends BaseActivity {
             try {
 
                 jo.put("userid", user.getId());
-                jo.put("AccessToken", user.getAccessToken());
+                jo.put("accesstoken", user.getAccessToken());
                 jo.put("filename", fileName);
 
             } catch (JSONException e) {
@@ -369,23 +370,41 @@ public class SettingsActivity extends BaseActivity {
             }
             if (BuildConfig.DEBUG) Timber.d("Login user: %s", jo.toString());
 
-            GsonRequest<ResponseData> updateUserProfileImageRequest = new GsonRequest<>(Request.Method.POST, Constants.updateUserProfilePic, jo.toString(), ResponseData.class,
-                    new Response.Listener<ResponseData>() {
+            JsonRequest updateUserProfileImageRequest = new JsonRequest(Request.Method.POST, Constants.updateUserProfilePic, jo,
+                    new Response.Listener<JSONObject>() {
                         @Override
-                        public void onResponse(@NonNull ResponseData response) {
+                        public void onResponse(@NonNull JSONObject response) {
                             Timber.d("response: %s", response.toString());
                             hideBusyProgress();
-                            if (response.getErrorCode() == null) {
-                                showToast(response.getMessage());
+                            try {
+                                if (response != null) {
+                                    if (response.has("error")) {
+                                        int error = response.getInt("error");
+                                        if(error==0){
+                                            showToast("Profile picture updated successfully");
+                                        }else{
+                                            showToast("Profile picture not updated successfully : "+response.getString("errorMessage"));
+                                            setValues();
+                                        }
+
+                                    }
+                                }
+                            }catch (JSONException e){
+                                showToast("Exception :"+e.getMessage());
+                                e.printStackTrace();
+                            }
+
+//                            if (response.getErrorCode() == null) {
+//                                showToast(response.getMessage());
 //                                Intent publishIntent = new Intent(CreateCourseContentActivity.this, PublishCourseActivity.class);
 //                                publishIntent.putExtra(PublishCourseActivity.courseIDKEY, courseId);
 //                                publishIntent.putExtra(courseTitleKEY, courseTitle);
 //                                publishIntent.putExtra(coursePriceKEY, coursePrice);
 //                                startActivity(publishIntent);
 //                                finish();
-                            } else {
-                                showToast(response.getErrorMessage());
-                            }
+//                            } else {
+//                                showToast(response.getErrorMessage());
+//                            }
 
                         }
                     }, new Response.ErrorListener() {

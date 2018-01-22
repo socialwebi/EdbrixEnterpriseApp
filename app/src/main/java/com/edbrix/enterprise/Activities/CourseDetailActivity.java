@@ -29,6 +29,7 @@ import com.edbrix.enterprise.Models.User;
 import com.edbrix.enterprise.R;
 import com.edbrix.enterprise.Utils.Constants;
 import com.edbrix.enterprise.Volley.GsonRequest;
+import com.edbrix.enterprise.Volley.JsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -191,14 +192,14 @@ public class CourseDetailActivity extends BaseActivity {
 
         courseDetailItem = (Courses) getIntent().getSerializableExtra(courseDetailBundleKey);
 
-        if (courseDetailItem != null) {
+       /* if (courseDetailItem != null) {
             //set Course Details
             setCourseDetails();
         } else {
             showToast(getString(R.string.error_something_wrong));
-        }
+        }*/
 
-//        getCourseDetails(courseDetailItem.getId());
+        getCourseDetails(courseDetailItem.getId());
     }
 
   /*  @Override
@@ -539,7 +540,7 @@ public class CourseDetailActivity extends BaseActivity {
             try {
 
                 jo.put("userid", user.getId());
-                jo.put("AccessToken", user.getAccessToken());
+                jo.put("accesstoken", user.getAccessToken());
                 jo.put("UserType", user.getUserType());
                 jo.put("courseid", courseId);
                 jo.put("filename", fileName);
@@ -550,12 +551,31 @@ public class CourseDetailActivity extends BaseActivity {
             }
             if (BuildConfig.DEBUG) Timber.d("Login user: %s", jo.toString());
 
-            GsonRequest<ResponseData> updateCourseImageRequest = new GsonRequest<>(Request.Method.POST, Constants.updateCoursePic, jo.toString(), ResponseData.class,
-                    new Response.Listener<ResponseData>() {
+            JsonRequest updateCourseImageRequest = new JsonRequest(Request.Method.POST, Constants.updateCoursePic, jo,
+                    new Response.Listener<JSONObject>() {
                         @Override
-                        public void onResponse(@NonNull ResponseData response) {
+                        public void onResponse(@NonNull JSONObject response) {
                             Timber.d("response: %s", response.toString());
-                            if (response.getErrorCode() == null) {
+                            hideBusyProgress();
+                            try {
+                                if (response != null) {
+                                    if (response.has("error")) {
+                                        int error = response.getInt("error");
+                                        if(error==0){
+                                            isUpdated = true;
+                                            showToast("Course image updated successfully");
+                                        }else{
+                                            isUpdated = false;
+                                            showToast("Course image not updated successfully : "+response.getString("errorMessage"));
+                                        }
+
+                                    }
+                                }
+                            }catch (JSONException e){
+                                showToast("Exception :"+e.getMessage());
+                                e.printStackTrace();
+                            }
+                           /* if (response.getErrorCode() == null) {
                                 hideBusyProgress();
                                 showToast(response.getMessage());
                                 isUpdated = true;
@@ -569,7 +589,7 @@ public class CourseDetailActivity extends BaseActivity {
                                 hideBusyProgress();
                                 isUpdated = false;
                                 showToast(response.getErrorMessage());
-                            }
+                            }*/
 
                         }
                     }, new Response.ErrorListener() {
