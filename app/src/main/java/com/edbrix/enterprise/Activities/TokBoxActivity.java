@@ -73,6 +73,8 @@ public class TokBoxActivity extends AppCompatActivity
 
     private Menu mMenu;
 
+    public boolean flag = false;
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
