@@ -1,94 +1,227 @@
 package com.edbrix.enterprise.Activities;
 
 import android.Manifest;
-import android.content.pm.ActivityInfo;
-import android.opengl.GLSurfaceView;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.FrameLayout;
+import android.widget.GridView;
 import android.widget.ImageView;
-import android.app.AlertDialog;
-import android.widget.TextView;
-import android.widget.ToggleButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.edbrix.enterprise.R;
 import com.edbrix.enterprise.Utils.Constants;
-import com.edbrix.enterprise.Utils.TokBoxWebServiceCoordinator;
-import com.opentok.android.Session;
-import com.opentok.android.Stream;
+import com.edbrix.enterprise.Volley.SettingsMy;
+import com.opentok.android.BaseVideoRenderer;
+import com.opentok.android.Connection;
+import com.opentok.android.OpentokError;
 import com.opentok.android.Publisher;
 import com.opentok.android.PublisherKit;
+import com.opentok.android.Session;
+import com.opentok.android.Stream;
 import com.opentok.android.Subscriber;
-import com.opentok.android.SubscriberKit;
-import com.opentok.android.BaseVideoRenderer;
-import com.opentok.android.OpentokError;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
-
-public class TokBoxActivity extends AppCompatActivity
-        implements  EasyPermissions.PermissionCallbacks,
-        TokBoxWebServiceCoordinator.Listener,
+public class TokBoxActivity extends AppCompatActivity implements
+        EasyPermissions.PermissionCallbacks,
+        Publisher.PublisherListener,
         Session.SessionListener,
-        PublisherKit.PublisherListener,
-        SubscriberKit.SubscriberListener,
-        Session.ArchiveListener {
+        Session.ArchiveListener
+{
+    private static final String TAG = "TokBoxActivity";//"simple-multiparty " + MainActivity.class.getSimpleName();
 
-    private static final String LOG_TAG = "TokBox";//MainActivity.class.getSimpleName();
+    private final int MAX_NUM_SUBSCRIBERS = 15; //Max Number Of TokBoxSubscribers
+
     private static final int RC_SETTINGS_SCREEN_PERM = 123;
     private static final int RC_VIDEO_APP_PERM = 124;
 
-    // Suppressing this warning. mWebServiceCoordinator will get GarbageCollected if it is local.
-    @SuppressWarnings("FieldCanBeLocal")
-    private TokBoxWebServiceCoordinator mWebServiceCoordinator;
-
-    private String mApiKey;
-    private String mSessionId;
-    private String mToken;
     private Session mSession;
     private Publisher mPublisher;
-    private Subscriber mSubscriber;
-    private String mCurrentArchiveId;
-    private String mPlayableArchiveId;
 
-    private FrameLayout mPublisherViewContainer;
-    private FrameLayout mSubscriberViewContainer;
-    private ImageView mArchivingIndicatorView;
-    private Button swapCamera,leavemeetButton;
-    private ToggleButton toggleVideo,toggleAudio;
+    private ArrayList<Subscriber> mSubscribers = new ArrayList<Subscriber>();
+    private HashMap<Stream, Subscriber> mSubscriberStreams = new HashMap<Stream, Subscriber>();
 
-    private Menu mMenu;
+    private RelativeLayout mPublisherViewContainer,mfullViewContainer;
 
-    public boolean flag = false;
+    private LinearLayout subscriberlistLinearLayout,publisherControlsLinearLayout,rightsideViewLinear;
+    public ImageView swapCamImageView,toggleAudioImageView,toggleVideoImageView;
+    boolean swapSubscriberToPublisher= false;
+    boolean togglePublisherFullScreen= false;
+    int swapPos;
+    //public String Role="Host";
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        Log.d(TAG, "onCreate");
+
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_tok_box);
+
+        mPublisherViewContainer = (RelativeLayout) findViewById(R.id.publisherview);
+
+        mfullViewContainer = (RelativeLayout) findViewById(R.id.fullViewLayout);
+        subscriberlistLinearLayout = (LinearLayout)findViewById(R.id.subscriberListLinear);
+        rightsideViewLinear = (LinearLayout) findViewById(R.id.rightLinear);
+        publisherControlsLinearLayout =(LinearLayout)findViewById(R.id.publisherControls);
+
+        swapCamImageView = (ImageView)findViewById(R.id.swapCam);
+        toggleAudioImageView = (ImageView)findViewById(R.id.toggleAudio);
+        toggleVideoImageView = (ImageView)findViewById(R.id.toggleVideo);
+
+        swapCamImageView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (mPublisher == null) {
+                    return;
+                }
+                mPublisher.cycleCamera();
+            }
+        });
+
+        // mPublisher.setPublishAudio(true);
+        toggleAudioImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mPublisher == null) {
+                    return;
+                }
+                if(mPublisher.getPublishAudio() == true)
+                {
+                    mPublisher.setPublishAudio(false);
+                    toggleAudioImageView.setImageResource(R.drawable.micoff);
+                }
+                else {
+                    mPublisher.setPublishAudio(true);
+                    toggleAudioImageView.setImageResource(R.drawable.micon);
+                }
+            }
+        });
+
+        // mPublisher.setPublishVideo(true);
+        toggleVideoImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mPublisher == null) {
+                    return;
+                }
+                if(mPublisher.getPublishVideo() == true)
+                {
+                    mPublisher.setPublishVideo(false);
+                    toggleVideoImageView.setImageResource(R.drawable.videooff);
+                }
+                else {
+                    mPublisher.setPublishVideo(true);
+                    toggleVideoImageView.setImageResource(R.drawable.videoon);
+                }
+            }
+        });
+        requestPermissions();
+       /* mPublisherViewContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!togglePublisherFullScreen)
+                {
+                    rightsideViewLinear.setVisibility(View.GONE);
+                    togglePublisherFullScreen = true;
+                }else if(togglePublisherFullScreen){
+                    rightsideViewLinear.setVisibility(View.VISIBLE);
+                    togglePublisherFullScreen = false;
+                }
+            }
+        });*/
+        mfullViewContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                if(!togglePublisherFullScreen)
+                {
+                    rightsideViewLinear.setVisibility(View.GONE);
+                    togglePublisherFullScreen = true;
+                }else if(togglePublisherFullScreen){
+                    rightsideViewLinear.setVisibility(View.VISIBLE);
+                    togglePublisherFullScreen = false;
+                }
+            }
+        });
+    }
+    @Override
+    protected void onStart() {
+        Log.d(TAG, "onStart");
+
+        super.onStart();
+    }
+    @Override
+    protected void onRestart() {
+        Log.d(TAG, "onRestart");
+
+        super.onRestart();
+    }
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "onResume");
+
+        super.onResume();
+
+        if (mSession == null) {
+            return;
+        }
+        mSession.onResume();
+    }
+    @Override
+    protected void onPause() {
+        Log.d(TAG, "onPause");
+
+        super.onPause();
+
+        if (mSession == null) {
+            return;
+        }
+        mSession.onPause();
+
+        if (isFinishing()) {
+            disconnectSession();
+        }
+    }
+    @Override
+    protected void onStop() {
+        Log.d(TAG, "onPause");
+
+        super.onStop();
+    }
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "onDestroy");
+
+        disconnectSession();
+
+        super.onDestroy();
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
-
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
-        Log.d(LOG_TAG, "onPermissionsGranted:" + requestCode + ":" + perms.size());
+        Log.d(TAG, "onPermissionsGranted:" + requestCode + ":" + perms.size());
     }
-
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
-        Log.d(LOG_TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
+        Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
 
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
             new AppSettingsDialog.Builder(this)
@@ -101,353 +234,403 @@ public class TokBoxActivity extends AppCompatActivity
                     .show();
         }
     }
-
     @AfterPermissionGranted(RC_VIDEO_APP_PERM)
     private void requestPermissions() {
-        String[] perms = { Manifest.permission.INTERNET, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO };
+        String[] perms = {
+                Manifest.permission.INTERNET,
+                Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        };
         if (EasyPermissions.hasPermissions(this, perms))
         {
-            // initialize view objects from your layout
-            mPublisherViewContainer = (FrameLayout) findViewById(R.id.publisher_container);
-            mSubscriberViewContainer = (FrameLayout) findViewById(R.id.subscriber_container);
-            mArchivingIndicatorView = (ImageView) findViewById(R.id.archiving_indicator_view);
-
-            // initialize WebServiceCoordinator and kick off request for session data
-            // session initialization occurs once data is returned, in onSessionConnectionDataReady
-            mWebServiceCoordinator = new TokBoxWebServiceCoordinator(this, this);
-            // mWebServiceCoordinator.fetchSessionConnectionData("/session");
-
             String API_KEY = Constants.TolkBox_APIKey;
             String SESSION_ID = getIntent().getStringExtra(Constants.TolkBox_SessionId);
             String TOKEN = getIntent().getStringExtra(Constants.TolkBox_Token);
-            Log.i(LOG_TAG, "TokBoxActivity :\nApi : "+API_KEY+"\nSession : "+SESSION_ID+"\n Token :"+TOKEN);
+            Log.i(TAG, "TokBoxActivity :\nApi : "+API_KEY+"\nSession : "+SESSION_ID+"\n Token :"+TOKEN);
 
-            TokBoxWebServiceCoordinator.delegate.onSessionConnectionDataReady(API_KEY, SESSION_ID, TOKEN);
+            mSession = new Session.Builder(TokBoxActivity.this, API_KEY, SESSION_ID).build();
+            mSession.setSessionListener(this);
+            mSession.connect(TOKEN);
         } else {
             EasyPermissions.requestPermissions(this, getString(R.string.rationale_video_app), RC_VIDEO_APP_PERM, perms);
         }
     }
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tok_box);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    public void onConnected(Session session)
+    {
+        Log.d(TAG, "onConnected: Connected to session " + session.getSessionId());
 
-        swapCamera = (Button) findViewById(R.id.swapCamera);
-        leavemeetButton =(Button)findViewById(R.id.leaveMeet);
-        leavemeetButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {   finish();   }
-        });
+        mPublisher = new Publisher.Builder(TokBoxActivity.this).name("publisher").build();
 
-        requestPermissions();
-        swapCamera.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (mPublisher == null) {
-                    return;
-                }
-                mPublisher.cycleCamera();
-            }
-        });
-
-        toggleAudio = (ToggleButton) findViewById(R.id.toggleAudio);
-        toggleAudio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (mPublisher == null) {
-                    return;
-                }
-                if (isChecked) {
-                    mPublisher.setPublishAudio(true);
-                } else {
-                    mPublisher.setPublishAudio(false);
-                }
-            }
-        });
-
-        toggleVideo = (ToggleButton) findViewById(R.id.toggleVideo);
-        toggleVideo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (mPublisher == null) {
-                    return;
-                }
-                if (isChecked) {
-                    mPublisher.setPublishVideo(true);
-                } else {
-                    mPublisher.setPublishVideo(false);
-                }
-            }
-        });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        setStopArchiveEnabled(false);
-        mPublisher.destroy();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_chat, menu);
-        mMenu = menu;
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        switch(item.getItemId()) {
-            case R.id.action_settings:
-                return true;
-            case R.id.action_start_archive:
-                startArchive();
-                return true;
-            case R.id.action_stop_archive:
-                stopArchive();
-                return true;
-            case R.id.action_play_archive:
-                playArchive();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void initializeSession(String apiKey, String sessionId, String token) {
-        mSession = new Session.Builder(this, apiKey, sessionId).build();
-        mSession.setSessionListener(this);
-        mSession.setArchiveListener(this);
-        mSession.connect(token);
-    }
-
-    private void initializePublisher() {
-        // initialize Publisher and set this object to listen to Publisher events
-        mPublisher = new Publisher.Builder(this).build();
         mPublisher.setPublisherListener(this);
+        mPublisher.setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE, BaseVideoRenderer.STYLE_VIDEO_FILL);
 
-        // set publisher video style to fill view
-        mPublisher.getRenderer().setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE, BaseVideoRenderer.STYLE_VIDEO_FILL);
-        mPublisherViewContainer.addView(mPublisher.getView(), 0);
-    }
-
-    private void logOpenTokError(OpentokError opentokError) {
-        Log.e(LOG_TAG, "Error Domain: " + opentokError.getErrorDomain().name());
-        Log.e(LOG_TAG, "Error Code: " + opentokError.getErrorCode().name());
-    }
-
-    /* methods calling mWebServiceCoordinator to control Archiving */
-
-    private void startArchive() {
-        if(mSession != null) {
-            mWebServiceCoordinator.startArchive(mSessionId);
-            setStartArchiveEnabled(false);
-        }
-    }
-
-    private void stopArchive() {
-        mWebServiceCoordinator.stopArchive(mCurrentArchiveId);
-        setStopArchiveEnabled(false);
-    }
-
-    private void playArchive() {
-        Uri playArchiveUri = mWebServiceCoordinator.archivePlaybackUri(mPlayableArchiveId);
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, playArchiveUri);
-        startActivity(browserIntent);
-    }
-
-    /* Activity lifecycle methods */
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(LOG_TAG, "onPause");
-
-        if (mSession != null) {
-            mSession.onPause();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(LOG_TAG, "onResume");
-
-        if (mSession != null) {
-            mSession.onResume();
-        }
-    }
-
-    /* Web Service Coordinator delegate methods */
-
-    @Override
-    public void onSessionConnectionDataReady(String apiKey, String sessionId, String token) {
-        Log.i(LOG_TAG, apiKey);
-        Log.i(LOG_TAG, sessionId);
-        Log.i(LOG_TAG, token);
-
-        mApiKey = apiKey;
-        mSessionId = sessionId;
-        mToken = token;
-
-        initializeSession(apiKey, sessionId, token);
-        initializePublisher();
-    }
-
-    @Override
-    public void onWebServiceCoordinatorError(Exception error) {
-        Log.e(LOG_TAG, "Web Service error: " + error);
-        Log.e(LOG_TAG, "Web Service error message: " + error.getMessage());
-    }
-
-    /* Session Listener methods */
-
-    @Override
-    public void onConnected(Session session) {
-        Log.i(LOG_TAG, "Session Connected");
-
-        Log.d(LOG_TAG, "onConnected: Connected to session: "+session.getSessionId());
-
-        // initialize Publisher and set this object to listen to Publisher events
-        mPublisher = new Publisher.Builder(this).build();
-        mPublisher.setPublisherListener(this);
-
-        // set publisher video style to fill view
-        mPublisher.getRenderer().setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE,
-                BaseVideoRenderer.STYLE_VIDEO_FILL);
         mPublisherViewContainer.addView(mPublisher.getView());
-        if (mPublisher.getView() instanceof GLSurfaceView) {
-            ((GLSurfaceView) mPublisher.getView()).setZOrderOnTop(true);
-        }
-
-        if (mPublisher != null) {
-            mSession.publish(mPublisher);
-        }
-
-        setStartArchiveEnabled(true);
+        mSession.publish(mPublisher);
     }
 
     @Override
     public void onDisconnected(Session session) {
-        Log.i(LOG_TAG, "Session Disconnected");
+        Log.d(TAG, "onDisconnected: disconnected from session " + session.getSessionId());
 
-        setStartArchiveEnabled(false);
-        setStopArchiveEnabled(false);
+        mSession = null;
     }
-
-    @Override
-    public void onStreamReceived(Session session, Stream stream) {
-        Log.i(LOG_TAG, "Stream Received");
-
-        if (mSubscriber == null) {
-            mSubscriber = new Subscriber.Builder(this, stream).build();
-            mSubscriber.setSubscriberListener(this);
-            mSubscriber.getRenderer().setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE,
-                    BaseVideoRenderer.STYLE_VIDEO_FILL);
-            mSession.subscribe(mSubscriber);
-            mSubscriberViewContainer.addView(mSubscriber.getView());
-        }
-    }
-
-    @Override
-    public void onStreamDropped(Session session, Stream stream) {
-        Log.i(LOG_TAG, "Stream Dropped");
-
-        if (mSubscriber != null) {
-            mSubscriber = null;
-            mSubscriberViewContainer.removeAllViews();
-        }
-    }
-
     @Override
     public void onError(Session session, OpentokError opentokError) {
-        Log.e(LOG_TAG, "onError: "+ opentokError.getErrorDomain() + " : " +
-                opentokError.getErrorCode() + " - "+opentokError.getMessage() + " in session: "+ session.getSessionId());
+        Log.d(TAG, "onError: Error (" + opentokError.getMessage() + ") in session " + session.getSessionId());
 
-        logOpenTokError(opentokError);
+        Toast.makeText(this, "Session error. See the logcat please.", Toast.LENGTH_LONG).show();
+        finish();
     }
+    @Override
+    public void onStreamReceived(Session session, Stream stream)
+    {
+        Log.d(TAG, "onStreamReceived: New stream " + stream.getStreamId() + " in session " + session.getSessionId());
+        Log.e(TAG,"Stream Data : "+stream.getConnection().getData()+"\nPos : "+(mSubscribers.size()));
+        if (mSubscribers.size() + 1 > MAX_NUM_SUBSCRIBERS)
+        {
+            Toast.makeText(this, "New subscriber ignored. MAX_NUM_SUBSCRIBERS limit reached : "+MAX_NUM_SUBSCRIBERS, Toast.LENGTH_LONG).show();
+            return;
+        }
+        if(!SettingsMy.getActiveUser().getUserType().equals("L")){
+            hostView(session,stream);
+        }else{
+            userView(session,stream);
+        }
+    }
+    @Override
+    public void onStreamDropped(Session session, Stream stream)
+    {
+        Log.d(TAG, "onStreamDropped: Stream " + stream.getStreamId() + " dropped from session " + session.getSessionId());
+        Log.e(TAG,"onStreamDropped: Stream Data : "+stream.getConnection().getData()+"\nPos : "+(mSubscribers.size()));
 
-    /* Publisher Listener methods */
+        Subscriber subscriber = mSubscriberStreams.get(stream);
+        if (subscriber == null) {   return;     }
 
+        try {
+            if (stream.getConnection().getData().equals("Host")) {
+
+                mfullViewContainer.removeView(subscriber.getView());
+                return;
+            }
+        }catch (Exception E){Log.e(TAG,"Error :"+E.getMessage().toString());}
+
+        int position = mSubscribers.indexOf(subscriber);
+        mSubscribers.remove(subscriber);
+        mSubscriberStreams.remove(stream);
+
+
+
+        /*if(Role.equals("Host"))
+        {*/
+        int subscriberFrameID = getResources().getIdentifier("subscriberFrame" + (new Integer(position)).toString(), "id", TokBoxActivity.this.getPackageName());
+        final FrameLayout subscriberFrame = (FrameLayout)findViewById(subscriberFrameID);
+        subscriberlistLinearLayout.removeView(subscriberFrame);
+        //}
+
+
+
+
+       /* int subscriberViewContainerID = getResources().getIdentifier("subscriberview" + (new Integer(position)).toString(), "id", MainActivity.this.getPackageName());
+        RelativeLayout subscriberViewContainer = (RelativeLayout) findViewById(subscriberViewContainerID);
+        subscriberlistLinearLayout.removeView(subscriberViewContainer);
+
+        int subscriberControlsContainerID = getResources().getIdentifier("subscriberControlsLinear" + (new Integer(position)).toString(), "id", MainActivity.this.getPackageName());
+        final LinearLayout subscriberControls = (LinearLayout) findViewById(subscriberControlsContainerID);
+        subscriberlistLinearLayout.removeView(subscriberControls);*/
+
+        /*int subscriberFrameID = getResources().getIdentifier("subscriberFrame" + (new Integer(position)).toString(), "id", MainActivity.this.getPackageName());
+        final FrameLayout subscriberFrame = (FrameLayout)findViewById(subscriberFrameID);
+        subscriberlistLinearLayout.removeView(subscriberFrame);*/
+
+
+       /*int switchAudioID = getResources().getIdentifier("toggleAudioSubscriber" + (new Integer(position)).toString(), "id", MainActivity.this.getPackageName());
+        final ImageView switchAudio = (ImageView)findViewById(switchAudioID);
+        subscriberlistLinearLayout.removeView(switchAudio);*/
+    }
     @Override
     public void onStreamCreated(PublisherKit publisherKit, Stream stream) {
-        Log.i(LOG_TAG, "Publisher Stream Created");
+        Log.d(TAG, "onStreamCreated: Own stream " + stream.getStreamId() + " created");
     }
-
     @Override
     public void onStreamDestroyed(PublisherKit publisherKit, Stream stream) {
-        Log.i(LOG_TAG, "Publisher Stream Destroyed");
+        Log.d(TAG, "onStreamDestroyed: Own stream " + stream.getStreamId() + " destroyed");
     }
-
     @Override
     public void onError(PublisherKit publisherKit, OpentokError opentokError) {
-        logOpenTokError(opentokError);
+        Log.d(TAG, "onError: Error (" + opentokError.getMessage() + ") in publisher");
+
+        Toast.makeText(this, "Session error. See the logcat please.", Toast.LENGTH_LONG).show();
+        finish();
     }
 
-    /* Subscriber Listener methods */
+    private void disconnectSession() {
+        if (mSession == null) {
+            return;
+        }
 
+        if (mSubscribers.size() > 0) {
+            for (Subscriber subscriber : mSubscribers) {
+                if (subscriber != null) {
+                    mSession.unsubscribe(subscriber);
+                    subscriber.destroy();
+                }
+            }
+        }
+
+        if (mPublisher != null) {
+            mPublisherViewContainer.removeView(mPublisher.getView());
+            mSession.unpublish(mPublisher);
+            mPublisher.destroy();
+            mPublisher = null;
+        }
+        mSession.disconnect();
+    }
     @Override
-    public void onConnected(SubscriberKit subscriberKit) {
-        Log.i(LOG_TAG, "Subscriber Connected");
-
-        // mSubscriberViewContainer.addView(mSubscriber.getView());
+    public void onArchiveStarted(Session session, String s, String s1) {
+        publisherControlsLinearLayout.setVisibility(View.VISIBLE);
     }
-
     @Override
-    public void onDisconnected(SubscriberKit subscriberKit) {
-        Log.i(LOG_TAG, "Subscriber Disconnected");
+    public void onArchiveStopped(Session session, String s) {
+        publisherControlsLinearLayout.setVisibility(View.INVISIBLE);
     }
 
-    @Override
-    public void onError(SubscriberKit subscriberKit, OpentokError opentokError) {
-        Log.e(LOG_TAG, "onError: "+opentokError.getErrorDomain() + " : " +
-                opentokError.getErrorCode() +  " - "+opentokError.getMessage());
+    public void hostView(Session session, Stream stream)
+    {   //Origin
+        final Subscriber subscriber = new Subscriber.Builder(TokBoxActivity.this, stream).build();
+        mSession.subscribe(subscriber);
+        mSubscribers.add(subscriber);
+        mSubscriberStreams.put(stream, subscriber);
 
-        logOpenTokError(opentokError);
+        final int position = mSubscribers.size() - 1;
+
+        final FrameLayout subscriberFrame = new FrameLayout(this);
+        int subscriberFrameID = getResources().getIdentifier("subscriberFrame" + (new Integer(position)).toString(), "id", TokBoxActivity.this.getPackageName());
+        subscriberFrame.setId(subscriberFrameID);
+        FrameLayout.LayoutParams subscriberFrameParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,500);
+        subscriberFrame.setLayoutParams(subscriberFrameParams);
+
+        final LinearLayout subscriberControls = new LinearLayout(this);
+        int subscriberControlsContainerID = getResources().getIdentifier("subscriberControlsLinear" + (new Integer(position)).toString(), "id", TokBoxActivity.this.getPackageName());
+        subscriberControls.setId(subscriberControlsContainerID);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,80);
+        subscriberControls.setOrientation(LinearLayout.HORIZONTAL);
+        subscriberControls.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+        subscriberControls.setAlpha((float) 0.70);
+        subscriberControls.setGravity(Gravity.RIGHT);
+        subscriberControls.setLayoutParams(params);
+
+        //Item Subscriber View
+        final RelativeLayout subscriberViewContainer = new RelativeLayout(this);
+        RelativeLayout.LayoutParams subscriberViewParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,500);
+        int subscriberViewContainerID = getResources().getIdentifier("subscriberview" + (new Integer(position)).toString(), "id", TokBoxActivity.this.getPackageName());
+        subscriberViewContainer.setId(subscriberViewContainerID);
+        subscriberViewContainer.setLayoutParams(subscriberViewParam);
+        subscriber.setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE, BaseVideoRenderer.STYLE_VIDEO_FILL);
+        subscriberViewContainer.setPadding(1,1,1,1);
+        subscriberViewContainer.addView(subscriber.getView());
+
+        //Item Subscriber Toggle View
+        final ImageView switchView = new ImageView(this);
+        int switchViewID = getResources().getIdentifier("toggleSubscriberView" + (new Integer(position)).toString(), "id", TokBoxActivity.this.getPackageName());
+        switchView.setId(switchViewID);
+        switchView.setLayoutParams(new LinearLayout.LayoutParams(70, 70));
+        switchView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        switchView.setMaxHeight(90);
+        switchView.setMaxWidth(90);
+        switchView.setPadding(2,2,2,2);
+        switchView.setImageResource(R.drawable.swapview);
+        switchView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(!swapSubscriberToPublisher)
+                {
+                    mfullViewContainer.removeView(subscriber.getView());
+                    subscriberViewContainer.removeView(subscriber.getView());
+
+                    mfullViewContainer.addView(subscriber.getView());
+                    //subscriberViewContainer.addView(subscriber.getView());
+                    swapPos = position;
+                    swapSubscriberToPublisher = true;
+                }else if(swapSubscriberToPublisher)
+                {
+                    if (position == swapPos)
+                    {
+                        mfullViewContainer.removeView(subscriber.getView());
+                        //subscriberViewContainer.removeView(subscriber.getView());
+                        subscriberViewContainer.addView(subscriber.getView());
+
+//                        mfullViewContainer.addView(subscriber.getView());
+                        //subscriberViewContainer.addView(subscriber.getView());
+
+                        swapSubscriberToPublisher= false;
+                    }
+                    else{   Toast.makeText(getApplicationContext(),"This Is Not Publisher",Toast.LENGTH_LONG).show();   return; }
+                }
+                else {return;}
+            }
+        });
+        switchView.setVisibility(View.VISIBLE);
+        subscriberControls.addView(switchView);
+
+        //Item Toggle Subscriber Audio
+        final ImageView switchAudio = new ImageView(this);
+        int switchAudioID = getResources().getIdentifier("toggleAudioSubscriber" + (new Integer(position)).toString(), "id", TokBoxActivity.this.getPackageName());
+        switchAudio.setId(switchAudioID);
+        subscriber.setSubscribeToAudio(true);
+        switchAudio.setLayoutParams(new GridView.LayoutParams(70, 70));
+        switchAudio.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        switchAudio.setMaxHeight(90);
+        switchAudio.setMaxWidth(90);
+        switchAudio.setPadding(2,2,2,2);
+        switchAudio.setImageResource(R.drawable.soundon);
+        switchAudio.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(subscriber.getSubscribeToAudio() == true) {
+                    subscriber.setSubscribeToAudio(false);
+                    switchAudio.setImageResource(R.drawable.soundoff);
+                }
+                else {
+                    subscriber.setSubscribeToAudio(true);
+                    switchAudio.setImageResource(R.drawable.soundon);
+                }
+            }
+        });
+        switchAudio.setVisibility(View.VISIBLE);
+        subscriberControls.addView(switchAudio);
+        //subscriberlistLinearLayout.addView(switchAudio);
+
+        subscriberFrame.addView(subscriberViewContainer);
+        subscriberFrame.addView(subscriberControls);
+        subscriberlistLinearLayout.addView(subscriberFrame);
     }
 
-    /* Archive Listener methods */
+    public void userView(Session session, Stream stream){
 
-    @Override
-    public void onArchiveStarted(Session session, String archiveId, String archiveName) {
-        mCurrentArchiveId = archiveId;
-        setStopArchiveEnabled(true);
-        mArchivingIndicatorView.setVisibility(View.VISIBLE);
-    }
+        try{
+            if(stream.getConnection().getData().equals("Host")) {
+                Subscriber mSubscriber = new Subscriber.Builder(TokBoxActivity.this, stream).build();
+                mSubscriber.setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE, BaseVideoRenderer.STYLE_VIDEO_FILL);
+                mSession.subscribe(mSubscriber);
+                mSubscribers.add(mSubscriber);
+                mSubscriberStreams.put(stream, mSubscriber);
+                mfullViewContainer.addView(mSubscriber.getView());
+                return;
+            }
+        }catch (Exception ex){}
 
-    @Override
-    public void onArchiveStopped(Session session, String archiveId) {
-        mPlayableArchiveId = archiveId;
-        mCurrentArchiveId = null;
-        setPlayArchiveEnabled(true);
-        setStartArchiveEnabled(true);
-        mArchivingIndicatorView.setVisibility(View.INVISIBLE);
-    }
+        //Origin
+        final Subscriber subscriber = new Subscriber.Builder(TokBoxActivity.this, stream).build();
+        mSession.subscribe(subscriber);
+        mSubscribers.add(subscriber);
+        mSubscriberStreams.put(stream, subscriber);
 
-    /* Options menu helpers */
+        final int position = mSubscribers.size() - 1;
 
-    private void setStartArchiveEnabled(boolean enabled) {
-       /* mMenu.findItem(R.id.action_start_archive1)
-                .setEnabled(enabled)
-                .setVisible(enabled);*/
-    }
+        final FrameLayout subscriberFrame = new FrameLayout(this);
+        int subscriberFrameID = getResources().getIdentifier("subscriberFrame" + (new Integer(position)).toString(), "id", TokBoxActivity.this.getPackageName());
+        subscriberFrame.setId(subscriberFrameID);
+        FrameLayout.LayoutParams subscriberFrameParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,500);
+        subscriberFrame.setLayoutParams(subscriberFrameParams);
 
-    private void setStopArchiveEnabled(boolean enabled) {
-       /* mMenu.findItem(R.id.action_stop_archive1)
-                .setEnabled(enabled)
-                .setVisible(enabled);*/
-    }
+        final LinearLayout subscriberControls = new LinearLayout(this);
+        int subscriberControlsContainerID = getResources().getIdentifier("subscriberControlsLinear" + (new Integer(position)).toString(), "id", TokBoxActivity.this.getPackageName());
+        subscriberControls.setId(subscriberControlsContainerID);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,80);
+        subscriberControls.setOrientation(LinearLayout.HORIZONTAL);
+        subscriberControls.setBackgroundColor(getResources().getColor(R.color.colorWhite));
+        subscriberControls.setAlpha((float) 0.70);
+        subscriberControls.setGravity(Gravity.RIGHT);
+        subscriberControls.setLayoutParams(params);
 
-    private void setPlayArchiveEnabled(boolean enabled) {
-      /*  mMenu.findItem(R.id.action_play_archive1)
-                .setEnabled(enabled)
-                .setVisible(enabled);*/
+        //Item Subscriber View
+        final RelativeLayout subscriberViewContainer = new RelativeLayout(this);
+        RelativeLayout.LayoutParams subscriberViewParam = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,500);
+        int subscriberViewContainerID = getResources().getIdentifier("subscriberview" + (new Integer(position)).toString(), "id", TokBoxActivity.this.getPackageName());
+        subscriberViewContainer.setId(subscriberViewContainerID);
+        subscriberViewContainer.setLayoutParams(subscriberViewParam);
+        subscriber.setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE, BaseVideoRenderer.STYLE_VIDEO_FILL);
+        subscriberViewContainer.setPadding(1,1,1,1);
+        subscriberViewContainer.addView(subscriber.getView());
 
+        //Item Subscriber Toggle View
+        /*final ImageView switchView = new ImageView(this);
+        int switchViewID = getResources().getIdentifier("toggleSubscriberView" + (new Integer(position)).toString(), "id", MainActivity.this.getPackageName());
+        switchView.setId(switchViewID);
+        switchView.setLayoutParams(new LinearLayout.LayoutParams(70, 70));
+        switchView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        switchView.setMaxHeight(90);
+        switchView.setMaxWidth(90);
+        switchView.setPadding(2,2,2,2);
+        switchView.setImageResource(R.drawable.swapview);
+        switchView.setVisibility(View.VISIBLE);
+        subscriberControls.addView(switchView);*/
 
+        //Item Toggle Subscriber Audio
+        final ImageView switchAudio = new ImageView(this);
+        int switchAudioID = getResources().getIdentifier("toggleAudioSubscriber" + (new Integer(position)).toString(), "id", TokBoxActivity.this.getPackageName());
+        switchAudio.setId(switchAudioID);
+        subscriber.setSubscribeToAudio(true);
+        switchAudio.setLayoutParams(new GridView.LayoutParams(70, 70));
+        switchAudio.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        switchAudio.setMaxHeight(90);
+        switchAudio.setMaxWidth(90);
+        switchAudio.setPadding(2,2,2,2);
+        switchAudio.setImageResource(R.drawable.soundon);
+        switchAudio.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if(subscriber.getSubscribeToAudio() == true) {
+                    subscriber.setSubscribeToAudio(false);
+                    switchAudio.setImageResource(R.drawable.soundoff);
+                }
+                else {
+                    subscriber.setSubscribeToAudio(true);
+                    switchAudio.setImageResource(R.drawable.soundon);
+                }
+            }
+        });
+        switchAudio.setVisibility(View.VISIBLE);
+        subscriberControls.addView(switchAudio);
+
+        subscriberFrame.addView(subscriberViewContainer);
+        subscriberFrame.addView(subscriberControls);
+        subscriberlistLinearLayout.addView(subscriberFrame);
     }
 }
+
+
+/*
+if(!swapSubscriberToPublisher)
+{
+    mPublisherViewContainer.removeView(mPublisher.getView());
+    subscriberViewContainer.removeView(subscriber.getView());
+
+    mPublisherViewContainer.addView(subscriber.getView());
+    subscriberViewContainer.addView(mPublisher.getView());
+    swapPos = position;
+    swapSubscriberToPublisher = true;
+}else if(swapSubscriberToPublisher)
+{
+    if (position == swapPos)
+    {
+        mPublisherViewContainer.removeView(subscriber.getView());
+        subscriberViewContainer.removeView(mPublisher.getView());
+
+        mPublisherViewContainer.addView(mPublisher.getView());
+        subscriberViewContainer.addView(subscriber.getView());
+
+        swapSubscriberToPublisher= false;
+    }
+    else{   Toast.makeText(getApplicationContext(),"This Is Not Publisher",Toast.LENGTH_LONG).show();   return; }
+}
+else {return;}
+ */

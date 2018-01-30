@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,6 +32,7 @@ import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
 import com.edbrix.enterprise.commons.AlertDialogManager;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -89,7 +91,11 @@ public class LearnersListActivity extends BaseActivity implements SearchView.OnQ
             public void onClick(View view) {
                 if (learnerIdsList != null && learnerIdsList.size() > 0) {
                     showBusyProgress();
-                    assignLearnerToAvailability(SettingsMy.getActiveUser(), scheduleId, learnerIdsList);
+                    JSONArray learnerIdJsonArray = new JSONArray();
+                    for (int i = 0; i < learnerIdsList.size(); i++) {
+                        learnerIdJsonArray.put(learnerIdsList.get(i));
+                    }
+                    assignLearnerToAvailability(SettingsMy.getActiveUser(), scheduleId, learnerIdJsonArray);
                 } else {
                     showToast("Please select learner to invite from list.");
                 }
@@ -203,14 +209,16 @@ public class LearnersListActivity extends BaseActivity implements SearchView.OnQ
      * @param scheduleId schedule Id
      * @param learnersId Learners Id
      */
-    private void assignLearnerToAvailability(final User activeUser, String scheduleId, ArrayList<String> learnersId) {
+    private void assignLearnerToAvailability(final User activeUser, String scheduleId, JSONArray learnersId)
+    {
         try {
             JSONObject jo = new JSONObject();
 
             jo.put("UserId", activeUser.getId());
             jo.put("AccessToken", activeUser.getAccessToken());
             jo.put("Id", scheduleId);
-            jo.put("LearnerIds", learnersId.get(0));
+            jo.put("LearnerIds", learnersId);
+            Log.e("LearnerList",""+learnersId+"\n"+jo.toString());
 
             GsonRequest<ResponseData> assignLearnerToAvailabilityRequest = new GsonRequest<>(Request.Method.POST, Constants.assignLearnerToAvailability, jo.toString(), ResponseData.class,
                     new Response.Listener<ResponseData>() {

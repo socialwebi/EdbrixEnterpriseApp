@@ -98,10 +98,7 @@
             android:name=".Activities.TokBoxActivity"
             android:screenOrientation="landscape" />
         <activity android:name=".Activities.LearnersListActivity" />
-        <activity
-            android:name=".Activities.Test_Drawer"
-            android:label="@string/title_activity_test__drawer"
-            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".Activities.CreateCourseActivity" />
         <activity android:name=".Activities.PublishCourseActivity" />
         <activity android:name=".Activities.CreateCourseContentActivity" />
