@@ -58,6 +58,7 @@
     <string name="start_course">Start Course</string>
     <string name="start_">Start</string>
     <string name="upload">Upload</string>
+    <string name="delete">Delete</string>
     <string name="set_availability">Set Availability</string>
     <string name="achievement_progress">Achievement &amp; Progress</string>
     <string name="settings">Settings</string>
@@ -118,10 +119,13 @@
     <string name="change_password">Change Password</string>
     <string name="choose_organisation">Choose your organisation</string>
     <string name="share">Share </string>
+    <string name="videos">Videos </string>
+    <string name="video_list">Video List </string>
     <string name="logout">Logout</string>
     <string name="app_tour">App Tour</string>
     <string name="change_profile">Upload Profile Pic</string>
     <string name="edit_profile">Edit Profile</string>
+    <string name="rename">Rename</string>
     <string name="all_meetings"> View All Meetings </string>
     <string name="all_courses"> View All Courses </string>
     <string name="about_yourself">About Yourself</string>

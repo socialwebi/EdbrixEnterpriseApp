@@ -62,6 +62,7 @@ public class SettingsActivity extends BaseActivity {
     RoundedImageView _settings_image_profile_pic;
     TextView _settings_text_user_name;
     TextView _settings_text_user_email;
+    LinearLayout _settings_linear_videos;
     LinearLayout _settings_linear_share;
     LinearLayout _settings_linear_edit_profile;
     LinearLayout _settings_linear_upload_pic;
@@ -98,6 +99,7 @@ public class SettingsActivity extends BaseActivity {
         _settings_linear_upload_pic = findViewById(R.id.settings_linear_upload_pic);
         _settings_linear_change_password = findViewById(R.id.settings_linear_change_password);
         _settings_linear_logout = findViewById(R.id.settings_linear_logout);
+        _settings_linear_videos = findViewById(R.id.settings_linear_videos);
         _settings_linear_share = findViewById(R.id.settings_linear_share);
         _settings_progress = findViewById(R.id.settings_progress);
 
@@ -151,6 +153,13 @@ public class SettingsActivity extends BaseActivity {
             }
         });
 
+        _settings_linear_videos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent videoList = new Intent(SettingsActivity.this, VideoListActivity.class);
+                startActivity(videoList);
+            }
+        });
 
         _settings_linear_logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -380,17 +389,17 @@ public class SettingsActivity extends BaseActivity {
                                 if (response != null) {
                                     if (response.has("error")) {
                                         int error = response.getInt("error");
-                                        if(error==0){
+                                        if (error == 0) {
                                             showToast("Profile picture updated successfully");
-                                        }else{
-                                            showToast("Profile picture not updated successfully : "+response.getString("errorMessage"));
+                                        } else {
+                                            showToast("Profile picture not updated successfully : " + response.getString("errorMessage"));
                                             setValues();
                                         }
 
                                     }
                                 }
-                            }catch (JSONException e){
-                                showToast("Exception :"+e.getMessage());
+                            } catch (JSONException e) {
+                                showToast("Exception :" + e.getMessage());
                                 e.printStackTrace();
                             }
 

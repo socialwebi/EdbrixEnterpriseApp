@@ -1,0 +1,58 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="1dp"
+    android:background="@color/colorWhite"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="@dimen/app_normal_padding"
+    tools:context="com.edbrix.enterprise.Adapters.DashBoardCourseListAdapter">
+
+    <ImageView
+        android:id="@+id/videoThumbnail"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/image_course"
+        android:src="@mipmap/edbrix" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="@dimen/app_normal_margin"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/videoName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:padding="@dimen/app_min_padding"
+            android:textColor="@color/actionbarText"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:typeface="monospace" />
+
+        <TextView
+            android:id="@+id/videoDuration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/app_min_padding"
+            android:textColor="@color/colorSubText"
+            android:textSize="14sp"
+            android:typeface="monospace" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/image_course"
+        android:src="@mipmap/next_arrow_icon_orange" />
+
+
+</LinearLayout>

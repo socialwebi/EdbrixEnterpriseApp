@@ -288,7 +288,8 @@
                 android:layout_margin="@dimen/app_normal_margin"
                 android:orientation="horizontal"
                 android:paddingBottom="10dp"
-                android:paddingTop="10dp">
+                android:paddingTop="10dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="0dp"
@@ -300,6 +301,38 @@
                     android:drawableStart="@mipmap/share"
                     android:gravity="center_vertical"
                     android:text="@string/share"
+                    android:textColor="@color/actionbarText"
+                    android:textSize="18sp"
+                    android:typeface="monospace" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:src="@mipmap/right_arrow_start_icon_orange" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/settings_linear_videos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/app_normal_margin"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:drawableLeft="@mipmap/video_icon"
+                    android:drawablePadding="10dp"
+                    android:drawableStart="@mipmap/video_icon"
+                    android:gravity="center_vertical"
+                    android:text="@string/videos"
                     android:textColor="@color/actionbarText"
                     android:textSize="18sp"
                     android:typeface="monospace" />

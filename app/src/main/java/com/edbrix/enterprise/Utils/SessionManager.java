@@ -23,6 +23,7 @@ public class SessionManager {
     private static final String PREFS_SESSION_USERNAME = "SessionUsername";
     private static final String PREFS_SESSION_PASSWORD = "SessionPassword";
     private static final String PREFS_SESSION_PROFILE_TOKEN = "SessionProfileToken";
+    private static final String PREFS_SESSION_FCM_TOKEN = "SessionFCMToken";
     private static final String PREFS_SESSION_DEVICE_TOKEN = "SessionDeviceToken";
     private static final String PREFS_SESSION_DEVICE_TYPE = "SessionDeviceType";
     private static final String PREFS_SESSION_ORG_ID = "SessionOrgId";
@@ -87,6 +88,15 @@ public class SessionManager {
      */
     public String getSessionDeviceToken() {
         return this.sharedPrefs.getString(PREFS_SESSION_DEVICE_TOKEN, "");
+    }
+
+    /**
+     * Gets the session's saved device FCM Token.
+     *
+     * @return
+     */
+    public String getSessionFCMToken() {
+        return this.sharedPrefs.getString(PREFS_SESSION_FCM_TOKEN, "");
     }
 
     /**
@@ -229,6 +239,22 @@ public class SessionManager {
             editor.putString(PREFS_SESSION_DEVICE_TOKEN, deviceToken);
         } else {
             editor.remove(PREFS_SESSION_DEVICE_TOKEN);
+        }
+        editor.commit();
+    }
+
+    /**
+     * Updates the saved session credentials.
+     *
+     * @param deviceFCMToken the DeviceFCMToken to save.
+     */
+    public void updateSessionFCMToken(String deviceFCMToken) {
+
+        Editor editor = this.sharedPrefs.edit();
+        if ((deviceFCMToken != null) && (deviceFCMToken.length() > 0)) {
+            editor.putString(PREFS_SESSION_FCM_TOKEN, deviceFCMToken);
+        } else {
+            editor.remove(PREFS_SESSION_FCM_TOKEN);
         }
         editor.commit();
     }

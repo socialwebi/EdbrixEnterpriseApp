@@ -56,16 +56,39 @@
         <activity android:name=".Activities.PhotoPopUpActivity" />
         <activity android:name=".Activities.FileListActivity" />
 
-        <service android:name=".Services.MyFirebaseInstanceIDService">
+        <activity android:name=".Activities.CreateScheduleActivity" />
+        <activity android:name=".Activities.EditProfileActivity" />
+        <activity
+            android:name=".Activities.TokBoxActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".Activities.LearnersListActivity" />
+        <activity android:name=".Activities.CreateCourseActivity" />
+        <activity android:name=".Activities.PublishCourseActivity" />
+        <activity android:name=".Activities.CreateCourseContentActivity" />
+        <activity android:name=".Activities.EditCourseActivity" />
+        <activity
+            android:name=".Activities.VideoPlayerActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activities.VideoWebView"
+            android:screenOrientation="landscape" />
+        <activity android:name=".Activities.VideoListActivity" />
+        <activity android:name=".Activities.VideoDetailsActivity"></activity>
+
+        <!-- Firebase Notifications Services -->
+        <service android:name=".Services.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".Services.MyFirebaseMessagingService">
+
+        <service android:name=".Services.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+        <!-- ./Firebase Notifications -->
+
         <service
             android:name=".Services.MyJobService"
             android:exported="false">
@@ -92,23 +115,6 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
 
-        <activity android:name=".Activities.CreateScheduleActivity" />
-        <activity android:name=".Activities.EditProfileActivity" />
-        <activity
-            android:name=".Activities.TokBoxActivity"
-            android:screenOrientation="landscape" />
-        <activity android:name=".Activities.LearnersListActivity" />
-
-        <activity android:name=".Activities.CreateCourseActivity" />
-        <activity android:name=".Activities.PublishCourseActivity" />
-        <activity android:name=".Activities.CreateCourseContentActivity" />
-        <activity android:name=".Activities.EditCourseActivity" />
-        <activity
-            android:name=".Activities.VideoPlayerActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Activities.VideoWebView"
-            android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:orientation="vertical"
+    tools:context="com.edbrix.enterprise.Activities.VideoDetailsActivity">
+
+    <RelativeLayout
+        android:id="@+id/headerVideoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/colorBlack">
+
+        <ImageView
+            android:id="@+id/videoPreview"
+            android:layout_width="match_parent"
+            android:layout_height="320dp"
+            android:layout_centerInParent="true"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/playBtn"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/play_circle_grey"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/noContentText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:padding="5dp"
+            android:text="No content available"
+            android:textColor="@color/colorWhite"
+            android:textSize="14sp" />
+
+        <ProgressBar
+            android:id="@+id/vProgressBar"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_centerInParent="true"
+            android:indeterminateDrawable="@drawable/progressbar_round_white"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/app_normal_padding">
+
+        <TextView
+            android:id="@+id/txtFileName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/app_min_margin"
+            android:text="@string/video"
+            android:textColor="@color/colorBlack"
+            android:textSize="18sp"
+            android:typeface="monospace" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/app_min_margin"
+            android:orientation="horizontal"
+            android:padding="@dimen/app_normal_padding">
+
+            <TextView
+                android:id="@+id/saveBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/app_min_margin"
+                android:layout_weight="1"
+                android:drawableTop="@android:drawable/ic_menu_save"
+                android:gravity="center"
+                android:text="@string/save"
+                android:textColor="@color/colorMainText"
+                android:textSize="15sp"
+                android:visibility="gone"
+                android:typeface="monospace" />
+
+            <TextView
+                android:id="@+id/renameBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/app_min_margin"
+                android:layout_weight="1"
+                android:drawableTop="@android:drawable/ic_menu_edit"
+                android:gravity="center"
+                android:text="@string/rename"
+                android:textColor="@color/colorMainText"
+                android:textSize="15sp"
+                android:typeface="monospace" />
+
+            <TextView
+                android:id="@+id/shareBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/app_min_margin"
+                android:layout_weight="1"
+                android:drawableTop="@android:drawable/ic_menu_share"
+                android:gravity="center"
+                android:text="@string/share"
+                android:textColor="@color/colorMainText"
+                android:textSize="15sp"
+                android:typeface="monospace" />
+
+            <TextView
+                android:id="@+id/uploadBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/app_min_margin"
+                android:layout_weight="1"
+                android:drawableTop="@android:drawable/ic_menu_upload"
+                android:gravity="center"
+                android:text="@string/upload"
+                android:textColor="@color/colorMainText"
+                android:textSize="15sp"
+                android:typeface="monospace" />
+
+            <TextView
+                android:id="@+id/deleteBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/app_min_margin"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/zm_mm_delete_btn"
+                android:gravity="center"
+                android:text="@string/delete"
+                android:textColor="@color/colorMainText"
+                android:textSize="15sp"
+                android:typeface="monospace" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="@dimen/app_min_margin"
+        android:background="@color/colorDivider"
+        android:textSize="15sp"
+        android:typeface="monospace" />
+
+
+</LinearLayout>

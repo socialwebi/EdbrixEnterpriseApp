@@ -271,6 +271,7 @@
                 android:layout_marginLeft="@dimen/app_big_margin"
                 android:layout_marginRight="@dimen/app_big_margin"
                 android:layout_marginTop="@dimen/app_min_margin"
+                android:visibility="gone"
                 android:background="@color/colorDivider" />
 
 
@@ -281,6 +282,7 @@
                 android:layout_margin="5dp"
                 android:orientation="horizontal"
                 android:paddingBottom="10dp"
+                android:visibility="gone"
                 android:paddingTop="10dp">
 
                 <TextView
@@ -304,6 +306,48 @@
                     android:src="@mipmap/right_arrow" />
 
             </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="@dimen/app_min_margin"
+                android:layout_marginLeft="@dimen/app_big_margin"
+                android:layout_marginRight="@dimen/app_big_margin"
+                android:layout_marginTop="@dimen/app_min_margin"
+                android:background="@color/colorDivider" />
+
+
+            <LinearLayout
+                android:id="@+id/settings_linear_videos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:drawableLeft="@mipmap/video_icon"
+                    android:drawablePadding="10dp"
+                    android:drawableStart="@mipmap/video_icon"
+                    android:gravity="center_vertical"
+                    android:text="@string/videos"
+                    android:textColor="@color/actionbarText"
+                    android:typeface="monospace" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:src="@mipmap/right_arrow" />
+
+            </LinearLayout>
+
 
             <TextView
                 android:layout_width="match_parent"

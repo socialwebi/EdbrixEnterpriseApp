@@ -14,13 +14,13 @@ public class VideoPlayerActivity extends BaseActivity implements EasyVideoCallba
     EasyVideoPlayer player;
     String fileName;
     String fileUrl;
-//    FileData fData;
+    FileData fData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
-//        fData = (FileData) getIntent().getSerializableExtra("FileData");
+        fData = (FileData) getIntent().getSerializableExtra("FileData");
         fileName = getIntent().getStringExtra("FileName");
         fileUrl = getIntent().getStringExtra("FileUrl");
         // Grabs a reference to the player view
@@ -32,8 +32,15 @@ public class VideoPlayerActivity extends BaseActivity implements EasyVideoCallba
         // Sets the source to the HTTP URL held in the TEST_URL variable.
         // To play files, you can use Uri.fromFile(new File("..."))
 //        player.setSource(Uri.parse("https://cdn.video.playwire.com/1010450/videos/5449631/video-sd.mp4"));
-        if (fileUrl != null && !fileUrl.isEmpty())
+
+        if (fData != null) {
+            player.setSource(Uri.fromFile(fData.getFileObject()));
+            player.setBottomLabelText(fData.getFileName());
+        } else if (fileUrl != null && !fileUrl.isEmpty()) {
             player.setSource(Uri.parse(fileUrl));
+        } else {
+            showToast("No file data found.");
+        }
 //        player.setSource(Uri.fromFile(fData.getFileObject()));
 
 //        player.setBottomLabelText(fileName);

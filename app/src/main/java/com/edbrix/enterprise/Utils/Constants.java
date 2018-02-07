@@ -31,6 +31,7 @@ public class Constants {
     public final static String TolkBox_APIKey= "45467242";
     public final static String TolkBox_Token= "Token";
     public final static String TolkBox_SessionId= "SessionId";
+    public final static String TolkBox_MeetingId= "MeetingId";
     public final static String FileType_Playwire= "playwire";
     public final static String FileType_Document= "document";
 
@@ -93,8 +94,10 @@ public class Constants {
     public final static String getTimezoneList = BASE_URL.concat("gettimezones.php");
     public final static String getUserDetails = BASE_URL.concat("editprofile.php");
     public final static String updateUserProfile = BASE_URL.concat("updateprofile.php");
+    public final static String sendMeetingNotification = BASE_URL.concat("sendmeetingpushnotification.php");
     public final static String updateUserProfilePic = "https://enterprise.edbrix.net/ntservices/updateUserProfileImage";
     public final static String updateCoursePic = "https://enterprise.edbrix.net/ntservices/updateCourseImage";
+    public final static String uploadVideoToMyFiles = "http://enterpriseservices.edbrix.net/app/uploadvideotomyfiles.php";
     public static final String SESSION_INFO_ENDPOINT = BASE_URL + "/session";
     public static final String ARCHIVE_START_ENDPOINT = BASE_URL + "/archive/start";
     public static final String ARCHIVE_STOP_ENDPOINT = BASE_URL + "/archive/:archiveId/stop";

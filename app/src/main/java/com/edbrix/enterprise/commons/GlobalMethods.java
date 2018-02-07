@@ -35,6 +35,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.edbrix.enterprise.R;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -505,6 +507,63 @@ public class GlobalMethods {
             }
         }
         return type;
+    }
+
+    /**
+     * @return The MIME type for the given file.
+     */
+    public static String getMimeType(File file) {
+
+        String extension = getExtension(file.getName());
+
+        if (extension.length() > 0)
+            return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.substring(1));
+
+        return "application/octet-stream";
+    }
+
+    /**
+     * Gets the extension of a file name, like ".png" or ".jpg".
+     *
+     * @param uri
+     * @return Extension including the dot("."); "" if there is no extension;
+     *         null if uri was null.
+     */
+    public static String getExtension(String uri) {
+        if (uri == null) {
+            return null;
+        }
+
+        int dot = uri.lastIndexOf(".");
+        if (dot >= 0) {
+            return uri.substring(dot);
+        } else {
+            // No extension.
+            return "";
+        }
+    }
+
+
+    public static File getAppStorageDirectory(Context mContext) {
+        File yourAppStorageDir = new File(Environment.getExternalStorageDirectory(), "/" + mContext.getResources().getString(R.string.app_name) + "/");
+        if (!yourAppStorageDir.exists()) {
+            boolean isDirCreated = yourAppStorageDir.mkdirs();
+            if (!isDirCreated) {
+                return null;
+            }
+        }
+        return yourAppStorageDir;
+    }
+
+    public static File getAppVideoStorageDirectory(Context mContext) {
+        File yourAppStorageDir = new File(Environment.getExternalStorageDirectory(), "/" + mContext.getResources().getString(R.string.app_name) + "/Video/");
+        if (!yourAppStorageDir.exists()) {
+            boolean isDirCreated = yourAppStorageDir.mkdirs();
+            if (!isDirCreated) {
+                return null;
+            }
+        }
+        return yourAppStorageDir;
     }
 
     public static Bitmap getVideoThumbnailFromPath(String path) {

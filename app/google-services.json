@@ -162,6 +162,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "250705916290-jsu33v2gguhngdctk49clg33dualepcd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.edbrix.enterprise",
+            "certificate_hash": "3abfee9e70ceed47c2cbe4828fa7aa180322582a"
+          }
+        },
+        {
+          "client_id": "250705916290-c2b9krmumpbj6cj6d29gc28qctbfe4so.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.edbrix.enterprise",
+            "certificate_hash": "35435d1d16176c77d0928dafb615487b822e3211"
+          }
+        },
+        {
           "client_id": "250705916290-ecngk1idta64s9v51f70av7fh0dj68ni.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -170,11 +186,123 @@
           }
         },
         {
-          "client_id": "250705916290-jsu33v2gguhngdctk49clg33dualepcd.apps.googleusercontent.com",
+          "client_id": "250705916290-og7jvq5gmft6uk695654sp922j13dlkm.apps.googleusercontent.com",
           "client_type": 3
         },
         {
-          "client_id": "250705916290-c2b9krmumpbj6cj6d29gc28qctbfe4so.apps.googleusercontent.com",
+          "client_id": "250705916290-fkjgv4g6vlguj7p8iegokfvatdak7315.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB49tuyECm9VEdRQVASoHZYAOsOjulYOs8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "250705916290-og7jvq5gmft6uk695654sp922j13dlkm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:250705916290:android:d91ed14d1a317d5a",
+        "android_client_info": {
+          "package_name": "com.edguru.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "250705916290-ull7ncjnkblj50n4im9gc99n17heu31m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.edguru.app",
+            "certificate_hash": "5618a32d4c267a07082087fc8a8405408e49e8ca"
+          }
+        },
+        {
+          "client_id": "250705916290-emdb72qeb625s55f55652cev4ssp3epv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.edguru.app",
+            "certificate_hash": "cc5fa6e3889b3a7697d3f6ed13648419502f6fe4"
+          }
+        },
+        {
+          "client_id": "250705916290-og7jvq5gmft6uk695654sp922j13dlkm.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "250705916290-fkjgv4g6vlguj7p8iegokfvatdak7315.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB49tuyECm9VEdRQVASoHZYAOsOjulYOs8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "250705916290-og7jvq5gmft6uk695654sp922j13dlkm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:250705916290:android:c19d05f5b2392658",
+        "android_client_info": {
+          "package_name": "com.knowledgebrix.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "250705916290-nit7t66fq7hje5j9fe1np91ukbis0iq8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.knowledgebrix.app",
+            "certificate_hash": "155ba8548def9856e6120a9c79a775d00f1acd52"
+          }
+        },
+        {
+          "client_id": "250705916290-6ghibsbiq1pf40hl53et9ch88ttsotr5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.knowledgebrix.app",
+            "certificate_hash": "cc5fa6e3889b3a7697d3f6ed13648419502f6fe4"
+          }
+        },
+        {
+          "client_id": "250705916290-og7jvq5gmft6uk695654sp922j13dlkm.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "250705916290-fkjgv4g6vlguj7p8iegokfvatdak7315.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
