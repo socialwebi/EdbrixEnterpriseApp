@@ -29,6 +29,7 @@ import com.edbrix.enterprise.Models.ResponseData;
 import com.edbrix.enterprise.R;
 import com.edbrix.enterprise.Utils.Conditions;
 import com.edbrix.enterprise.Utils.Constants;
+import com.edbrix.enterprise.Utils.SessionManager;
 import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
@@ -50,6 +51,7 @@ public class LoginActivity extends BaseActivity {
     TextView _login_text_view_forgot_password;
     ProgressBar _login_progress_bar;
     boolean checkEmail = false, checkPassword = false;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +59,7 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
 
         context = this;
-
+        sessionManager = new SessionManager(context);
         _login_edit_text_email = findViewById(R.id.login_edit_text_email);
         _login_edit_text_password = findViewById(R.id.login_edit_text_password);
         _login_button_login = findViewById(R.id.login_button_login);
@@ -213,6 +215,8 @@ public class LoginActivity extends BaseActivity {
             jo.put("Email", email);
             jo.put("Password", password);
             jo.put("OrganizationId", "");
+            jo.put("DeviceType", "A");
+            jo.put("DeviceToken", sessionManager.getSessionFCMToken());
 
         } catch (JSONException e) {
             Timber.e(e, "Parse logInWithEmail exception");
@@ -230,7 +234,7 @@ public class LoginActivity extends BaseActivity {
                             //((MainActivity) getActivity()).onCategoryListSelected();  //onCategoryMenuSelected
                             if (response.getIsOrganizationListShow().equals("0")) {
                                 SettingsMy.setActiveUser(response.getUser());
-                                SettingsMy.setZoomCredential(response.getUser().getZoomUserId(),response.getUser().getZoomUserToken());
+                                SettingsMy.setZoomCredential(response.getUser().getZoomUserId(), response.getUser().getZoomUserToken());
 
                                 Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

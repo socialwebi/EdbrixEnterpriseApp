@@ -28,6 +28,7 @@ import com.edbrix.enterprise.Models.ResponseData;
 import com.edbrix.enterprise.R;
 import com.edbrix.enterprise.Utils.Conditions;
 import com.edbrix.enterprise.Utils.Constants;
+import com.edbrix.enterprise.Utils.SessionManager;
 import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
@@ -56,6 +57,7 @@ public class OrganizationListActivity extends BaseActivity {
     private String orgId;
     private String orgName;
     private String orgImage;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +73,7 @@ public class OrganizationListActivity extends BaseActivity {
             }
         });
         context = this;
-
+        sessionManager = new SessionManager(context);
         Intent intent = getIntent();
         key = intent.getBooleanExtra("Key", false);
         email = intent.getStringExtra("email");
@@ -208,6 +210,8 @@ public class OrganizationListActivity extends BaseActivity {
             jo.put("Email", email);
             jo.put("Password", password);
             jo.put("OrganizationId", orgId);
+            jo.put("DeviceType", "A");
+            jo.put("DeviceToken", sessionManager.getSessionFCMToken());
 
         } catch (JSONException e) {
             Timber.e(e, "Parse logInWithEmail exception");
