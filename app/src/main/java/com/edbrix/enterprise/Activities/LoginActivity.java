@@ -33,6 +33,7 @@ import com.edbrix.enterprise.Utils.SessionManager;
 import com.edbrix.enterprise.Volley.GsonRequest;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.baseclass.BaseActivity;
+import com.edbrix.enterprise.commons.GlobalMethods;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -261,14 +262,7 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 _login_progress_bar.setVisibility(View.INVISIBLE);
-                try {
-                    Timber.d("Error: %s", error.getMessage());
-                    Snackbar.make(layout, getString(R.string.error_something_wrong), Snackbar.LENGTH_LONG).show();
-                } catch (Exception e2) {
-                    e2.printStackTrace();
-
-                    Toast.makeText(context, getString(R.string.error_something_wrong), Toast.LENGTH_LONG).show();
-                }
+                showToast(SettingsMy.getErrorMessage(error));
             }
         });
         userLoginEmailRequest.setRetryPolicy(Application.getDefaultRetryPolice());

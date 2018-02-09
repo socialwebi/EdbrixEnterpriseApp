@@ -139,7 +139,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
                 // app is in foreground, broadcast the push message
                 Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
-                pushNotification.putExtra("message", message);
+                pushNotification.putExtra("filename", message);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
                 // play notification sound
@@ -165,21 +165,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private void handleNotificationMessage(JSONObject json) {
-        Log.e(TAG, "push json: " + json.toString());
+    private void handleNotificationMessage(JSONObject data) {
+        Log.e(TAG, "push json: " + data.toString());
 
         try {
-            JSONObject data = json.getJSONObject("data");
-
 //            String title = data.getString("title");
-            String message = data.getString("filename");
+            String filename = data.getString("filename");
 //            boolean isBackground = data.getBoolean("is_background");
 //            String imageUrl = data.getString("image");
 //            String timestamp = data.getString("timestamp");
 //            JSONObject payload = data.getJSONObject("payload");
 
 //            Log.e(TAG, "title: " + title);
-            Log.e(TAG, "message: " + message);
+            Log.e(TAG, "filename: " + filename);
 //            Log.e(TAG, "isBackground: " + isBackground);
 //            Log.e(TAG, "payload: " + payload.toString());
 //            Log.e(TAG, "imageUrl: " + imageUrl);
@@ -189,7 +187,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
                 // app is in foreground, broadcast the push message
                 Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
-                pushNotification.putExtra("message", message);
+                pushNotification.putExtra("filename", filename);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
                 // play notification sound
@@ -198,7 +196,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             } else {
                 // app is in background, show the notification in notification tray
                 Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
-                resultIntent.putExtra("message", message);
+                resultIntent.putExtra("message", filename);
 
                 // check for image attachment
 //                if (TextUtils.isEmpty(imageUrl)) {

@@ -46,6 +46,7 @@ import com.edbrix.enterprise.Models.FileData;
 import com.edbrix.enterprise.Models.User;
 import com.edbrix.enterprise.R;
 import com.edbrix.enterprise.Utils.Constants;
+import com.edbrix.enterprise.Utils.VideoPlayerDialog;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.app.Config;
 import com.edbrix.enterprise.baseclass.BaseActivity;
@@ -337,10 +338,9 @@ public class TokBoxActivity extends BaseActivity implements
             if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
                 // new push notification is received
 
-                final String message = intent.getStringExtra("message");
                 final String fileName = intent.getStringExtra("filename");
 
-                showToast("Push notification: " + message);
+                showToast("Push notification: " + fileName);
 
                 getAlertDialogManager().setAlertDialogCancellable(false);
                 getAlertDialogManager().Dialog("Download Video", "Continue to download video", "Continue", "Exit", new AlertDialogManager.onTwoButtonClickListner() {
@@ -351,8 +351,7 @@ public class TokBoxActivity extends BaseActivity implements
 
                     @Override
                     public void onPositiveClick() {
-                        downloadVideoFromNotification(message);
-//                       downloadVideoFromNotification(fileName);
+                        downloadVideoFromNotification(fileName);
                     }
                 }).show();
 
@@ -829,20 +828,28 @@ public class TokBoxActivity extends BaseActivity implements
                 mMediaRecorder.reset();
                 Log.v(TAG, "Stopping Recording");
                 stopScreenSharing();
-//                showToast("Meeting recording is done successfully.", Toast.LENGTH_SHORT);
-                getAlertDialogManager().setAlertDialogCancellable(false);
-                getAlertDialogManager().Dialog("Video Recording", "Continue to share video recording.", "Continue", "Exit", new AlertDialogManager.onTwoButtonClickListner() {
+                showToast("Recording is done. Showing recorded video preview.", Toast.LENGTH_SHORT);
+                VideoPlayerDialog videoPlayerDialog = new VideoPlayerDialog(mContext,R.style.DialogAnimation,new FileData(screenRecordOutputFile));
+                videoPlayerDialog.setOnActionButtonListener(new VideoPlayerDialog.OnActionButtonListener() {
                     @Override
-                    public void onNegativeClick() {
+                    public void onOptionPressed(String optionType) {
 
+                        getAlertDialogManager().setAlertDialogCancellable(false);
+                        getAlertDialogManager().Dialog("Video Recording", "Continue to share video recording?", "Continue", "Cancel", new AlertDialogManager.onTwoButtonClickListner() {
+                            @Override
+                            public void onNegativeClick() {
+
+                            }
+
+                            @Override
+                            public void onPositiveClick() {
+                                uploadToEdbrixMyFiles();
+
+                            }
+                        }).show();
                     }
-
-                    @Override
-                    public void onPositiveClick() {
-                        uploadToEdbrixMyFiles();
-                    }
-                }).show();
-
+                });
+                videoPlayerDialog.showMe();
             }
         } catch (RuntimeException stopRuntimeException) {
             mMediaRecorder.reset();
@@ -1065,14 +1072,13 @@ public class TokBoxActivity extends BaseActivity implements
                 @Override
                 public void onResponse(JSONObject response) {
                     hideBusyProgress();
-                    showToast(response.toString());
                     Log.v("Volley Response", response.toString());
                     try {
                         if (response != null) {
-                            if (response.has("Success")) {
+                            if (response.has("success")) {
                                 showToast("Video recording shared successfully.");
                             } else if (response.has("Error")) {
-                                showToast("Error occurred while sharing video recording");
+                                showToast("Error occurred while sharing video recording.");
                             }
                         }
                     } catch (Exception e) {
