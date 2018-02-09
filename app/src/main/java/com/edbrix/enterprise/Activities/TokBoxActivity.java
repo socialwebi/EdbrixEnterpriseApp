@@ -2,9 +2,10 @@ package com.edbrix.enterprise.Activities;
 
 import android.Manifest;
 import android.animation.LayoutTransition;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
@@ -96,11 +97,12 @@ public class TokBoxActivity extends BaseActivity implements
     private ArrayList<Subscriber> mSubscribers = new ArrayList<Subscriber>();
     private HashMap<Stream, Subscriber> mSubscriberStreams = new HashMap<Stream, Subscriber>();
 
-    private RelativeLayout mPublisherViewContainer, mfullViewContainer;
-    public ImageView swapCamImageView, toggleAudioImageView, toggleVideoImageView, restoreFullViewImageView, publisherFullViewImageView, zoomImageView;
+    private RelativeLayout mPublisherViewContainer,mfullViewContainer;
+    public ImageView swapCamImageView,toggleAudioImageView,toggleVideoImageView,recordScreenImageView,publisherFullViewImageView,zoomImageView;
 
-    private LinearLayout mSubscriberlistLinearLayout, mPublisherControlsLinearLayout, mRightSideLinearLayout;
+    private LinearLayout mSubscriberlistLinearLayout,mPublisherControlsLinearLayout,mRightSideLinearLayout;
     public FrameLayout mpublisherScreenFrame;
+    public TextView publisherNameTextView,userNameTextview,leaveMeetingTextView;
 
     boolean swapSubscriberToFullView = false;
     boolean swapPublisherToFullView = false;
@@ -161,11 +163,16 @@ public class TokBoxActivity extends BaseActivity implements
         mPublisherControlsLinearLayout = (LinearLayout) findViewById(R.id.publisherControlLayout);
         mRightSideLinearLayout = (LinearLayout) findViewById(R.id.rightLinearLayout);
 
-        swapCamImageView = (ImageView) findViewById(R.id.swapCamera);
-        toggleAudioImageView = (ImageView) findViewById(R.id.toggleAudio);
-        toggleVideoImageView = (ImageView) findViewById(R.id.toggleVideo);
-        publisherFullViewImageView = (ImageView) findViewById(R.id.fullView);
-        zoomImageView = (ImageView) findViewById(R.id.zoomView);
+        swapCamImageView = (ImageView)findViewById(R.id.swapCamera);
+        toggleAudioImageView = (ImageView)findViewById(R.id.toggleAudio);
+        toggleVideoImageView = (ImageView)findViewById(R.id.toggleVideo);
+        publisherFullViewImageView = (ImageView)findViewById(R.id.fullView);
+        zoomImageView = (ImageView)findViewById(R.id.zoomView);
+        recordScreenImageView = (ImageView)findViewById(R.id.recordView);
+
+        publisherNameTextView = (TextView)findViewById(R.id.textViewPubliishername);
+        userNameTextview = (TextView)findViewById(R.id.textViewUsername);
+        leaveMeetingTextView = (TextView)findViewById(R.id.textViewLeaveMeeting);
 
         startBtn = (ImageView) findViewById(R.id.startBtn);
         stopBtn = (ImageView) findViewById(R.id.stopBtn);
@@ -283,6 +290,13 @@ public class TokBoxActivity extends BaseActivity implements
                 onToggleScreenShare(false);
                 recordTime = 0;
                 currentTimeText.setVisibility(View.GONE);
+            }
+        });
+
+        leaveMeetingTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                leaveMeetingDialog();
             }
         });
     }
@@ -439,6 +453,7 @@ public class TokBoxActivity extends BaseActivity implements
         if (!SettingsMy.getActiveUser().getUserType().equals("L")) {
             mpublisherScreenFrame.setVisibility(View.GONE);
             mfullViewContainer.addView(mPublisher.getView());
+            userNameTextview.setText(""+mPublisher.getName());
             swapPublisherToFullView = true;
         } else {
             mPublisherViewContainer.addView(mPublisher.getView());
@@ -600,16 +615,21 @@ public class TokBoxActivity extends BaseActivity implements
                         mpublisherScreenFrame.setVisibility(View.VISIBLE);
                         publisherFullViewImageView.setVisibility(View.VISIBLE);
                         mPublisherViewContainer.addView(mPublisher.getView());
+                        publisherNameTextView.setText(""+mPublisher.getName().toString());
                         swapPublisherToFullView = false;
 
                         subscriberViewContainer.removeView(subscriber.getView());
+                        addView.setVisibility(View.GONE);
                         mfullViewContainer.addView(subscriber.getView());
+                        userNameTextview.setText(""+subscriber.getStream().getName().toString());
                         swapPos = itemposition;
                         swapSubscriberToFullView = true;
                         return;
                     } else {
                         subscriberViewContainer.removeView(subscriber.getView());
+                        addView.setVisibility(View.GONE);
                         mfullViewContainer.addView(subscriber.getView());
+                        userNameTextview.setText(""+subscriber.getStream().getName().toString());
                         swapPos = itemposition;
                         swapSubscriberToFullView = true;
                         return;
@@ -618,11 +638,14 @@ public class TokBoxActivity extends BaseActivity implements
                     Log.e("swap", "SubscriberToFullView = " + swapSubscriberToFullView + " SwapPos : " + swapPos + "ItemPos : " + itemposition);
                     if (swapPos == itemposition) {
                         mfullViewContainer.removeView(subscriber.getView());
+                        addView.setVisibility(View.VISIBLE);
                         subscriberViewContainer.addView(subscriber.getView());
+                        userNameTextview.setText("Name");
                         swapSubscriberToFullView = false;
                         return;
-                    } else if (swapPos != itemposition) {
-                        mfullViewContainer.removeView(mSubscribers.get(swapPos).getView());
+                    }
+                   else if(swapPos != itemposition){
+                       mfullViewContainer.removeView(mSubscribers.get(swapPos).getView());
 
                         final Subscriber tmpsubscriber = mSubscribers.get(swapPos);
                         tmpsubscriber.setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE, BaseVideoRenderer.STYLE_VIDEO_FILL);
@@ -637,11 +660,16 @@ public class TokBoxActivity extends BaseActivity implements
                         //tmpsubscriber.setSubscribeToAudio(true);
                         View tmpView = mSubscriberlistLinearLayout.getChildAt(swapPos);
                         RelativeLayout tmpSubView = (RelativeLayout) tmpView.findViewById(R.id.subscriberview);
+                        TextView subscriberNameTextView = (TextView)tmpView.findViewById(R.id.textViewSubscribername);
+                        subscriberNameTextView.setText(""+tmpsubscriber.getStream().getName().toString());
                         tmpSubView.addView(tmpsubscriber.getView());
+                        tmpView.setVisibility(View.VISIBLE);
 
-                        swapPos = itemposition;
-                        subscriberViewContainer.removeView(subscriber.getView());
-                        mfullViewContainer.addView(subscriber.getView());
+                       swapPos = itemposition;
+                       subscriberViewContainer.removeView(subscriber.getView());
+                       addView.setVisibility(View.GONE);
+                       mfullViewContainer.addView(subscriber.getView());
+                       userNameTextview.setText("" + subscriber.getStream().getName().toString());
 
                         swapSubscriberToFullView = true;
                         return;
@@ -664,14 +692,18 @@ public class TokBoxActivity extends BaseActivity implements
                     mpublisherScreenFrame.setVisibility(View.GONE);
                     publisherFullViewImageView.setVisibility(View.GONE);
                     mfullViewContainer.addView(mPublisher.getView());
+                    userNameTextview.setText(""+mPublisher.getName().toString());
                     swapPublisherToFullView = true;
 
                     final Subscriber tmpsubscriber = mSubscribers.get(swapPos);
                     tmpsubscriber.setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE, BaseVideoRenderer.STYLE_VIDEO_FILL);
                     tmpsubscriber.setSubscribeToAudio(true);
                     View tmpView = mSubscriberlistLinearLayout.getChildAt(swapPos);
-                    RelativeLayout tmpSubView = (RelativeLayout) tmpView.findViewById(R.id.subscriberview);
+                    RelativeLayout tmpSubView = (RelativeLayout)tmpView.findViewById(R.id.subscriberview);
+                    TextView subscriberNameTextView = (TextView)tmpView.findViewById(R.id.textViewSubscribername);
+                    subscriberNameTextView.setText(""+tmpsubscriber.getStream().getName().toString());
                     tmpSubView.addView(tmpsubscriber.getView());
+                    tmpView.setVisibility(View.VISIBLE);
 
                     swapSubscriberToFullView = false;
                     return;
@@ -680,6 +712,7 @@ public class TokBoxActivity extends BaseActivity implements
                     mpublisherScreenFrame.setVisibility(View.GONE);
                     publisherFullViewImageView.setVisibility(View.GONE);
                     mfullViewContainer.addView(mPublisher.getView());
+                    userNameTextview.setText(""+mPublisher.getName().toString());
                     swapPublisherToFullView = true;
                     return;
                 }
@@ -697,6 +730,7 @@ public class TokBoxActivity extends BaseActivity implements
                 mSubscribers.add(mSubscriber);
                 mSubscriberStreams.put(stream, mSubscriber);
                 mfullViewContainer.addView(mSubscriber.getView());
+                userNameTextview.setText(""+mSubscriber.getStream().getName().toString());
                 return;
             }
         } catch (Exception ex) {
@@ -1167,4 +1201,31 @@ public class TokBoxActivity extends BaseActivity implements
             }
         }
     };
+
+    public void leaveMeetingDialog()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Do you want to Leave the meeting ?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        disconnectSession();
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.setTitle("Leave ");
+        alert.show();
+    }
+    @Override
+    public void onBackPressed()
+    {
+        //super.onBackPressed();
+        leaveMeetingDialog();
+    }
 }

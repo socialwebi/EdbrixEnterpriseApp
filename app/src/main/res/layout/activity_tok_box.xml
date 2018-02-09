@@ -14,11 +14,31 @@
         android:layout_height="match_parent"
         android:layout_weight="0.35">
 
+        <ImageView
+            android:layout_width="350dp"
+            android:layout_height="100dp"
+            android:src="@drawable/wait"
+            android:padding="1dp"
+            android:layout_gravity="center"/>
+
         <RelativeLayout
             android:id="@+id/fullViewLayout"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:padding="1dp" />
+
+        <TextView
+            android:id="@+id/textViewUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|left"
+            android:text="Name"
+            android:textColor="@color/orange"
+            android:textStyle="bold"
+            android:textSize="15dp"
+            android:padding="5dp"
+            android:ellipsize="end"
+            android:maxLines="1"/>
 
         <LinearLayout
             android:id="@+id/fullViewControlsLayout"
@@ -29,29 +49,31 @@
 
             <ImageView
                 android:id="@+id/stopBtn"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:alpha="0.70"
-                android:background="#ffffff"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:padding="3dp"
                 android:visibility="gone"
                 android:src="@drawable/zm_ic_stop" />
 
             <ImageView
                 android:id="@+id/startBtn"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:alpha="0.70"
-                android:background="#ffffff"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:padding="3dp"
                 android:src="@drawable/record" />
+
+            <ImageView
+                android:id="@+id/recordView"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/record"
+                android:padding="3dp"
+                android:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/zoomView"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:alpha="0.70"
-                android:background="#ffffff"
                 android:padding="3dp"
                 android:src="@drawable/maximize" />
         </LinearLayout>
@@ -88,8 +110,6 @@
             android:visibility="gone"
             android:orientation="horizontal">
 
-
-
         </LinearLayout>
     </FrameLayout>
 
@@ -104,7 +124,7 @@
             android:id="@+id/publisherScreenFrame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="2">
+            android:layout_weight="1.5">
 
             <RelativeLayout
                 android:id="@+id/publisherviewLayout"
@@ -112,13 +132,36 @@
                 android:layout_height="fill_parent"
                 android:padding="1dp" />
 
+            <TextView
+                android:id="@+id/textViewPubliishername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|right"
+                android:text="Publisher"
+                android:textColor="@color/orange"
+                android:textSize="10dp"
+                android:padding="3dp"
+                android:ellipsize="end"
+                android:maxLines="1"/>
+
+            <TextView
+                android:id="@+id/textViewLeaveMeeting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|left"
+                android:text="LEAVE"
+                android:textStyle="bold"
+                android:textColor="@color/red"
+                android:textSize="10dp"
+                android:padding="3dp"
+                android:ellipsize="end"
+                android:maxLines="1"/>
+
             <LinearLayout
                 android:id="@+id/publisherControlLayout"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="30dp"
                 android:layout_gravity="bottom|center"
-                android:alpha="0.70"
-                android:background="#ffffff"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -152,7 +195,7 @@
                     android:layout_weight="1"
                     android:padding="1dp"
                     android:src="@drawable/fullview"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
             </LinearLayout>
         </FrameLayout>

@@ -2,8 +2,8 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="200dp"
-    android:layout_height="200dp"
+    android:layout_width="match_parent"
+    android:layout_height="400dp"
     android:id="@+id/subscriberFrame"
     android:padding="2dp">
 
@@ -17,36 +17,45 @@
         android:adjustViewBounds="true" />
 
     <RelativeLayout
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:id="@+id/subscriberview"/>
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:id="@+id/subscriberview" />
 
-    <TextView
-        android:id="@+id/textViewSubscribername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|center"
-        android:text="Subscriber"
-        android:textColor="@color/colorPrimary"
-        android:textSize="15dp"
-        android:ellipsize="end"
-        android:maxLines="1"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:layout_weight="3"
+        android:background="@drawable/subscriber_item_controls_background">
 
- <!--<ImageView
-        android:id="@+id/toggleSubscriberView"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_weight="1"
-        android:src="@drawable/fullview"
-        android:layout_gravity="top|left"/>-->
+        <ImageView
+            android:id="@+id/toggleSubscriberView"
+            android:layout_width="30dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:src="@drawable/fullview"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:padding="2dp"
+            android:visibility="invisible"/>
+        <TextView
+            android:id="@+id/textViewSubscribername"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Subscriber"
+            android:textAlignment="center"
+            android:textColor="@color/orange"
+            android:textSize="20dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_weight="1"/>
 
-    <ImageView
-        android:id="@+id/toggleAudioSubscriber"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_weight="1"
-        android:src="@drawable/soundon"
-        android:layout_gravity="top|right"
-        android:padding="2dp"/>
-
+        <ImageView
+            android:id="@+id/toggleAudioSubscriber"
+            android:layout_width="30dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:src="@drawable/soundon"
+            android:padding="2dp"/>
+    </LinearLayout>
 </FrameLayout>
