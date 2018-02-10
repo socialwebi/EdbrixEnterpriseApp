@@ -122,11 +122,19 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
         registerForContextMenu(_meeting_detail_recycler);
         _meeting_detail_recycler.setAdapter(adapter);
 
+        if (savedInstanceState == null) {
+            ZoomSDK sdk = ZoomSDK.getInstance();
+            sdk.initialize(context, Constants.APP_KEY, Constants.APP_SECRET, Constants.WEB_DOMAIN, this);
+        } else {
+            registerMeetingServiceListener();
+        }
+
         _meeting_detail_button_connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (meeting.getConnect().equals("1")) {
+                if (meeting.getConnect().equals("1"))
+                {
                     if (meeting.getConnectType().equals("ZOOM")) {
                         meetingID = meeting.getMeetingId();
 
@@ -167,12 +175,7 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
 
         //if ()
 
-        if (savedInstanceState == null) {
-            ZoomSDK sdk = ZoomSDK.getInstance();
-            sdk.initialize(context, Constants.APP_KEY, Constants.APP_SECRET, Constants.WEB_DOMAIN, this);
-        } else {
-            registerMeetingServiceListener();
-        }
+
 
         if (Conditions.isNetworkConnected(context)) {
             showBusyProgress();
@@ -291,7 +294,6 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
             MeetingService meetingService = zoomSDK.getMeetingService();
             meetingService.removeListener(this);
         }
-
         super.onDestroy();
     }
 

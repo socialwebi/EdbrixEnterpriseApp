@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="400dp"
     android:id="@+id/subscriberFrame"
@@ -25,37 +24,41 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:orientation="horizontal"
-        android:layout_weight="3"
-        android:background="@drawable/subscriber_item_controls_background">
+        android:layout_gravity="bottom"
+        android:background="@color/colorBlack"
+        android:alpha="0.60">
 
         <ImageView
             android:id="@+id/toggleSubscriberView"
-            android:layout_width="30dp"
-            android:layout_height="35dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/fullview"
+            android:src="@drawable/maximize"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            android:padding="2dp"
-            android:visibility="invisible"/>
+            android:padding="3dp" />
+
+        <ImageView
+            android:id="@+id/toggleAudioSubscriber"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/soundon"
+            android:padding="3dp"/>
+
         <TextView
             android:id="@+id/textViewSubscribername"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="Subscriber"
             android:textAlignment="center"
             android:textColor="@color/orange"
-            android:textSize="20dp"
+            android:textSize="18dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:layout_gravity="top|left"
+            android:layout_margin="9dp"
             android:layout_weight="1"/>
 
-        <ImageView
-            android:id="@+id/toggleAudioSubscriber"
-            android:layout_width="30dp"
-            android:layout_height="35dp"
-            android:layout_weight="1"
-            android:src="@drawable/soundon"
-            android:padding="2dp"/>
     </LinearLayout>
 </FrameLayout>

@@ -52,7 +52,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import timber.log.Timber;
+import timber.log.Timber;/*
 import us.zoom.sdk.JoinMeetingOptions;
 import us.zoom.sdk.MeetingError;
 import us.zoom.sdk.MeetingEvent;
@@ -60,9 +60,9 @@ import us.zoom.sdk.MeetingService;
 import us.zoom.sdk.MeetingServiceListener;
 import us.zoom.sdk.ZoomError;
 import us.zoom.sdk.ZoomSDK;
-import us.zoom.sdk.ZoomSDKInitializeListener;
+import us.zoom.sdk.ZoomSDKInitializeListener;*/
 
-public class DashboardActivity extends BaseActivity implements ZoomSDKInitializeListener, MeetingServiceListener {
+public class DashboardActivity extends BaseActivity {
 
     private static String DISPLAY_NAME = "User";
     Context context;
@@ -125,12 +125,12 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
         _dashboard_text_all_meetings.setText("No meetings available ");
         _dashboard_text_all_course.setText("No courses available ");
 
-        if (savedInstanceState == null) {
+       /* if (savedInstanceState == null) {
             ZoomSDK sdk = ZoomSDK.getInstance();
             sdk.initialize(this, Constants.APP_KEY, Constants.APP_SECRET, Constants.WEB_DOMAIN, this);
         } else {
             registerMeetingServiceListener();
-        }
+        }*/
 
         courseAdapter = new DashBoardCourseListAdapter(context, courses, new DashBoardCourseListAdapter.DashboardListInterface() {
             @Override
@@ -490,12 +490,12 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
 
     @Override
     public void onDestroy() {
-        ZoomSDK zoomSDK = ZoomSDK.getInstance();
+        /*ZoomSDK zoomSDK = ZoomSDK.getInstance();
 
         if (zoomSDK.isInitialized()) {
             MeetingService meetingService = zoomSDK.getMeetingService();
             meetingService.removeListener(this);
-        }
+        }*/
 
         super.onDestroy();
     }
@@ -515,15 +515,15 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
         }
     }
 
-    private void registerMeetingServiceListener() {
+    /*private void registerMeetingServiceListener() {
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
         MeetingService meetingService = zoomSDK.getMeetingService();
         if (meetingService != null) {
             meetingService.addListener(this);
         }
-    }
+    }*/
 
-    @Override
+   /* @Override
     public void onMeetingEvent(int meetingEvent, int errorCode,
                                int internalErrorCode) {
 
@@ -537,9 +537,9 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
         if (mbPendingStartMeeting && meetingEvent == MeetingEvent.MEETING_DISCONNECTED) {
             mbPendingStartMeeting = false;
         }
-    }
+    }*/
 
-    @Override
+   /* @Override
     public void onZoomSDKInitializeResult(int errorCode, int internalErrorCode) {
         Log.i("TAG", "onZoomSDKInitializeResult, errorCode=" + errorCode + ", internalErrorCode=" + internalErrorCode);
 
@@ -549,10 +549,10 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
             // Toast.makeText(context, "Initialize Zoom SDK successfully.", Toast.LENGTH_LONG).show();
             registerMeetingServiceListener();
         }
-    }
+    }*/
 
 
-    public void onClickBtnJoinMeeting() {
+   /* public void onClickBtnJoinMeeting() {
 
         String meetingPassword = "";
 
@@ -592,7 +592,7 @@ public class DashboardActivity extends BaseActivity implements ZoomSDKInitialize
         int ret = meetingService.joinMeeting(context, meetingNo, DISPLAY_NAME, meetingPassword, opts);
         Log.i("TAG", "onClickBtnJoinMeeting, ret=" + ret);
 
-    }
+    }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -24,9 +24,8 @@ android {
 
         // Enabling multidex support.
         multiDexEnabled true
-
         ndk {
-            abiFilters "armeabi-v7a", "armeabi", "x86"
+            abiFilters "armeabi", "armeabi-v7a"
         }
     }
     buildTypes {
@@ -38,7 +37,6 @@ android {
     }
 
     dexOptions {
-
         javaMaxHeapSize "4g"
     }
     packagingOptions {
@@ -62,8 +60,11 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.google.firebase:firebase-storage:11.6.2'
     implementation 'com.google.firebase:firebase-auth:11.6.2'
-    compile project(':zoomcommonlib')
-    compile project(':zoommobilertc')
+    /*compile project(':zoomcommonlib')
+    compile project(':zoommobilertc')*/
+    compile(name:'zoommobilertc', ext:'aar')
+    compile(name:'zoomcommonlib', ext:'aar')
+
     compile project(':ViewPagerIndicator')
     compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
