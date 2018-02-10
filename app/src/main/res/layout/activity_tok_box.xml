@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -33,13 +32,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
-                    android:text="Leave"
-                    android:textColor="@color/red"
-                    android:textStyle="bold"
-                    android:textSize="20sp"
-                    android:textAlignment="center"
+                    android:layout_marginRight="7dp"
                     android:paddingTop="9dp"
-                    android:layout_marginRight="7dp"/>
+                    android:text="Leave"
+                    android:textAlignment="center"
+                    android:textColor="@color/red"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
             </RelativeLayout>
 
@@ -89,17 +88,39 @@
 
             <LinearLayout
                 android:id="@+id/fullViewControlsLayout"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="top|right"
                 android:orientation="horizontal">
 
+                <TextView
+                    android:id="@+id/currentTimeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.70"
+                    android:background="@color/colorWhiteSmoke"
+                    android:padding="@dimen/app_normal_padding"
+                    android:text="00:00"
+                    android:textColor="@color/red"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/stopBtn"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:padding="3dp"
+                    android:src="@drawable/stop"
+                    android:visibility="gone" />
+
                 <ImageView
                     android:id="@+id/zoomView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
                     android:padding="3dp"
                     android:src="@drawable/maximize" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -138,14 +159,6 @@
                     android:src="@drawable/micon"
                     android:visibility="gone" />
 
-                <ImageView
-                    android:id="@+id/stopBtn"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:padding="3dp"
-                    android:src="@drawable/zm_ic_stop"
-                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/startBtn"
@@ -167,17 +180,6 @@
                 android:textColor="@color/colorWhite"
                 android:textSize="30sp"
                 android:textStyle="bold"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/currentTimeText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:alpha="0.70"
-                android:background="@color/colorWhiteSmoke"
-                android:padding="@dimen/app_normal_padding"
-                android:text="00:00"
-                android:textColor="@color/colorSubText"
                 android:visibility="gone" />
 
             <LinearLayout
@@ -289,13 +291,15 @@
                 android:paddingTop="1dp">
 
                 <RelativeLayout
-                    android:layout_height="match_parent"
-                    android:layout_width="match_parent">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                    <TextView android:layout_height="wrap_content"
+                    <TextView
                         android:layout_width="wrap_content"
-                        android:text="Waiting for Subscribers"
-                        android:layout_centerInParent="true"/>
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="Waiting for Subscribers" />
+
                     <LinearLayout
                         android:id="@+id/subscriberListLinear"
                         android:layout_width="match_parent"
