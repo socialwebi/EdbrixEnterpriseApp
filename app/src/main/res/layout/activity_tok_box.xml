@@ -27,30 +27,55 @@
                 android:visibility="visible">
 
                 <TextView
-                    android:id="@+id/txtVideoList"
+                    android:id="@+id/txtMeetingName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/lnrBtn"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/meetings"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:id="@+id/lnrBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="@string/video"
-                    android:textColor="@color/colorWhite"
-                    android:textStyle="bold"
-                    android:textSize="20sp"
-                    android:textAlignment="center"
-                    android:paddingTop="9dp"
-                    android:layout_marginRight="7dp"/>
+                    android:layout_alignParentEnd="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/textViewLeaveMeeting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:text="@string/leave"
-                    android:layout_marginRight="7dp"
-                    android:paddingTop="9dp"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/txtVideoList"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/app_normal_padding"
+                        android:text="@string/video_library"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
+                    <TextView
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginLeft="@dimen/app_min_margin"
+                        android:layout_marginRight="@dimen/app_min_margin"
+                        android:layout_marginTop="20dp"
+                        android:background="@color/colorWhite" />
+
+                    <TextView
+                        android:id="@+id/textViewLeaveMeeting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/app_normal_padding"
+                        android:text="@string/leave_meeting"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </RelativeLayout>
 
         </android.support.v7.widget.Toolbar>
@@ -70,14 +95,41 @@
             android:layout_height="match_parent"
             android:layout_weight="0.35">
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/app_big_margin"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <ProgressBar
+                    android:id="@+id/login_progress_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/app_normal_margin"
+                    android:indeterminate="true"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/txtLoading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorMainText"
+                    android:textSize="18sp"
+                    android:text="@string/please_wait" />
+
+            </LinearLayout>
+
             <ImageView
                 android:id="@+id/waitImageView"
                 android:layout_width="350dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:padding="25dp"
                 android:layout_marginBottom="15dp"
-                android:src="@drawable/wait" />
+                android:padding="25dp"
+                android:src="@drawable/wait"
+                android:visibility="gone" />
 
             <RelativeLayout
                 android:id="@+id/fullViewLayout"
@@ -96,7 +148,8 @@
                 android:text="Name"
                 android:textColor="@color/orange"
                 android:textSize="18dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="invisible" />
 
             <LinearLayout
                 android:id="@+id/fullViewControlsLayout"
@@ -130,7 +183,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_weight="1"
-                    android:padding="3dp"
+                    android:padding="@dimen/app_min_padding"
                     android:src="@drawable/maximize" />
 
             </LinearLayout>
@@ -288,7 +341,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:padding="2dp"
+                        android:padding="3dp"
                         android:src="@drawable/maximize"
                         android:visibility="visible" />
 
@@ -310,8 +363,9 @@
                         android:id="@+id/textViewSubscriberWait"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/app_normal_margin"
                         android:layout_centerInParent="true"
-                        android:text="Wait" />
+                        android:textSize="15sp"/>
 
                     <LinearLayout
                         android:id="@+id/subscriberListLinear"

@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:padding="@dimen/app_min_padding"
-            android:textColor="@color/actionbarText"
+            android:textColor="@color/colorWhite"
             android:textSize="16sp"
             android:textStyle="bold"
             android:text="vd_.mp4"
@@ -35,7 +35,7 @@
             android:id="@+id/videoDuration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorSubText"
+            android:textColor="@color/colorWhite"
             android:textSize="14sp"
             android:text="00:10"
             android:typeface="monospace" />

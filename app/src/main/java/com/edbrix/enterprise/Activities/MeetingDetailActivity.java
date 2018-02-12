@@ -156,6 +156,7 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
                     } else if (meeting.getConnectType().equals(Constants.availabilityType_TrainingSession)) {
                         Intent tokboxIntent = new Intent(MeetingDetailActivity.this, TokBoxActivity.class);
                         tokboxIntent.putExtra(Constants.TolkBox_MeetingId, meeting.getId());
+                        tokboxIntent.putExtra(Constants.TolkBox_MeetingName, meeting.getTitle());
                         tokboxIntent.putExtra(Constants.TolkBox_SessionId, meeting.getMeetingId());
                         tokboxIntent.putExtra(Constants.TolkBox_Token, meeting.getMeetingToken());
                         startActivity(tokboxIntent);

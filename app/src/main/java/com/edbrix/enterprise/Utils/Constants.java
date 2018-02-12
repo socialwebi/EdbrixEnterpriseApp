@@ -32,6 +32,7 @@ public class Constants {
     public final static String TolkBox_Token= "Token";
     public final static String TolkBox_SessionId= "SessionId";
     public final static String TolkBox_MeetingId= "MeetingId";
+    public final static String TolkBox_MeetingName= "MeetingName";
     public final static String FileType_Playwire= "playwire";
     public final static String FileType_Document= "document";
 

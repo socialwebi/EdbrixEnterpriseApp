@@ -43,6 +43,8 @@
 
     <string name="schedules">Schedules</string>
     <string name="meetings">Meetings</string>
+    <string name="please_wait">Please wait...</string>
+    <string name="plz_wait_host_start_meeting">Please wait while host start meeting...</string>
     <string name="category">Category</string>
     <string name="meeting_details">Meeting Details</string>
     <string name="create_live_course">Create Course</string>
@@ -136,7 +138,9 @@
     <string name="update">Update</string>
     <string name="audio">Audio</string>
     <string name="video">Video</string>
+    <string name="video_library">Video Library</string>
     <string name="leave">Leave</string>
+    <string name="leave_meeting">Leave Meeting</string>
     <string name="enter_first_name">Enter first name</string>
     <string name="enter_last_name">Enter last name</string>
     <string name="enter_your_tagline">Enter your tagline</string>
