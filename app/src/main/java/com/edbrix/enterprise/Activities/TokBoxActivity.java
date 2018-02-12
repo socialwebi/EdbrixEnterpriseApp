@@ -30,6 +30,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -108,7 +109,7 @@ public class TokBoxActivity extends BaseActivity implements
     public LinearLayout mFullViewControlsLinearLayout;
     public FrameLayout mpublisherScreenFrame;
     public Toolbar toolbar;
-    public TextView publisherNameTextView, userNameTextview, leaveMeetingTextView, txtVideoList;
+    public TextView publisherNameTextView, userNameTextview, leaveMeetingTextView, txtVideoList,subscriberwaitTextView;
 
     boolean swapSubscriberToFullView = false;
     boolean swapPublisherToFullView = false;
@@ -187,6 +188,7 @@ public class TokBoxActivity extends BaseActivity implements
         userNameTextview = (TextView) findViewById(R.id.textViewUsername);
         leaveMeetingTextView = (TextView) findViewById(R.id.textViewLeaveMeeting);
         txtVideoList = (TextView) findViewById(R.id.txtVideoList);
+        subscriberwaitTextView = (TextView)findViewById(R.id.textViewSubscriberWait);
 
         startBtn = (ImageView) findViewById(R.id.startBtn);
         stopBtn = (ImageView) findViewById(R.id.stopBtn);
@@ -196,6 +198,8 @@ public class TokBoxActivity extends BaseActivity implements
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReferenceFromUrl("gs://edbrixcbuilder.appspot.com");
         meetingId = getIntent().getStringExtra(Constants.TolkBox_MeetingId);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);/////Handle ScreenOut Time
 
         swapCamImageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -218,7 +222,18 @@ public class TokBoxActivity extends BaseActivity implements
         toggleAudioImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                togglePublisherAudio();
+
+            //togglePublisherAudio();
+            if (mPublisher == null) {
+                return;
+            }
+            if (mPublisher.getPublishAudio() == true) {
+                mPublisher.setPublishAudio(false);
+                toggleAudioImageView.setImageResource(R.drawable.micoff);
+            } else {
+                mPublisher.setPublishAudio(true);
+                toggleAudioImageView.setImageResource(R.drawable.micon);
+            }
             }
         });
         fullViewToggleAudioImageView.setOnClickListener(new View.OnClickListener() {
@@ -236,7 +251,18 @@ public class TokBoxActivity extends BaseActivity implements
         toggleVideoImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                togglePublisherVideo();
+
+            //togglePublisherVideo();
+            if (mPublisher == null) {
+                return;
+            }
+            if (mPublisher.getPublishVideo() == true) {
+                mPublisher.setPublishVideo(false);
+                toggleVideoImageView.setImageResource(R.drawable.videooff);
+            } else {
+                mPublisher.setPublishVideo(true);
+                toggleVideoImageView.setImageResource(R.drawable.videoon);
+            }
             }
         });
         fullViewToggleVideoImageView.setOnClickListener(new View.OnClickListener() {
@@ -339,14 +365,11 @@ public class TokBoxActivity extends BaseActivity implements
     @Override
     protected void onStart() {
         Log.d(TAG, "onStart");
-
         super.onStart();
     }
-
     @Override
     protected void onRestart() {
         Log.d(TAG, "onRestart");
-
         super.onRestart();
     }
 
@@ -410,16 +433,13 @@ public class TokBoxActivity extends BaseActivity implements
     @Override
     protected void onStop() {
         Log.d(TAG, "onPause");
-
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
         Log.d(TAG, "onDestroy");
-
         disconnectSession();
-
         super.onDestroy();
     }
 
@@ -482,6 +502,7 @@ public class TokBoxActivity extends BaseActivity implements
 
         ///New
         if (!SettingsMy.getActiveUser().getUserType().equals("L")) {
+            subscriberwaitTextView.setText("Waiting for participant");
             startBtn.setVisibility(View.VISIBLE);
             fullViewSwapCamImageView.setVisibility(View.VISIBLE);
             fullViewToggleVideoImageView.setVisibility(View.VISIBLE);
@@ -494,12 +515,17 @@ public class TokBoxActivity extends BaseActivity implements
             userNameTextview.setText("" + mPublisher.getName());
             swapPublisherToFullView = true;
         } else {
+            subscriberwaitTextView.setText("Waiting for other participant");
             fullViewToggleAudioImageView.setVisibility(View.VISIBLE);
             publisherFullViewImageView.setVisibility(View.GONE);
             waitingImageView.setImageResource(R.drawable.wait_host);
             mPublisherViewContainer.addView(mPublisher.getView());
+
+            userNameTextview.setVisibility(View.GONE);
+            mFullViewControlsLinearLayout.setVisibility(View.GONE);
         }
         mSession.publish(mPublisher);
+        publisherNameTextView.setText("" + mPublisher.getName().toString());
     }
 
     @Override
@@ -787,7 +813,11 @@ public class TokBoxActivity extends BaseActivity implements
     public void userView(Session session, Stream stream) {
 
         try {
-            if (stream.getConnection().getData().equals("Host")) {
+            if (stream.getConnection().getData().equals("Host"))
+            {
+                userNameTextview.setVisibility(View.VISIBLE);
+                mFullViewControlsLinearLayout.setVisibility(View.VISIBLE);
+
                 Subscriber mSubscriber = new Subscriber.Builder(TokBoxActivity.this, stream).build();
                 mSubscriber.setStyle(BaseVideoRenderer.STYLE_VIDEO_SCALE, BaseVideoRenderer.STYLE_VIDEO_FILL);
                 mSession.subscribe(mSubscriber);
@@ -1268,10 +1298,6 @@ public class TokBoxActivity extends BaseActivity implements
                     // Delay 1s before next call
                     handler.postDelayed(this, 1000);
                 }
-
-//                if (recordTime == slideMaxTimeDuration) {
-//                    stopBtn.callOnClick();
-//                }
             }
         }
     };
@@ -1303,16 +1329,13 @@ public class TokBoxActivity extends BaseActivity implements
             public void onOptionPressed(String optionType) {
 
                 getAlertDialogManager().setAlertDialogCancellable(false);
-                getAlertDialogManager().Dialog("Video Recording", "Continue to share video recording?", "Continue", "Cancel", new AlertDialogManager.onTwoButtonClickListner() {
+                getAlertDialogManager().Dialog("Video Recording", "Continue to share video recording ?", "Continue", "Cancel", new AlertDialogManager.onTwoButtonClickListner() {
+
                     @Override
-                    public void onNegativeClick() {
-
-                    }
-
+                    public void onNegativeClick() { }
                     @Override
                     public void onPositiveClick() {
                         uploadToEdbrixMyFiles();
-
                     }
                 }).show();
             }
