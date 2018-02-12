@@ -47,7 +47,7 @@ import com.edbrix.enterprise.Models.FileData;
 import com.edbrix.enterprise.Models.User;
 import com.edbrix.enterprise.R;
 import com.edbrix.enterprise.Utils.Constants;
-import com.edbrix.enterprise.Utils.VideoPlayerDialog;
+import com.edbrix.enterprise.Utils.VideoPlayerWithListDialog;
 import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.app.Config;
 import com.edbrix.enterprise.baseclass.BaseActivity;
@@ -107,8 +107,8 @@ public class TokBoxActivity extends BaseActivity implements
     private LinearLayout mSubscriberlistLinearLayout, mPublisherControlsLinearLayout, mRightSideLinearLayout;
     public LinearLayout mFullViewControlsLinearLayout;
     public FrameLayout mpublisherScreenFrame;
-    public TextView publisherNameTextView, userNameTextview, leaveMeetingTextView;
     public Toolbar toolbar;
+    public TextView publisherNameTextView, userNameTextview, leaveMeetingTextView, txtVideoList;
 
     boolean swapSubscriberToFullView = false;
     boolean swapPublisherToFullView = false;
@@ -186,6 +186,7 @@ public class TokBoxActivity extends BaseActivity implements
         publisherNameTextView = (TextView) findViewById(R.id.textViewPubliishername);
         userNameTextview = (TextView) findViewById(R.id.textViewUsername);
         leaveMeetingTextView = (TextView) findViewById(R.id.textViewLeaveMeeting);
+        txtVideoList = (TextView) findViewById(R.id.txtVideoList);
 
         startBtn = (ImageView) findViewById(R.id.startBtn);
         stopBtn = (ImageView) findViewById(R.id.stopBtn);
@@ -324,6 +325,13 @@ public class TokBoxActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 leaveMeetingDialog();
+            }
+        });
+
+        txtVideoList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showVideoList();
             }
         });
     }
@@ -889,8 +897,8 @@ public class TokBoxActivity extends BaseActivity implements
                 Log.v(TAG, "Stopping Recording");
                 stopScreenSharing();
                 showToast("Recording is done. Showing recorded video preview.", Toast.LENGTH_SHORT);
-                VideoPlayerDialog videoPlayerDialog = new VideoPlayerDialog(mContext, R.style.DialogAnimation, new FileData(screenRecordOutputFile));
-                videoPlayerDialog.setOnActionButtonListener(new VideoPlayerDialog.OnActionButtonListener() {
+                VideoPlayerWithListDialog videoPlayerDialog = new VideoPlayerWithListDialog(mContext, R.style.DialogAnimation, new FileData(screenRecordOutputFile));
+                videoPlayerDialog.setOnActionButtonListener(new VideoPlayerWithListDialog.OnActionButtonListener() {
                     @Override
                     public void onOptionPressed(String optionType) {
 
@@ -1286,6 +1294,30 @@ public class TokBoxActivity extends BaseActivity implements
         AlertDialog alert = builder.create();
         alert.setTitle("Leave ");
         alert.show();
+    }
+
+    private void showVideoList() {
+        VideoPlayerWithListDialog videoPlayerDialog = new VideoPlayerWithListDialog(mContext, R.style.DialogAnimation, null);
+        videoPlayerDialog.setOnActionButtonListener(new VideoPlayerWithListDialog.OnActionButtonListener() {
+            @Override
+            public void onOptionPressed(String optionType) {
+
+                getAlertDialogManager().setAlertDialogCancellable(false);
+                getAlertDialogManager().Dialog("Video Recording", "Continue to share video recording?", "Continue", "Cancel", new AlertDialogManager.onTwoButtonClickListner() {
+                    @Override
+                    public void onNegativeClick() {
+
+                    }
+
+                    @Override
+                    public void onPositiveClick() {
+                        uploadToEdbrixMyFiles();
+
+                    }
+                }).show();
+            }
+        });
+        videoPlayerDialog.showMe();
     }
 
     @Override

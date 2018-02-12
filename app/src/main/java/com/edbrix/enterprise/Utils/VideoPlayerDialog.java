@@ -15,7 +15,7 @@ import com.edbrix.enterprise.Models.FileData;
 import com.edbrix.enterprise.R;
 
 /**
- * Created by ganeshchaudhari on 09/02/18.
+ * Created by rajk on 09/02/18.
  */
 
 public class VideoPlayerDialog extends Dialog implements EasyVideoCallback {

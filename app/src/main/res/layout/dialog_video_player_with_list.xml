@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+
+    <com.afollestad.easyvideoplayer.EasyVideoPlayer
+        android:id="@+id/videoPlayer"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:visibility="invisible"
+        app:evp_autoFullscreen="false"
+        app:evp_autoPlay="true"
+        app:evp_customLabelText="Custom label text if rightAction is customLabel"
+        app:evp_disableControls="false"
+        app:evp_hideControlsOnPlay="false"
+        app:evp_leftAction="restart"
+        app:evp_loop="false"
+        app:evp_pauseDrawable="@drawable/evp_action_pause"
+        app:evp_playDrawable="@drawable/evp_action_play"
+        app:evp_restartDrawable="@drawable/restart_white"
+        app:evp_retryText="@string/evp_retry"
+        app:evp_rightAction="submit"
+        app:evp_submitText="@string/share"
+        app:evp_themeColor="@color/ColorBlackTransparent" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/videoList"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/video_list_item"/>
+
+
+</LinearLayout>
