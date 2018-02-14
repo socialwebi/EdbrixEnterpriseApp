@@ -4,36 +4,96 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:background="@color/colorMainText"
+    android:orientation="vertical">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <com.afollestad.easyvideoplayer.EasyVideoPlayer
-        android:id="@+id/videoPlayer"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
-        android:visibility="invisible"
-        app:evp_autoFullscreen="false"
-        app:evp_autoPlay="true"
-        app:evp_customLabelText="Custom label text if rightAction is customLabel"
-        app:evp_disableControls="false"
-        app:evp_hideControlsOnPlay="false"
-        app:evp_leftAction="restart"
-        app:evp_loop="false"
-        app:evp_pauseDrawable="@drawable/evp_action_pause"
-        app:evp_playDrawable="@drawable/evp_action_play"
-        app:evp_restartDrawable="@drawable/restart_white"
-        app:evp_retryText="@string/evp_retry"
-        app:evp_rightAction="submit"
-        app:evp_submitText="@string/share"
-        app:evp_themeColor="@color/ColorBlackTransparent" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_margin="@dimen/app_normal_margin"
+            android:text="Video Library"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp" />
 
+        <ImageView
+            android:id="@+id/closeBtn"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/app_min_margin"
+            android:padding="@dimen/app_min_padding"
+            android:src="@drawable/cancel_white_circle" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/videoList"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/video_list_item"/>
+    </RelativeLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/app_big_margin"
+                    android:text="Preview Here"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:text="Select video from list to preview"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <com.afollestad.easyvideoplayer.EasyVideoPlayer
+                android:id="@+id/videoPlayer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible"
+                app:evp_autoFullscreen="false"
+                app:evp_autoPlay="true"
+                app:evp_customLabelText="Custom label text if rightAction is customLabel"
+                app:evp_disableControls="false"
+                app:evp_hideControlsOnPlay="false"
+                app:evp_leftAction="restart"
+                app:evp_loop="false"
+                app:evp_pauseDrawable="@drawable/evp_action_pause"
+                app:evp_playDrawable="@drawable/evp_action_play"
+                app:evp_restartDrawable="@drawable/restart_white"
+                app:evp_retryText="@string/evp_retry"
+                app:evp_rightAction="submit"
+                app:evp_submitText="@string/share"
+                app:evp_themeColor="@color/ColorBlackTransparent" />
+
+        </FrameLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/videoList"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/video_list_item" />
+
+    </LinearLayout>
 </LinearLayout>

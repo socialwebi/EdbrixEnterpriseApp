@@ -24,6 +24,41 @@ public class ToastMessage extends ViewGroup {
         mContext = context;
     }
 
+    public static ToastMessage getInstance(Context context){
+        ToastMessage toastMessage = new ToastMessage(context);
+        return toastMessage;
+    }
+
+    public void showToast(String message) {
+        try {
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View toastLayout = inflater.inflate(R.layout.toast_layout,
+                    (ViewGroup) findViewById(R.id.toast_layout_root));
+
+
+            ImageView image = (ImageView) toastLayout.findViewById(R.id.image);
+//            image.setImageResource(R.drawable.white);
+            image.setVisibility(GONE);
+            TextView text = (TextView) toastLayout.findViewById(R.id.text);
+            text.setText(message);
+
+            DisplayMetrics displaymetrics = new DisplayMetrics();
+            ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+            int height = displaymetrics.heightPixels;
+            int width = displaymetrics.widthPixels;
+
+            toast = new Toast(mContext);
+            toast.setGravity(Gravity.BOTTOM, 0, height / 4);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(toastLayout);
+            toast.show();
+        } catch (Exception e) {
+//            Utility.saveExceptionDetails(mContext, e);
+            e.printStackTrace();
+        }
+
+    }
+
     public void showToastMsg(String message, int timeDuration) {
         try {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

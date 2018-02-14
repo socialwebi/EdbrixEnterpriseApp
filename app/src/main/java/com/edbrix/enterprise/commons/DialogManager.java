@@ -15,6 +15,11 @@ public class DialogManager {
     private AlertDialogManager alertDialogManager;
     private int activeBusyTasks = 0;
 
+    public static DialogManager getInstance(Context context){
+        DialogManager dialogManager = new DialogManager(context);
+        return dialogManager;
+    }
+
     public DialogManager(Context mContext) {
         this.mContext = mContext;
     }

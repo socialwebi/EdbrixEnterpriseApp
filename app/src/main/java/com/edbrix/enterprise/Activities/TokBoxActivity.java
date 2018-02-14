@@ -55,7 +55,9 @@ import com.edbrix.enterprise.Volley.SettingsMy;
 import com.edbrix.enterprise.app.Config;
 import com.edbrix.enterprise.baseclass.BaseActivity;
 import com.edbrix.enterprise.commons.AlertDialogManager;
+import com.edbrix.enterprise.commons.DialogManager;
 import com.edbrix.enterprise.commons.GlobalMethods;
+import com.edbrix.enterprise.commons.ToastMessage;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -85,7 +87,7 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class TokBoxActivity extends BaseActivity implements
+public class TokBoxActivity extends AppCompatActivity implements
         EasyPermissions.PermissionCallbacks,
         Publisher.PublisherListener,
         Session.SessionListener {
@@ -98,6 +100,8 @@ public class TokBoxActivity extends BaseActivity implements
 
     private Session mSession;
     private Publisher mPublisher;
+    public DialogManager dialogManager;
+    public ToastMessage toastMessage;
 
     private ArrayList<Subscriber> mSubscribers = new ArrayList<Subscriber>();
     private HashMap<Stream, Subscriber> mSubscriberStreams = new HashMap<Stream, Subscriber>();
@@ -165,8 +169,10 @@ public class TokBoxActivity extends BaseActivity implements
         Log.d(TAG, "onCreate");
 
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_tok_box);
+
+        dialogManager = DialogManager.getInstance(TokBoxActivity.this);
+        toastMessage = ToastMessage.getInstance(TokBoxActivity.this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -407,8 +413,8 @@ public class TokBoxActivity extends BaseActivity implements
 
                 final String fileName = intent.getStringExtra("filename");
 //                showToast("Push notification: " + fileName);
-                getAlertDialogManager().setAlertDialogCancellable(false);
-                getAlertDialogManager().Dialog("Download Video", "Continue to download video", "Continue", "Exit", new AlertDialogManager.onTwoButtonClickListner() {
+                dialogManager.getAlertDialogManager().setAlertDialogCancellable(false);
+                dialogManager.getAlertDialogManager().Dialog("Download Video", "Continue to download video", "Continue", "Exit", new AlertDialogManager.onTwoButtonClickListner() {
                     @Override
                     public void onNegativeClick() {
 
@@ -891,7 +897,8 @@ public class TokBoxActivity extends BaseActivity implements
         switch (requestCode) {
             case REQUEST_CODE:
                 if (resultCode != RESULT_OK) {
-                    showToast("Screen Cast Permission Denied");
+//                    showToast("Screen Cast Permission Denied");
+                   toastMessage.showToast("Screen Cast Permission Denied");
 //            mToggleButton.setChecked(false);
                     stopBtn.setVisibility(View.GONE);
                     startBtn.setVisibility(View.VISIBLE);
@@ -915,7 +922,7 @@ public class TokBoxActivity extends BaseActivity implements
                     mMediaRecorder.reset();
                     stopScreenSharing();
                     setResult(REQUEST_CODE);
-                    showToast("Something went wrong. Please try again later..!");
+                    toastMessage.showToast("Something went wrong. Please try again later..!");
                     finish();
                 }
 
@@ -940,7 +947,7 @@ public class TokBoxActivity extends BaseActivity implements
                 Log.v(TAG, "Stopping Recording");
                 stopScreenSharing();
 //                showToast("Recording is done. Showing recorded video preview.", Toast.LENGTH_SHORT);
-                final MaterialDialog dialog = new MaterialDialog.Builder(mContext)
+                final MaterialDialog dialog = new MaterialDialog.Builder(TokBoxActivity.this)
                         .customView(R.layout.share_preview_dialog, true)
                         .cancelable(false)
                         .build();
@@ -951,13 +958,14 @@ public class TokBoxActivity extends BaseActivity implements
                 btnPreview.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        VideoPlayerWithListDialog videoPlayerDialog = new VideoPlayerWithListDialog(mContext, R.style.DialogAnimation, new FileData(screenRecordOutputFile));
+                        dialog.dismiss();
+                        VideoPlayerWithListDialog videoPlayerDialog = new VideoPlayerWithListDialog(TokBoxActivity.this, R.style.DialogAnimation, new FileData(screenRecordOutputFile));
                         videoPlayerDialog.setOnActionButtonListener(new VideoPlayerWithListDialog.OnActionButtonListener() {
                             @Override
                             public void onOptionPressed(String optionType) {
 
-                                getAlertDialogManager().setAlertDialogCancellable(false);
-                                getAlertDialogManager().Dialog("Video Recording", "Continue to share video recording ?", "Continue", "Cancel", new AlertDialogManager.onTwoButtonClickListner() {
+                                dialogManager.getAlertDialogManager().setAlertDialogCancellable(false);
+                                dialogManager.getAlertDialogManager().Dialog("Video Recording", "Continue to share video recording ?", "Continue", "Cancel", new AlertDialogManager.onTwoButtonClickListner() {
                                     @Override
                                     public void onNegativeClick() {
 
@@ -999,7 +1007,7 @@ dialog.dismiss();
         } catch (RuntimeException stopRuntimeException) {
             mMediaRecorder.reset();
             stopScreenSharing();
-            showToast("Meeting recording is not done successfully.", Toast.LENGTH_SHORT);
+            toastMessage.showToast("Meeting recording is not done successfully.");
         }
     }
 
@@ -1128,7 +1136,7 @@ dialog.dismiss();
      */
     private void uploadToEdbrixMyFiles() {
         try {
-            showBusyProgress();
+            dialogManager.showBusyProgress();
             final FileData fileData = new FileData(screenRecordOutputFile);
             final String userId;
             final String accessToken;
@@ -1164,7 +1172,7 @@ dialog.dismiss();
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.v("Upload", "Fail Exception :" + e.getMessage());
-                        hideBusyProgress();
+                        dialogManager.hideBusyProgress();
 //                        btnUpload.setEnabled(true);
 //                        btnUpload.setVisibility(View.VISIBLE);
 //                        btnCancel.setVisibility(View.GONE);
@@ -1182,12 +1190,12 @@ dialog.dismiss();
                 });
 
             } else {
-                showToast("No file found");
-                hideBusyProgress();
+                toastMessage.showToast("No file found");
+                dialogManager.hideBusyProgress();
             }
         } catch (Exception e) {
             Log.v("VideoDetailsActivity", e.getMessage());
-            hideBusyProgress();
+            dialogManager.hideBusyProgress();
         }
 
     }
@@ -1216,29 +1224,29 @@ dialog.dismiss();
             JsonObjectRequest shareRecording = new JsonObjectRequest(Request.Method.POST, Constants.sendMeetingNotification, new JSONObject(requestMap), new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    hideBusyProgress();
+                    dialogManager.hideBusyProgress();
                     Log.v("Volley Response", response.toString());
                     try {
                         if (response != null) {
                             if (response.has("success")) {
-                                showToast("Video recording shared successfully.");
+                                toastMessage.showToast("Video recording shared successfully.");
                             } else if (response.has("Error")) {
-                                showToast("Error occurred while sharing video recording.");
+                                toastMessage.showToast("Error occurred while sharing video recording.");
                             }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        hideBusyProgress();
+                        dialogManager.hideBusyProgress();
                         Log.v("Volley Excep", e.getMessage());
-                        showToast(getResources().getString(R.string.error_something_wrong));
+                        toastMessage.showToast(getResources().getString(R.string.error_something_wrong));
                     }
                 }
 
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    hideBusyProgress();
-                    showToast(SettingsMy.getErrorMessage(error));
+                    dialogManager.hideBusyProgress();
+                    toastMessage.showToast(SettingsMy.getErrorMessage(error));
                 }
 
             }) {
@@ -1257,7 +1265,7 @@ dialog.dismiss();
 
         } catch (Exception e) {
             Log.v("Excep", e.getMessage());
-            showToast(getResources().getString(R.string.error_something_wrong));
+            toastMessage.showToast(getResources().getString(R.string.error_something_wrong));
         }
     }
 
@@ -1268,8 +1276,8 @@ dialog.dismiss();
      */
     public void downloadVideoFromNotification(String fileName) {
         try {
-            showBusyProgress();
-            final File localFile = new File(GlobalMethods.getAppVideoStorageDirectory(mContext).getPath() + "/" + fileName);
+            dialogManager.showBusyProgress();
+            final File localFile = new File(GlobalMethods.getAppVideoStorageDirectory(TokBoxActivity.this).getPath() + "/" + fileName);
             if (localFile.createNewFile()) {
                 String userId;
                 User activeUser = SettingsMy.getActiveUser();
@@ -1280,10 +1288,10 @@ dialog.dismiss();
                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                                hideBusyProgress();
+                                dialogManager.hideBusyProgress();
 //                                showToast("File downloaded successfully..");
-                                getAlertDialogManager().setAlertDialogCancellable(false);
-                                getAlertDialogManager().Dialog("Video", "Video downloaded successfully. Continue to play video ?", "Continue", "Exit", new AlertDialogManager.onTwoButtonClickListner() {
+                                dialogManager.getAlertDialogManager().setAlertDialogCancellable(false);
+                                dialogManager.getAlertDialogManager().Dialog("Video", "Video downloaded successfully. Continue to play video ?", "Continue", "Exit", new AlertDialogManager.onTwoButtonClickListner() {
                                     @Override
                                     public void onNegativeClick() {
 
@@ -1296,13 +1304,13 @@ dialog.dismiss();
                                             videoDetail.putExtra("FileData", new FileData(localFile));
                                             startActivity(videoDetail);*/
 
-                                            VideoPlayerWithListDialog videoPlayerDialog = new VideoPlayerWithListDialog(mContext, R.style.DialogAnimation, new FileData(localFile));
+                                            VideoPlayerWithListDialog videoPlayerDialog = new VideoPlayerWithListDialog(TokBoxActivity.this, R.style.DialogAnimation, new FileData(localFile));
                                             videoPlayerDialog.setOnActionButtonListener(new VideoPlayerWithListDialog.OnActionButtonListener() {
                                                 @Override
                                                 public void onOptionPressed(String optionType) {
 
-                                                    getAlertDialogManager().setAlertDialogCancellable(false);
-                                                    getAlertDialogManager().Dialog("Video Recording", "Continue to share video recording?", "Continue", "Cancel", new AlertDialogManager.onTwoButtonClickListner() {
+                                                    dialogManager.getAlertDialogManager().setAlertDialogCancellable(false);
+                                                    dialogManager.getAlertDialogManager().Dialog("Video Recording", "Continue to share video recording?", "Continue", "Cancel", new AlertDialogManager.onTwoButtonClickListner() {
                                                         @Override
                                                         public void onNegativeClick() {
 
@@ -1326,8 +1334,8 @@ dialog.dismiss();
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        hideBusyProgress();
-                        showToast("Error found..");
+                        dialogManager.hideBusyProgress();
+                        toastMessage.showToast("Error found..");
                         // Handle failed download
                         // ...
                     }
@@ -1335,8 +1343,8 @@ dialog.dismiss();
             }
 
         } catch (Exception e) {
-            hideBusyProgress();
-            showToast("Exception found.." + e.getMessage());
+            dialogManager.hideBusyProgress();
+            toastMessage.showToast("Exception found.." + e.getMessage());
         }
     }
 
@@ -1392,13 +1400,13 @@ dialog.dismiss();
     }
 
     private void showVideoList() {
-        VideoPlayerWithListDialog videoPlayerDialog = new VideoPlayerWithListDialog(mContext, R.style.DialogAnimation, null);
+        VideoPlayerWithListDialog videoPlayerDialog = new VideoPlayerWithListDialog(TokBoxActivity.this, R.style.DialogAnimation, null);
         videoPlayerDialog.setOnActionButtonListener(new VideoPlayerWithListDialog.OnActionButtonListener() {
             @Override
             public void onOptionPressed(String optionType) {
 
-                getAlertDialogManager().setAlertDialogCancellable(false);
-                getAlertDialogManager().Dialog("Video Recording", "Continue to share video recording?", "Continue", "Cancel", new AlertDialogManager.onTwoButtonClickListner() {
+                dialogManager.getAlertDialogManager().setAlertDialogCancellable(false);
+                dialogManager.getAlertDialogManager().Dialog("Video Recording", "Continue to share video recording?", "Continue", "Cancel", new AlertDialogManager.onTwoButtonClickListner() {
                     @Override
                     public void onNegativeClick() { }
                     @Override

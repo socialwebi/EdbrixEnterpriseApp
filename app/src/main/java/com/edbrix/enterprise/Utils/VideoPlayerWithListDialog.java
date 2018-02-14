@@ -3,6 +3,7 @@ package com.edbrix.enterprise.Utils;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Context;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.afollestad.easyvideoplayer.EasyVideoCallback;
 import com.afollestad.easyvideoplayer.EasyVideoPlayer;
@@ -48,6 +50,8 @@ public class VideoPlayerWithListDialog extends Dialog implements EasyVideoCallba
 
     private OnActionButtonListener onActionButtonListener;
 
+    private ImageView closeBtn;
+
     public interface OnActionButtonListener {
         void onOptionPressed(String optionType);
     }
@@ -69,6 +73,13 @@ public class VideoPlayerWithListDialog extends Dialog implements EasyVideoCallba
         super.onCreate(savedInstanceState);
         videoPlayer = (EasyVideoPlayer) findViewById(R.id.videoPlayer);
         recyclerViewVideoList = (RecyclerView) findViewById(R.id.videoList);
+        closeBtn = (ImageView)findViewById(R.id.closeBtn);
+        closeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
 
         // Sets the callback to this Activity, since it inherits EasyVideoCallback
         videoPlayer.setCallback(this);
