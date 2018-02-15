@@ -143,6 +143,7 @@ public class TokBoxActivity extends AppCompatActivity implements
     private int countDownTime;
     private int countDownInterval;
     private TextView countDownTimerText;
+    private TextView infoTimerText;
     private TextView currentTimeText;
     private TextView txtMeetingName;
     private TextView txtLoading;
@@ -211,6 +212,7 @@ public class TokBoxActivity extends AppCompatActivity implements
         startBtn = (ImageView) findViewById(R.id.startBtn);
         stopBtn = (ImageView) findViewById(R.id.stopBtn);
         countDownTimerText = (TextView) findViewById(R.id.countDownTimerText);
+        infoTimerText = (TextView) findViewById(R.id.infoTimerText);
         currentTimeText = (TextView) findViewById(R.id.currentTimeText);
         progressText = (TextView) findViewById(R.id.progressText);
 
@@ -347,6 +349,7 @@ public class TokBoxActivity extends AppCompatActivity implements
                     zoomImageView.callOnClick();
 
                 zoomImageView.setVisibility(View.GONE);
+                infoTimerText.setVisibility(View.VISIBLE);
                 countDownTimerText.setVisibility(View.VISIBLE);
                 myCountDownTimer.start();
             }
@@ -1183,6 +1186,7 @@ public class TokBoxActivity extends AppCompatActivity implements
         public void onFinish() {
             countDownTimerText.setText("0");
             countDownTimerText.setVisibility(View.GONE);
+            infoTimerText.setVisibility(View.GONE);
             stopBtn.setVisibility(View.VISIBLE);
             onToggleScreenShare(true);
         }

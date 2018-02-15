@@ -143,6 +143,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/app_normal_margin"
                     android:indeterminate="true"
+                    android:theme="@style/AppTheme"
                     android:visibility="visible" />
 
                 <TextView
@@ -269,6 +270,18 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/infoTimerText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:paddingTop="@dimen/app_big_padding"
+                android:text="Starting to record meeting..."
+                android:textColor="@color/whitesmoke"
+                android:background="@color/black_semi_transparent"
+                android:visibility="gone"
+                android:textSize="16sp" />
+
+            <TextView
                 android:id="@+id/countDownTimerText"
                 android:layout_width="52dp"
                 android:layout_height="52dp"
@@ -279,6 +292,8 @@
                 android:textSize="30sp"
                 android:textStyle="bold"
                 android:visibility="gone" />
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
