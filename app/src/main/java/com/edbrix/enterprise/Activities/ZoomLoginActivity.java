@@ -21,8 +21,8 @@ import us.zoom.sdk.ZoomAuthenticationError;
 import us.zoom.sdk.ZoomSDK;
 import us.zoom.sdk.ZoomSDKAuthenticationListener;
 
-public class ZoomLoginActivity extends BaseActivity implements ZoomSDKAuthenticationListener, View.OnClickListener {
-
+public class ZoomLoginActivity extends BaseActivity implements ZoomSDKAuthenticationListener, View.OnClickListener
+{
     Context context;
     String meetingNo;
     private EditText mEdtUserName;
@@ -31,7 +31,8 @@ public class ZoomLoginActivity extends BaseActivity implements ZoomSDKAuthentica
     private View mProgressPanel;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_zoom_login);
 
@@ -65,7 +66,6 @@ public class ZoomLoginActivity extends BaseActivity implements ZoomSDKAuthentica
     @Override
     protected void onResume() {
         super.onResume();
-
         ZoomSDK zoomSDK = ZoomSDK.getInstance();
         if (zoomSDK.isInitialized()) {
             zoomSDK.addAuthenticationListener(this);
@@ -137,7 +137,6 @@ public class ZoomLoginActivity extends BaseActivity implements ZoomSDKAuthentica
 //		opts.no_meeting_error_message = true;
 
         int ret = meetingService.startMeeting(ZoomLoginActivity.this, meetingNo, opts);
-
         Log.i("TAG", "onClickBtnLoginUserStart, ret=" + ret);
     }
 

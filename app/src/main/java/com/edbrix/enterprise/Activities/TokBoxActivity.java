@@ -47,6 +47,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.edbrix.enterprise.Application;
 import com.edbrix.enterprise.Models.FileData;
+import com.edbrix.enterprise.Models.Meeting;
 import com.edbrix.enterprise.Models.User;
 import com.edbrix.enterprise.R;
 import com.edbrix.enterprise.Utils.Constants;
@@ -121,6 +122,7 @@ public class TokBoxActivity extends AppCompatActivity implements
     boolean swapPublisherToFullView = false;
     boolean togglePublisherFullScreen = false;
     public static int swapPos;
+    Meeting meeting;
 
     //public String Role="Host";
 
@@ -520,7 +522,6 @@ public class TokBoxActivity extends AppCompatActivity implements
 
         ///New
         if (!SettingsMy.getActiveUser().getUserType().equals("L")) {
-            subscriberwaitTextView.setText("Waiting for participant");
             startBtn.setVisibility(View.VISIBLE);
             fullViewSwapCamImageView.setVisibility(View.VISIBLE);
             fullViewToggleVideoImageView.setVisibility(View.VISIBLE);
@@ -534,8 +535,18 @@ public class TokBoxActivity extends AppCompatActivity implements
             userNameTextview.setText("" + mPublisher.getName());
             userNameTextview.setVisibility(View.VISIBLE);
             swapPublisherToFullView = true;
+
+            if(Constants.meetingUserCount == 1) {
+                subscriberwaitTextView.setVisibility(View.VISIBLE);
+                //subscriberwaitTextView.setText("Waiting for "+(Constants.meetingUserCount - mSubscribers.size())+" participants..");
+                subscriberwaitTextView.setText("Waiting for participant..");
+            }
+            else{
+                subscriberwaitTextView.setVisibility(View.VISIBLE);
+                //subscriberwaitTextView.setText("Waiting for "+(Constants.meetingUserCount - mSubscribers.size())+" participants..");
+                subscriberwaitTextView.setText("Waiting for other participants..");
+            }
         } else {
-            subscriberwaitTextView.setText("Waiting for other participant");
             fullViewToggleAudioImageView.setVisibility(View.VISIBLE);
             publisherFullViewImageView.setVisibility(View.GONE);
             waitingImageView.setImageResource(R.drawable.wait_host);
@@ -544,6 +555,17 @@ public class TokBoxActivity extends AppCompatActivity implements
 
             userNameTextview.setVisibility(View.GONE);
             mFullViewControlsLinearLayout.setVisibility(View.GONE);
+
+            if(Constants.meetingUserCount == 1) {
+                subscriberwaitTextView.setVisibility(View.VISIBLE);
+                //subscriberwaitTextView.setText("Waiting for "+(Constants.meetingUserCount - mSubscribers.size())+" participants..");
+                subscriberwaitTextView.setText("Waiting for participant..");
+            }
+            else{
+                subscriberwaitTextView.setVisibility(View.VISIBLE);
+                //subscriberwaitTextView.setText("Waiting for "+(Constants.meetingUserCount - mSubscribers.size())+" participants..");
+                subscriberwaitTextView.setText("Waiting for other participants..");
+            }
         }
         mSession.publish(mPublisher);
         publisherNameTextView.setText("" + mPublisher.getName().toString());
@@ -616,6 +638,20 @@ public class TokBoxActivity extends AppCompatActivity implements
         } else {
             userView(session, stream);
         }
+        if(mSubscribers.size() == Constants.meetingUserCount)
+        {   subscriberwaitTextView.setVisibility(View.GONE);}
+        else{
+            if(Constants.meetingUserCount == 1) {
+                subscriberwaitTextView.setVisibility(View.VISIBLE);
+                //subscriberwaitTextView.setText("Waiting for "+(Constants.meetingUserCount - mSubscribers.size())+" participants..");
+                subscriberwaitTextView.setText("Waiting for participant..");
+            }
+            else{
+                subscriberwaitTextView.setVisibility(View.VISIBLE);
+                //subscriberwaitTextView.setText("Waiting for "+(Constants.meetingUserCount - mSubscribers.size())+" participants..");
+                subscriberwaitTextView.setText("Waiting for other participants..");
+            }
+        }
     }
 
     @Override
@@ -648,6 +684,20 @@ public class TokBoxActivity extends AppCompatActivity implements
         mSubscribers.remove(subscriber);
         mSubscriberStreams.remove(stream);
         mSubscriberlistLinearLayout.removeViewAt(position);
+        if(mSubscribers.size() == Constants.meetingUserCount)
+        {   subscriberwaitTextView.setVisibility(View.GONE);}
+        else{
+            if(Constants.meetingUserCount == 1) {
+                subscriberwaitTextView.setVisibility(View.VISIBLE);
+                //subscriberwaitTextView.setText("Waiting for "+(Constants.meetingUserCount - mSubscribers.size())+" participants..");
+                subscriberwaitTextView.setText("Waiting for participant..");
+            }
+            else{
+                subscriberwaitTextView.setVisibility(View.VISIBLE);
+                //subscriberwaitTextView.setText("Waiting for "+(Constants.meetingUserCount - mSubscribers.size())+" participants..");
+                subscriberwaitTextView.setText("Waiting for other participants..");
+            }
+        }
     }
 
     public void hostView(Session session, Stream stream) {

@@ -6,6 +6,12 @@
     android:layout_height="match_parent"
     tools:context="com.edbrix.enterprise.Activities.TokBoxActivity">
 
+    <SurfaceView
+        android:id="@+id/surface"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/dashboard_app_bar"
         android:layout_width="match_parent"
@@ -355,28 +361,27 @@
                 android:paddingRight="1dp"
                 android:paddingTop="1dp">
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/textViewSubscriberWait"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/app_normal_margin"
                         android:layout_centerInParent="true"
-                        android:textSize="15sp"/>
+                        android:textSize="10sp"/>
 
                     <LinearLayout
                         android:id="@+id/subscriberListLinear"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical" />
-                </RelativeLayout>
 
-
+                </LinearLayout>
             </ScrollView>
         </LinearLayout>
     </LinearLayout>
-
 </RelativeLayout>

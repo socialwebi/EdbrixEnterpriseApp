@@ -112,7 +112,6 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
         _meeting_detail_button_connect = findViewById(R.id.meeting_detail_button_connect);
         RecyclerView _meeting_detail_recycler = findViewById(R.id.meeting_detail_recycler);
 
-
         adapter = new ParticipantListAdapter(MeetingDetailActivity.this, list);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
@@ -135,6 +134,7 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
 
                 if (meeting.getConnect().equals("1"))
                 {
+                   // _meeting_detail_button_connect.setEnabled(false);
                     if (meeting.getConnectType().equals("ZOOM")) {
                         meetingID = meeting.getMeetingId();
 
@@ -173,11 +173,7 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
 
             }
         });
-
         //if ()
-
-
-
         if (Conditions.isNetworkConnected(context)) {
             showBusyProgress();
             getMeetingList();
@@ -194,9 +190,7 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
 
 
     void getMeetingList() {
-
         User user = SettingsMy.getActiveUser();
-
         if (user != null) {
 
             if (user.getUserType().equals("L")) {
@@ -252,6 +246,7 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
 
                                 list = response.getMeetingUsers();
                                 adapter.refreshList(list);
+                                Constants.meetingUserCount = list.size();
                                 adapter.notifyDataSetChanged();
                             }
 

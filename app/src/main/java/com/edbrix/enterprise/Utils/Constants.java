@@ -35,6 +35,7 @@ public class Constants {
     public final static String TolkBox_MeetingName= "MeetingName";
     public final static String FileType_Playwire= "playwire";
     public final static String FileType_Document= "document";
+    public static int meetingUserCount=0;
 
 
     // TOKBOX

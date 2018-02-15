@@ -34,7 +34,8 @@ import pub.devrel.easypermissions.EasyPermissions;
  * Created by rajk on 09/02/18.
  */
 
-public class VideoPlayerWithListDialog extends Dialog implements EasyVideoCallback {
+public class VideoPlayerWithListDialog extends Dialog implements EasyVideoCallback
+{
 
     static final int REQUEST_PERMISSION_EXTERNAL = 1004;
 
