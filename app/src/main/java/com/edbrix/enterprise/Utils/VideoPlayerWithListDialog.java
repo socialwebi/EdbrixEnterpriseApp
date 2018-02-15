@@ -53,7 +53,7 @@ public class VideoPlayerWithListDialog extends Dialog implements EasyVideoCallba
     private ImageView closeBtn;
 
     public interface OnActionButtonListener {
-        void onOptionPressed(String optionType);
+        void onShareFile(FileData fileData);
     }
 
     public void setOnActionButtonListener(OnActionButtonListener listener) {
@@ -73,7 +73,7 @@ public class VideoPlayerWithListDialog extends Dialog implements EasyVideoCallba
         super.onCreate(savedInstanceState);
         videoPlayer = (EasyVideoPlayer) findViewById(R.id.videoPlayer);
         recyclerViewVideoList = (RecyclerView) findViewById(R.id.videoList);
-        closeBtn = (ImageView)findViewById(R.id.closeBtn);
+        closeBtn = (ImageView) findViewById(R.id.closeBtn);
         closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -208,7 +208,8 @@ public class VideoPlayerWithListDialog extends Dialog implements EasyVideoCallba
 
     @Override
     public void onSubmit(EasyVideoPlayer player, Uri source) {
-        onActionButtonListener.onOptionPressed("");
+        if (fData != null)
+            onActionButtonListener.onShareFile(fData);
         dismiss();
     }
 }

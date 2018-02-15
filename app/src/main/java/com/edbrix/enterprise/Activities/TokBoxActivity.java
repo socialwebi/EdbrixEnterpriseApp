@@ -115,7 +115,7 @@ public class TokBoxActivity extends AppCompatActivity implements
     public LinearLayout mFullViewControlsLinearLayout;
     public FrameLayout mpublisherScreenFrame;
     public Toolbar toolbar;
-    public TextView publisherNameTextView, userNameTextview, leaveMeetingTextView, txtVideoList,subscriberwaitTextView;
+    public TextView publisherNameTextView, userNameTextview, leaveMeetingTextView, txtVideoList, subscriberwaitTextView;
 
     boolean swapSubscriberToFullView = false;
     boolean swapPublisherToFullView = false;
@@ -200,7 +200,7 @@ public class TokBoxActivity extends AppCompatActivity implements
         txtLoading = (TextView) findViewById(R.id.txtLoading);
         leaveMeetingTextView = (TextView) findViewById(R.id.textViewLeaveMeeting);
         txtVideoList = (TextView) findViewById(R.id.txtVideoList);
-        subscriberwaitTextView = (TextView)findViewById(R.id.textViewSubscriberWait);
+        subscriberwaitTextView = (TextView) findViewById(R.id.textViewSubscriberWait);
         txtMeetingName = (TextView) findViewById(R.id.txtMeetingName);
 
         startBtn = (ImageView) findViewById(R.id.startBtn);
@@ -239,17 +239,17 @@ public class TokBoxActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
 
-            //togglePublisherAudio();
-            if (mPublisher == null) {
-                return;
-            }
-            if (mPublisher.getPublishAudio() == true) {
-                mPublisher.setPublishAudio(false);
-                toggleAudioImageView.setImageResource(R.drawable.micoff);
-            } else {
-                mPublisher.setPublishAudio(true);
-                toggleAudioImageView.setImageResource(R.drawable.micon);
-            }
+                //togglePublisherAudio();
+                if (mPublisher == null) {
+                    return;
+                }
+                if (mPublisher.getPublishAudio() == true) {
+                    mPublisher.setPublishAudio(false);
+                    toggleAudioImageView.setImageResource(R.drawable.micoff);
+                } else {
+                    mPublisher.setPublishAudio(true);
+                    toggleAudioImageView.setImageResource(R.drawable.micon);
+                }
             }
         });
         fullViewToggleAudioImageView.setOnClickListener(new View.OnClickListener() {
@@ -268,17 +268,17 @@ public class TokBoxActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
 
-            //togglePublisherVideo();
-            if (mPublisher == null) {
-                return;
-            }
-            if (mPublisher.getPublishVideo() == true) {
-                mPublisher.setPublishVideo(false);
-                toggleVideoImageView.setImageResource(R.drawable.videooff);
-            } else {
-                mPublisher.setPublishVideo(true);
-                toggleVideoImageView.setImageResource(R.drawable.videoon);
-            }
+                //togglePublisherVideo();
+                if (mPublisher == null) {
+                    return;
+                }
+                if (mPublisher.getPublishVideo() == true) {
+                    mPublisher.setPublishVideo(false);
+                    toggleVideoImageView.setImageResource(R.drawable.videooff);
+                } else {
+                    mPublisher.setPublishVideo(true);
+                    toggleVideoImageView.setImageResource(R.drawable.videoon);
+                }
             }
         });
         fullViewToggleVideoImageView.setOnClickListener(new View.OnClickListener() {
@@ -383,6 +383,7 @@ public class TokBoxActivity extends AppCompatActivity implements
         Log.d(TAG, "onStart");
         super.onStart();
     }
+
     @Override
     protected void onRestart() {
         Log.d(TAG, "onRestart");
@@ -412,9 +413,10 @@ public class TokBoxActivity extends AppCompatActivity implements
                 // new push notification is received
 
                 final String fileName = intent.getStringExtra("filename");
+                final String ownerName = intent.getStringExtra("owner");
 //                showToast("Push notification: " + fileName);
                 dialogManager.getAlertDialogManager().setAlertDialogCancellable(false);
-                dialogManager.getAlertDialogManager().Dialog("Download Video", "Continue to download video", "Continue", "Exit", new AlertDialogManager.onTwoButtonClickListner() {
+                dialogManager.getAlertDialogManager().Dialog("Shared Video", ownerName +" shared video? Continue to download video?", "Continue", "Exit", new AlertDialogManager.onTwoButtonClickListner() {
                     @Override
                     public void onNegativeClick() {
 
@@ -832,8 +834,7 @@ public class TokBoxActivity extends AppCompatActivity implements
     public void userView(Session session, Stream stream) {
 
         try {
-            if (stream.getConnection().getData().equals("Host"))
-            {
+            if (stream.getConnection().getData().equals("Host")) {
                 userNameTextview.setVisibility(View.VISIBLE);
                 mFullViewControlsLinearLayout.setVisibility(View.VISIBLE);
 
@@ -898,7 +899,7 @@ public class TokBoxActivity extends AppCompatActivity implements
             case REQUEST_CODE:
                 if (resultCode != RESULT_OK) {
 //                    showToast("Screen Cast Permission Denied");
-                   toastMessage.showToast("Screen Cast Permission Denied");
+                    toastMessage.showToast("Screen Cast Permission Denied");
 //            mToggleButton.setChecked(false);
                     stopBtn.setVisibility(View.GONE);
                     startBtn.setVisibility(View.VISIBLE);
@@ -962,7 +963,7 @@ public class TokBoxActivity extends AppCompatActivity implements
                         VideoPlayerWithListDialog videoPlayerDialog = new VideoPlayerWithListDialog(TokBoxActivity.this, R.style.DialogAnimation, new FileData(screenRecordOutputFile));
                         videoPlayerDialog.setOnActionButtonListener(new VideoPlayerWithListDialog.OnActionButtonListener() {
                             @Override
-                            public void onOptionPressed(String optionType) {
+                            public void onShareFile(FileData fileData) {
 
                                 dialogManager.getAlertDialogManager().setAlertDialogCancellable(false);
                                 dialogManager.getAlertDialogManager().Dialog("Video Recording", "Continue to share video recording ?", "Continue", "Cancel", new AlertDialogManager.onTwoButtonClickListner() {
@@ -996,11 +997,10 @@ public class TokBoxActivity extends AppCompatActivity implements
                 btnCancel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-dialog.dismiss();
+                        dialog.dismiss();
                     }
                 });
                 dialog.show();
-
 
 
             }
@@ -1141,6 +1141,7 @@ dialog.dismiss();
             final String userId;
             final String accessToken;
             final String userType;
+            final String userFullName;
             Uri fileUri = Uri.fromFile(fileData.getFileObject());
             if (fileUri != null) {
 //                btnUpload.setVisibility(View.GONE);
@@ -1153,6 +1154,7 @@ dialog.dismiss();
                 userId = activeUser.getId();
                 accessToken = activeUser.getAccessToken();
                 userType = activeUser.getUserType();
+                userFullName = activeUser.getFirstName() + " " + activeUser.getLastName();
 
                 StorageReference childRef = storageRef.child("meetingrecordings/" + meetingId + "/" + fileData.getFileName());
                 //uploading the image
@@ -1166,7 +1168,7 @@ dialog.dismiss();
 //                        btnCancel.setVisibility(View.GONE);
 //
 //                        mProgressBar.setVisibility(View.GONE);
-                        shareRecordWithNotification(userId, accessToken, userType, meetingId, fileData.getFileName());
+                        shareRecordWithNotification(userId, accessToken, userType, userFullName, meetingId, fileData.getFileName());
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -1210,12 +1212,13 @@ dialog.dismiss();
      * @param meetingId
      * @param fileName
      */
-    private void shareRecordWithNotification(final String userId, final String accessToken, final String userType, final String meetingId, final String fileName) {
+    private void shareRecordWithNotification(final String userId, final String accessToken, final String userType, final String userFullName, final String meetingId, final String fileName) {
 
         Map<String, String> requestMap = new HashMap<String, String>();
         requestMap.put("UserId", userId);
         requestMap.put("AccessToken", accessToken);
         requestMap.put("UserType", userType);
+        requestMap.put("UserFullName", userFullName);
         requestMap.put("FileName", fileName);
         requestMap.put("MeetingId", meetingId);
 
@@ -1307,7 +1310,7 @@ dialog.dismiss();
                                             VideoPlayerWithListDialog videoPlayerDialog = new VideoPlayerWithListDialog(TokBoxActivity.this, R.style.DialogAnimation, new FileData(localFile));
                                             videoPlayerDialog.setOnActionButtonListener(new VideoPlayerWithListDialog.OnActionButtonListener() {
                                                 @Override
-                                                public void onOptionPressed(String optionType) {
+                                                public void onShareFile(FileData fileData) {
 
                                                     dialogManager.getAlertDialogManager().setAlertDialogCancellable(false);
                                                     dialogManager.getAlertDialogManager().Dialog("Video Recording", "Continue to share video recording?", "Continue", "Cancel", new AlertDialogManager.onTwoButtonClickListner() {
@@ -1381,7 +1384,7 @@ dialog.dismiss();
 
     public void leaveMeetingDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Do you want to Leave the meeting ?")
+        builder.setMessage("Do you want to Leave the meeting?")
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -1403,14 +1406,17 @@ dialog.dismiss();
         VideoPlayerWithListDialog videoPlayerDialog = new VideoPlayerWithListDialog(TokBoxActivity.this, R.style.DialogAnimation, null);
         videoPlayerDialog.setOnActionButtonListener(new VideoPlayerWithListDialog.OnActionButtonListener() {
             @Override
-            public void onOptionPressed(String optionType) {
+            public void onShareFile(final FileData fileData) {
 
                 dialogManager.getAlertDialogManager().setAlertDialogCancellable(false);
                 dialogManager.getAlertDialogManager().Dialog("Video Recording", "Continue to share video recording?", "Continue", "Cancel", new AlertDialogManager.onTwoButtonClickListner() {
                     @Override
-                    public void onNegativeClick() { }
+                    public void onNegativeClick() {
+                    }
+
                     @Override
                     public void onPositiveClick() {
+                        screenRecordOutputFile = fileData.getFileObject();
                         uploadToEdbrixMyFiles();
                     }
                 }).show();

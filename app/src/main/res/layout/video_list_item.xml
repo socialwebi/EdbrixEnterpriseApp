@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:orientation="vertical"
+    android:layout_margin="@dimen/app_min_margin"
     android:padding="@dimen/app_min_padding"
+    android:background="@color/whitesmoke"
     android:layout_height="wrap_content">
 
     <ImageView
@@ -16,6 +18,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
@@ -25,8 +28,9 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:padding="@dimen/app_min_padding"
-            android:textColor="@color/colorWhite"
-            android:textSize="16sp"
+            android:maxLines="1"
+            android:textColor="@color/colorMainText"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:text="vd_.mp4"
             android:typeface="monospace" />
@@ -35,7 +39,7 @@
             android:id="@+id/videoDuration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/colorSubText"
             android:textSize="14sp"
             android:text="00:10"
             android:typeface="monospace" />
