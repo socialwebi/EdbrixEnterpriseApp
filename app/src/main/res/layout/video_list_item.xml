@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:orientation="vertical"
+    android:layout_height="wrap_content"
     android:layout_margin="@dimen/app_min_margin"
-    android:padding="@dimen/app_min_padding"
     android:background="@color/whitesmoke"
-    android:layout_height="wrap_content">
+    android:orientation="vertical"
+    android:padding="@dimen/app_min_padding">
 
-    <ImageView
-        android:id="@+id/videoThumbnail"
-        android:layout_width="175dp"
-        android:layout_height="120dp"
-        android:scaleType="centerCrop"
-        android:contentDescription="@string/image_course"
-        android:src="@mipmap/edbrix" />
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/play_circle_grey" />
+
+        <ImageView
+            android:id="@+id/videoThumbnail"
+            android:layout_width="175dp"
+            android:layout_height="120dp"
+            android:scaleType="centerCrop" />
+
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,28 +34,27 @@
         <TextView
             android:id="@+id/videoName"
             android:layout_width="0dp"
-            android:layout_weight="2"
             android:layout_height="wrap_content"
+            android:layout_weight="2"
             android:ellipsize="end"
-            android:padding="@dimen/app_min_padding"
             android:maxLines="1"
+            android:padding="@dimen/app_min_padding"
+            android:text="vd_.mp4"
             android:textColor="@color/colorMainText"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:text="vd_.mp4"
             android:typeface="monospace" />
 
         <TextView
             android:id="@+id/videoDuration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="00:10"
             android:textColor="@color/colorSubText"
             android:textSize="14sp"
-            android:text="00:10"
             android:typeface="monospace" />
 
     </LinearLayout>
-
 
 
 </LinearLayout>

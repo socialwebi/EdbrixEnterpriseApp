@@ -54,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="@dimen/app_big_margin"
-                    android:text="Preview Here"
+                    android:text="Preview"
                     android:textColor="@color/colorWhite"
                     android:textSize="22sp" />
 
@@ -63,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:gravity="center"
-                    android:text="Select video from list to preview"
+                    android:text="Select video from list."
                     android:textColor="@color/colorWhite"
                     android:textSize="16sp" />
             </LinearLayout>

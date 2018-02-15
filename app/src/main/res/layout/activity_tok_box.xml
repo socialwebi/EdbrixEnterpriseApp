@@ -10,7 +10,7 @@
         android:id="@+id/surface"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/dashboard_app_bar"
@@ -52,6 +52,34 @@
                     android:layout_alignParentEnd="true"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/loaderLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/app_normal_margin"
+                        android:layout_marginStart="@dimen/app_normal_margin"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <ProgressBar
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:indeterminate="true"
+                            android:padding="@dimen/app_min_padding"
+                            android:theme="@style/AppTheme.WhiteAccent"
+                            android:visibility="visible" />
+
+                        <TextView
+                            android:id="@+id/progressText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Downloading video...75%"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="13sp" />
+
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/txtVideoList"
@@ -104,9 +132,9 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:layout_marginBottom="@dimen/app_big_margin"
                 android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/app_big_margin"
+                android:gravity="center_horizontal"
                 android:orientation="vertical">
 
                 <ProgressBar
@@ -121,9 +149,9 @@
                     android:id="@+id/txtLoading"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/please_wait"
                     android:textColor="@color/colorMainText"
-                    android:textSize="18sp"
-                    android:text="@string/please_wait" />
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -140,8 +168,7 @@
             <RelativeLayout
                 android:id="@+id/fullViewLayout"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:padding="1dp" />
+                android:layout_height="fill_parent" />
 
             <TextView
                 android:id="@+id/textViewUsername"
@@ -164,6 +191,15 @@
                 android:layout_gravity="top|right"
                 android:orientation="horizontal">
 
+                <ImageView
+                    android:id="@+id/stopBtn"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:padding="3dp"
+                    android:src="@drawable/stop"
+                    android:visibility="gone" />
+
                 <TextView
                     android:id="@+id/currentTimeText"
                     android:layout_width="wrap_content"
@@ -173,15 +209,6 @@
                     android:padding="@dimen/app_normal_padding"
                     android:text="00:00"
                     android:textColor="@color/red"
-                    android:visibility="gone" />
-
-                <ImageView
-                    android:id="@+id/stopBtn"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:padding="3dp"
-                    android:src="@drawable/stop"
                     android:visibility="gone" />
 
                 <ImageView
@@ -370,10 +397,10 @@
                         android:id="@+id/textViewSubscriberWait"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/app_normal_margin"
                         android:layout_centerInParent="true"
-                        android:textSize="10sp"
-                        android:textAlignment="center"/>
+                        android:layout_marginTop="@dimen/app_normal_margin"
+                        android:textAlignment="center"
+                        android:textSize="10sp" />
 
                     <LinearLayout
                         android:id="@+id/subscriberListLinear"

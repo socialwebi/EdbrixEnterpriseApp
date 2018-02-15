@@ -58,4 +58,8 @@
 
     <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="AppTheme.WhiteAccent">
+        <item name="colorAccent">@color/colorWhite</item> <!-- Whatever color you want-->
+    </style>
+
 </resources>

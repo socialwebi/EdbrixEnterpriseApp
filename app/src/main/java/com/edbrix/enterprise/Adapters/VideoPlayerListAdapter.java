@@ -56,7 +56,7 @@ public class VideoPlayerListAdapter extends RecyclerView.Adapter<VideoPlayerList
         holder.fileDataAdpt = fileDataList.get(position);
         holder.thumbnail.setTag(holder.fileDataAdpt.getFileObject().getPath());// binding imageview
 
-        holder.thumbnail.setImageResource(R.drawable.play_circle_grey); //default image
+//        holder.thumbnail.setImageResource(R.drawable.play_circle_grey); //default image
         mVideoThumbLoader.showThumbByAsynctack(holder.fileDataAdpt.getFileObject().getPath(), holder.thumbnail);
         String fName = holder.fileDataAdpt.getFileName().replaceAll(".mp4", "");
         holder.title.setText(fName);

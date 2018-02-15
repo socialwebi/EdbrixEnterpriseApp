@@ -172,6 +172,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //            String title = data.getString("title");
             String filename = data.getString("filename");
             String owner = data.getString("owner");
+            String ownerId = data.getString("ownerId");
 //            boolean isBackground = data.getBoolean("is_background");
 //            String imageUrl = data.getString("image");
 //            String timestamp = data.getString("timestamp");
@@ -180,6 +181,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //            Log.e(TAG, "title: " + title);
             Log.e(TAG, "filename: " + filename);
             Log.e(TAG, "owner: " + owner);
+            Log.e(TAG, "ownerId: " + ownerId);
 //            Log.e(TAG, "isBackground: " + isBackground);
 //            Log.e(TAG, "payload: " + payload.toString());
 //            Log.e(TAG, "imageUrl: " + imageUrl);
@@ -191,6 +193,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
                 pushNotification.putExtra("filename", filename);
                 pushNotification.putExtra("owner", owner);
+                pushNotification.putExtra("ownerId", ownerId);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 
                 // play notification sound
