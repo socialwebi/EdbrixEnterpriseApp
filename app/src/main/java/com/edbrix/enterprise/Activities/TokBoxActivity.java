@@ -465,6 +465,12 @@ public class TokBoxActivity extends AppCompatActivity implements
         Log.d(TAG, "onPause");
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mNotificationBroadcastReceiver);
         super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(TAG, "onPause");
+        super.onStop();
 
         if (mSession == null) {
             return;
@@ -474,12 +480,6 @@ public class TokBoxActivity extends AppCompatActivity implements
         if (isFinishing()) {
             disconnectSession();
         }
-    }
-
-    @Override
-    protected void onStop() {
-        Log.d(TAG, "onPause");
-        super.onStop();
     }
 
     @Override
