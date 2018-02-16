@@ -20,9 +20,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.edbrix.enterprise.Adapters.ParticipantListAdapter;
 import com.edbrix.enterprise.Application;
 import com.edbrix.enterprise.Models.Meeting;
@@ -39,6 +41,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import timber.log.Timber;
 import us.zoom.sdk.JoinMeetingOptions;
@@ -154,12 +158,12 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
                             }
                         }
                     } else if (meeting.getConnectType().equals(Constants.availabilityType_TrainingSession)) {
-                        Intent tokboxIntent = new Intent(MeetingDetailActivity.this, TokBoxActivity.class);
-                        tokboxIntent.putExtra(Constants.TolkBox_MeetingId, meeting.getId());
-                        tokboxIntent.putExtra(Constants.TolkBox_MeetingName, meeting.getTitle());
-                        tokboxIntent.putExtra(Constants.TolkBox_SessionId, meeting.getMeetingId());
-                        tokboxIntent.putExtra(Constants.TolkBox_Token, meeting.getMeetingToken());
-                        startActivity(tokboxIntent);
+                        assert user != null;
+                        if(user.getUserType().equals("L")){
+                            getTokboxMeetingStatus(user.getId(),user.getAccessToken(),user.getUserType(),meeting.getId(),meeting.getType());
+                        }else{
+                            startTokBoxMeeting();
+                        }
                     } else {
                         if (meeting.getConnectURL() != null && meeting.getConnectURL().length() > 0) {
                             Intent i = new Intent(Intent.ACTION_VIEW);
@@ -188,8 +192,17 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
 
     }
 
+    private void startTokBoxMeeting(){
+        Intent tokboxIntent = new Intent(MeetingDetailActivity.this, TokBoxActivity.class);
+        tokboxIntent.putExtra(Constants.TolkBox_MeetingId, meeting.getId());
+        tokboxIntent.putExtra(Constants.TolkBox_MeetingName, meeting.getTitle());
+        tokboxIntent.putExtra(Constants.TolkBox_MeetingType, meeting.getType());
+        tokboxIntent.putExtra(Constants.TolkBox_SessionId, meeting.getMeetingId());
+        tokboxIntent.putExtra(Constants.TolkBox_Token, meeting.getMeetingToken());
+        startActivity(tokboxIntent);
+    }
 
-    void getMeetingList() {
+    private void getMeetingList() {
         User user = SettingsMy.getActiveUser();
         if (user != null) {
 
@@ -441,6 +454,89 @@ public class MeetingDetailActivity extends BaseActivity implements ZoomSDKInitia
                         STYPE, "469520738", "USER NAME", opts);*/
 
         Log.i("TAG", "onClickBtnStartMeeting, ret=" + ret);
+    }
+
+
+    /**
+     * Get Tokbox Meeting status
+     *
+     * @param userId
+     * @param accessToken
+     * @param userType
+     * @param meetingId
+     * @param meetingType
+     */
+    private void getTokboxMeetingStatus(final String userId, final String accessToken, final String userType, final String meetingId, final String meetingType) {
+        showBusyProgress();
+        Map<String, String> requestMap = new HashMap<String, String>();
+        requestMap.put("UserId", userId);
+        requestMap.put("AccessToken", accessToken);
+        requestMap.put("UserType", userType);
+        requestMap.put("MeetingId", meetingId);
+        requestMap.put("MeetingType", meetingType);
+
+
+        try {
+            JsonObjectRequest tokBoxMeetingStatus = new JsonObjectRequest(Request.Method.POST, Constants.getTalkboxMeetingStatus, new JSONObject(requestMap), new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    hideBusyProgress();
+                    Log.v("Volley Response", response.toString());
+                    try {
+                        if (response != null) {
+                            if (response.has("ismeetingstarted")) {
+                                String isMeetingStarted = response.getString("ismeetingstarted");
+                                if(isMeetingStarted!=null && !isMeetingStarted.isEmpty()){
+                                    if(isMeetingStarted.equals("1")){
+                                        // meeting started is true then go to connect meeting
+                                        startTokBoxMeeting();
+                                    }else{
+                                        // meeting started is false then send message to user, meeting is not started by user. Please try after sometimes.
+
+                                       getAlertDialogManager().Dialog("CONNECT","Meeting not started by host.",null).show();
+
+                                    }
+                                }
+                            } else if (response.has("ErrorMessage")) {
+                                showToast(response.getString("ErrorMessage"));
+                            }else{
+                                showToast(getResources().getString(R.string.error_something_wrong));
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        hideBusyProgress();
+                        Log.v("Volley Excep", e.getMessage());
+                        showToast(getResources().getString(R.string.error_something_wrong));
+                    }
+                }
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    hideBusyProgress();
+                    showToast(SettingsMy.getErrorMessage(error));
+                }
+
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> headers = new HashMap<String, String>();
+                    headers.put("Content-Type", "application/json");
+                    return headers;
+                }
+
+            };
+
+            tokBoxMeetingStatus.setRetryPolicy(Application.getDefaultRetryPolice());
+            tokBoxMeetingStatus.setShouldCache(false);
+            Application.getInstance().addToRequestQueue(tokBoxMeetingStatus, "get_tokbox_meeting_status");
+
+        } catch (Exception e) {
+            hideBusyProgress();
+            Log.v("Excep", e.getMessage());
+            showToast(getResources().getString(R.string.error_something_wrong));
+        }
     }
 
 }

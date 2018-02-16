@@ -45,6 +45,7 @@
     <string name="meetings">Meetings</string>
     <string name="please_wait">Please wait...</string>
     <string name="plz_wait_host_start_meeting">Please wait while host start meeting...</string>
+    <string name="plz_wait_host_unavailable">Please wait host is unavailable...</string>
     <string name="category">Category</string>
     <string name="meeting_details">Meeting Details</string>
     <string name="create_live_course">Create Course</string>

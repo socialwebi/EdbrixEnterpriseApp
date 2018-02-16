@@ -122,6 +122,7 @@ public class TokBoxActivity extends AppCompatActivity implements
     boolean swapSubscriberToFullView = false;
     boolean swapPublisherToFullView = false;
     boolean togglePublisherFullScreen = false;
+    boolean isMeetingStarted = false;
     public static int swapPos;
     Meeting meeting;
 
@@ -151,6 +152,7 @@ public class TokBoxActivity extends AppCompatActivity implements
     private ImageView stopBtn;
     private ImageView startBtn;
     private MyCountDownTimer myCountDownTimer;
+    private SessionEndCountDownTimer sessionEndCountDownTimer;
     private boolean isScreenRecordingRunning = false;
     private File screenRecordOutputFile;
     private Handler handler;
@@ -159,6 +161,7 @@ public class TokBoxActivity extends AppCompatActivity implements
     private UploadTask uploadTask;
     private String meetingId;
     private String meetingName;
+    private String meetingType;
     private int recordTime;
     private static final int slideMaxTimeDuration = 10; // 600 sec i.e. 10 min
 
@@ -220,6 +223,7 @@ public class TokBoxActivity extends AppCompatActivity implements
         storageRef = storage.getReferenceFromUrl("gs://edbrixcbuilder.appspot.com");
         meetingId = getIntent().getStringExtra(Constants.TolkBox_MeetingId);
         meetingName = getIntent().getStringExtra(Constants.TolkBox_MeetingName);
+        meetingType = getIntent().getStringExtra(Constants.TolkBox_MeetingType);
 
         txtMeetingName.setText(meetingName);
 
@@ -339,6 +343,7 @@ public class TokBoxActivity extends AppCompatActivity implements
 //        countDownTimerText.setVisibility(View.VISIBLE);
         countDownTimerText.setText("" + countDownTime);
         myCountDownTimer = new MyCountDownTimer(countDownTime * 1000, countDownInterval);
+        sessionEndCountDownTimer = new SessionEndCountDownTimer(countDownTime * 1000, countDownInterval);
 
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -349,6 +354,7 @@ public class TokBoxActivity extends AppCompatActivity implements
                     zoomImageView.callOnClick();
 
                 zoomImageView.setVisibility(View.GONE);
+                infoTimerText.setText("Starting to record meeting...");
                 infoTimerText.setVisibility(View.VISIBLE);
                 countDownTimerText.setVisibility(View.VISIBLE);
                 myCountDownTimer.start();
@@ -402,6 +408,15 @@ public class TokBoxActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         Log.d(TAG, "onResume");
+        User activeUser = SettingsMy.getActiveUser();
+        String uId = activeUser.getId();
+        String acsToken = activeUser.getAccessToken();
+        String uType = activeUser.getUserType();
+        isMeetingStarted = true;
+        if (uType.equals("I")) {
+            //update meeting status by host as meeting is started
+            updateTokboxMeetingStatus(uId, acsToken, uType, meetingId, meetingType, "1");
+        }
 
         LocalBroadcastManager.getInstance(this).registerReceiver(mNotificationBroadcastReceiver,
                 new IntentFilter(Config.PUSH_NOTIFICATION));
@@ -547,12 +562,11 @@ public class TokBoxActivity extends AppCompatActivity implements
             userNameTextview.setVisibility(View.VISIBLE);
             swapPublisherToFullView = true;
 
-            if(Constants.meetingUserCount == 1) {
+            if (Constants.meetingUserCount == 1) {
                 subscriberwaitTextView.setVisibility(View.VISIBLE);
                 //subscriberwaitTextView.setText("Waiting for "+(Constants.meetingUserCount - mSubscribers.size())+" participants..");
                 subscriberwaitTextView.setText("Waiting for participant..");
-            }
-            else{
+            } else {
                 subscriberwaitTextView.setVisibility(View.VISIBLE);
                 //subscriberwaitTextView.setText("Waiting for "+(Constants.meetingUserCount - mSubscribers.size())+" participants..");
                 subscriberwaitTextView.setText("Waiting for other participants..");
@@ -567,12 +581,11 @@ public class TokBoxActivity extends AppCompatActivity implements
             userNameTextview.setVisibility(View.GONE);
             mFullViewControlsLinearLayout.setVisibility(View.GONE);
 
-            if(Constants.meetingUserCount == 1) {
+            if (Constants.meetingUserCount == 1) {
                 subscriberwaitTextView.setVisibility(View.VISIBLE);
                 //subscriberwaitTextView.setText("Waiting for "+(Constants.meetingUserCount - mSubscribers.size())+" participants..");
                 subscriberwaitTextView.setText("Waiting for participant..");
-            }
-            else{
+            } else {
                 subscriberwaitTextView.setVisibility(View.VISIBLE);
                 //subscriberwaitTextView.setText("Waiting for "+(Constants.meetingUserCount - mSubscribers.size())+" participants..");
                 subscriberwaitTextView.setText("Waiting for other participants..");
@@ -649,15 +662,14 @@ public class TokBoxActivity extends AppCompatActivity implements
         } else {
             userView(session, stream);
         }
-        if(mSubscribers.size() == Constants.meetingUserCount)
-        {   subscriberwaitTextView.setVisibility(View.GONE);}
-        else{
-            if(Constants.meetingUserCount == 1) {
+        if (mSubscribers.size() == Constants.meetingUserCount) {
+            subscriberwaitTextView.setVisibility(View.GONE);
+        } else {
+            if (Constants.meetingUserCount == 1) {
                 subscriberwaitTextView.setVisibility(View.VISIBLE);
                 //subscriberwaitTextView.setText("Waiting for "+(Constants.meetingUserCount - mSubscribers.size())+" participants..");
                 subscriberwaitTextView.setText("Waiting for participant..");
-            }
-            else{
+            } else {
                 subscriberwaitTextView.setVisibility(View.VISIBLE);
                 //subscriberwaitTextView.setText("Waiting for "+(Constants.meetingUserCount - mSubscribers.size())+" participants..");
                 subscriberwaitTextView.setText("Waiting for other participants..");
@@ -678,6 +690,12 @@ public class TokBoxActivity extends AppCompatActivity implements
         try {
             if (stream.getConnection().getData().equals("Host")) {
                 mfullViewContainer.removeView(subscriber.getView());
+                txtLoading.setText(getString(R.string.plz_wait_host_unavailable));
+                User activeUser = SettingsMy.getActiveUser();
+                String uId = activeUser.getId();
+                String acsToken = activeUser.getAccessToken();
+                String uType = activeUser.getUserType();
+                getTokboxMeetingStatus(uId, acsToken, uType, meetingId, meetingType);
                 return;
             }
         } catch (Exception ex) {
@@ -695,15 +713,14 @@ public class TokBoxActivity extends AppCompatActivity implements
         mSubscribers.remove(subscriber);
         mSubscriberStreams.remove(stream);
         mSubscriberlistLinearLayout.removeViewAt(position);
-        if(mSubscribers.size() == Constants.meetingUserCount)
-        {   subscriberwaitTextView.setVisibility(View.GONE);}
-        else{
-            if(Constants.meetingUserCount == 1) {
+        if (mSubscribers.size() == Constants.meetingUserCount) {
+            subscriberwaitTextView.setVisibility(View.GONE);
+        } else {
+            if (Constants.meetingUserCount == 1) {
                 subscriberwaitTextView.setVisibility(View.VISIBLE);
                 //subscriberwaitTextView.setText("Waiting for "+(Constants.meetingUserCount - mSubscribers.size())+" participants..");
                 subscriberwaitTextView.setText("Waiting for participant..");
-            }
-            else{
+            } else {
                 subscriberwaitTextView.setVisibility(View.VISIBLE);
                 //subscriberwaitTextView.setText("Waiting for "+(Constants.meetingUserCount - mSubscribers.size())+" participants..");
                 subscriberwaitTextView.setText("Waiting for other participants..");
@@ -1464,8 +1481,14 @@ public class TokBoxActivity extends AppCompatActivity implements
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        disconnectSession();
-                        finish();
+                        User activeUser = SettingsMy.getActiveUser();
+                        String uId = activeUser.getId();
+                        String acsToken = activeUser.getAccessToken();
+                        String uType = activeUser.getUserType();
+                        isMeetingStarted = false;
+                        updateTokboxMeetingStatus(uId, acsToken, uType, meetingId, meetingType, "0");
+//                        disconnectSession();
+//                        finish();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -1564,5 +1587,186 @@ public class TokBoxActivity extends AppCompatActivity implements
             sub.setSubscribeToVideo(true);
             fullViewToggleVideoImageView.setImageResource(R.drawable.videoon);
         }
+    }
+
+    /**
+     * Get Tokbox Meeting status
+     *
+     * @param userId
+     * @param accessToken
+     * @param userType
+     * @param meetingId
+     * @param meetingType
+     */
+    private void getTokboxMeetingStatus(final String userId, final String accessToken, final String userType, final String meetingId, final String meetingType) {
+
+        Map<String, String> requestMap = new HashMap<String, String>();
+        requestMap.put("UserId", userId);
+        requestMap.put("AccessToken", accessToken);
+        requestMap.put("UserType", userType);
+        requestMap.put("MeetingId", meetingId);
+        requestMap.put("MeetingType", meetingType);
+
+
+        try {
+            JsonObjectRequest tokBoxMeetingStatus = new JsonObjectRequest(Request.Method.POST, Constants.getTalkboxMeetingStatus, new JSONObject(requestMap), new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    dialogManager.hideBusyProgress();
+                    Log.v("Volley Response", response.toString());
+                    try {
+                        if (response != null) {
+                            if (response.has("ismeetingstarted")) {
+                                String isMeetingStarted = response.getString("ismeetingstarted");
+                                if (isMeetingStarted != null && !isMeetingStarted.isEmpty()) {
+                                    if (isMeetingStarted.equals("0")) {
+                                        // meeting started is false then forcefully close meeting session
+                                        infoTimerText.setText("Meeting has been ended by host");
+                                        infoTimerText.setVisibility(View.VISIBLE);
+                                        countDownTimerText.setVisibility(View.VISIBLE);
+                                        sessionEndCountDownTimer.start();
+                                    } else {
+                                        // meeting started is true then keep meeting as it is
+                                    }
+                                }
+                            } else if (response.has("ErrorMessage")) {
+                                //  toastMessage.showToast(response.getString("ErrorMessage"));
+                            } else {
+//                                toastMessage.showToast(getResources().getString(R.string.error_something_wrong));
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        dialogManager.hideBusyProgress();
+                        Log.v("Volley Excep", e.getMessage());
+                        toastMessage.showToast(getResources().getString(R.string.error_something_wrong));
+                    }
+                }
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    dialogManager.hideBusyProgress();
+                    toastMessage.showToast(SettingsMy.getErrorMessage(error));
+                }
+
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> headers = new HashMap<String, String>();
+                    headers.put("Content-Type", "application/json");
+                    return headers;
+                }
+
+            };
+
+            tokBoxMeetingStatus.setRetryPolicy(Application.getDefaultRetryPolice());
+            tokBoxMeetingStatus.setShouldCache(false);
+            Application.getInstance().addToRequestQueue(tokBoxMeetingStatus, "get_tokbox_meeting_status");
+
+        } catch (Exception e) {
+            Log.v("Excep", e.getMessage());
+            toastMessage.showToast(getResources().getString(R.string.error_something_wrong));
+        }
+    }
+
+    /**
+     * Update Tokbox Meeting status
+     *
+     * @param userId
+     * @param accessToken
+     * @param userType
+     * @param meetingId
+     * @param meetingType
+     */
+    private void updateTokboxMeetingStatus(final String userId, final String accessToken, final String userType, final String meetingId, final String meetingType, final String meetingStatus) {
+
+        Map<String, String> requestMap = new HashMap<String, String>();
+        requestMap.put("UserId", userId);
+        requestMap.put("AccessToken", accessToken);
+        requestMap.put("UserType", userType);
+        requestMap.put("MeetingId", meetingId);
+        requestMap.put("MeetingType", meetingType);
+        requestMap.put("MeetingStatus", meetingStatus);
+
+
+        try {
+            JsonObjectRequest updateTokBoxMeetingStatus = new JsonObjectRequest(Request.Method.POST, Constants.updateTalkboxMeetingStatus, new JSONObject(requestMap), new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    dialogManager.hideBusyProgress();
+                    Log.v("Volley Response", response.toString());
+                    try {
+                        if (response != null) {
+                            if (response.has("success")) {
+//                                toastMessage.showToast("Video recording shared successfully.");
+                                if (!isMeetingStarted) {
+                                    disconnectSession();
+                                    finish();
+                                }
+                            } else if (response.has("Error")) {
+//                                toastMessage.showToast("Error occurred while sharing video recording.");
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        dialogManager.hideBusyProgress();
+                        Log.v("Volley Excep", e.getMessage());
+                        toastMessage.showToast(getResources().getString(R.string.error_something_wrong));
+                    }
+                }
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    dialogManager.hideBusyProgress();
+                    toastMessage.showToast(SettingsMy.getErrorMessage(error));
+                }
+
+            }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> headers = new HashMap<String, String>();
+                    headers.put("Content-Type", "application/json");
+                    return headers;
+                }
+
+            };
+
+            updateTokBoxMeetingStatus.setRetryPolicy(Application.getDefaultRetryPolice());
+            updateTokBoxMeetingStatus.setShouldCache(false);
+            Application.getInstance().addToRequestQueue(updateTokBoxMeetingStatus, "update_tokbox_meeting_status");
+
+        } catch (Exception e) {
+            Log.v("Excep", e.getMessage());
+            toastMessage.showToast(getResources().getString(R.string.error_something_wrong));
+        }
+    }
+
+    // This countdown will show to learner only once meeting is end by host and session will disconnect automatically
+    public class SessionEndCountDownTimer extends CountDownTimer {
+
+        public SessionEndCountDownTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+
+            int progress = (int) (millisUntilFinished / 1000);
+            countDownTimerText.setText("" + (progress - 1));
+
+        }
+
+        @Override
+        public void onFinish() {
+            infoTimerText.setText("Meeting end");
+            countDownTimerText.setText("0");
+            countDownTimerText.setVisibility(View.GONE);
+            infoTimerText.setVisibility(View.GONE);
+            disconnectSession();
+            finish();
+        }
+
     }
 }

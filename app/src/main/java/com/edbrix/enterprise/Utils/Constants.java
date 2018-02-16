@@ -33,6 +33,7 @@ public class Constants {
     public final static String TolkBox_SessionId= "SessionId";
     public final static String TolkBox_MeetingId= "MeetingId";
     public final static String TolkBox_MeetingName= "MeetingName";
+    public final static String TolkBox_MeetingType= "MeetingType";
     public final static String FileType_Playwire= "playwire";
     public final static String FileType_Document= "document";
     public static int meetingUserCount=0;
@@ -97,6 +98,8 @@ public class Constants {
     public final static String getUserDetails = BASE_URL.concat("editprofile.php");
     public final static String updateUserProfile = BASE_URL.concat("updateprofile.php");
     public final static String sendMeetingNotification = BASE_URL.concat("sendmeetingpushnotification.php");
+    public final static String getTalkboxMeetingStatus = BASE_URL.concat("gettalkboxmeetingstatus.php");
+    public final static String updateTalkboxMeetingStatus = BASE_URL.concat("updatetokboxmeetingstatus.php");
     public final static String updateUserProfilePic = "https://enterprise.edbrix.net/ntservices/updateUserProfileImage";
     public final static String updateCoursePic = "https://enterprise.edbrix.net/ntservices/updateCourseImage";
     public final static String uploadVideoToMyFiles = "http://enterpriseservices.edbrix.net/app/uploadvideotomyfiles.php";
