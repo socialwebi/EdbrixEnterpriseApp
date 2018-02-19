@@ -439,8 +439,9 @@ public class TokBoxActivity extends AppCompatActivity implements
                 final String fileName = intent.getStringExtra("filename");
                 final String ownerName = intent.getStringExtra("owner");
                 final String ownerId = intent.getStringExtra("ownerId");
+                final String meetingIdNoti = intent.getStringExtra("meetingId");
                 if (!ownerId.isEmpty()) {
-                    if (!SettingsMy.getActiveUser().getId().equals(ownerId)) {
+                    if (!SettingsMy.getActiveUser().getId().equals(ownerId) && meetingId.equals(meetingIdNoti)) {
 //                showToast("Push notification: " + fileName);
                         dialogManager.getAlertDialogManager().setAlertDialogCancellable(false);
                         dialogManager.getAlertDialogManager().Dialog("Download Video", ownerName + " shared video.\nContinue to download video?", "Continue", "Exit", new AlertDialogManager.onTwoButtonClickListner() {
